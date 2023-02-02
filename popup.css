@@ -1,0 +1,153 @@
+body {
+  position: relative;
+  width: 350px;
+  height: auto;
+  padding: 0px;
+  margin: 0px;
+
+  background: rgba(244, 244, 244, 0.7);
+}
+
+.wrap {
+  position: relative;
+  width: 320px;
+  height: auto;
+
+  padding: 25px 15px;
+  margin-bottom: 50px;
+}
+
+.dir {
+  position: relative;
+  width: 304px;
+  height: 60px;
+  /* width는 컨텐트 기준.. 패딩 계산  */
+
+  padding-left: 16px;
+  margin: 0px;
+
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+/* dir 이름 길어졌을 때 어떻게 처리할지 얘기 안 함 */
+.dir > h1 {
+  height: 60px;
+  overflow: hidden;
+  /* 일단 잘리게 하고 마우스오버시 정보 뜨게 하도록 */
+
+  margin: 0px;
+
+  font-weight: 800;
+  /* 피그마 폰트 웨이트는 800설정인데 그대로 해도 느낌이 다른데.. */
+  line-height: 60px;
+  /* font-size: 32px; */
+  /* 피그마에서는 32px던데.. 적용하니까 너무 큰데????? */
+}
+
+.keyword-box {
+  position: relative;
+  width: 304px;
+
+  margin-top: 28px;
+  margin-bottom: 14px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+
+  background: #34a853;
+  border-radius: 15px;
+  /* 키워드 박스만 border-radius: 15px; 인 이유가 있겠지??*/
+}
+
+.keyword {
+  display: inline-block;
+  margin: 0px 35px 0px 0px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 25px;
+  color: #ffffff;
+}
+
+.toggle_keyword {
+  position: absolute;
+  margin-top: -7px;
+  /* 이미지 높이의 절반값 */
+  top: 50%;
+  right: 16px;
+}
+
+.path_template {
+  position: relative;
+
+  width: 304px;
+  height: 51px;
+
+  margin-bottom: 7px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  padding-left: 16px;
+
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+.path_template > li {
+  list-style-type: none;
+}
+
+a {
+  height: 51px;
+  text-decoration: none;
+  color: #4f4f4f;
+  font-size: 14px;
+  vertical-align: middle;
+  /* line-height: 17px; */
+}
+
+/* 페이지 제목과 링크는 길이 넘어가면 자동 숨김처리 함 */
+/* 넘친 부분에 대해서 마우스 오버시 보이게 하기 등의 조작 필요 */
+a > h3 {
+  width: 288px;
+  height: 21.6px;
+  overflow: hidden;
+  margin: 0px;
+}
+
+a > p {
+  text-decoration: underline;
+
+  width: 288px;
+  height: 21.6px;
+  overflow: hidden;
+}
+
+footer {
+  position: fixed;
+  width: inherit;
+  height: 75px;
+  bottom: 0px;
+
+  margin: 0px;
+  padding: 0px;
+
+  background-color: #ffffff;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  margin-top: -15px;
+}
+
+#icon-folder {
+  left: 30px;
+}
+
+#icon-start {
+  right: 71px;
+}
+
+#icon-stop {
+  right: 27px;
+}
