@@ -5,7 +5,11 @@ body {
   padding: 0px;
   margin: 0px;
 
-  background: rgba(244, 244, 244, 0.7);
+  /* background: rgba(244, 244, 244, 0.7); */
+  /* 여전히 고민 중 */
+
+  /* 불투명도 확인하려고 넣어본 테스트용 백그라운드이미지 */
+  /* background-image: url(../화면\ 캡처\ 2023-02-03\ 033610.jpg); */
 }
 
 .wrap {
@@ -15,6 +19,7 @@ body {
 
   padding: 25px 15px;
   margin-bottom: 50px;
+  background: rgba(244, 244, 244, 0.7);
 }
 
 .dir {
@@ -124,7 +129,11 @@ a > p {
 
 footer {
   position: fixed;
-  width: inherit;
+  /* width: inherit; */
+  /* vscode로 봤을 땐 바디 자체가 350px로 잘 잡혀서 괜찮았는데..
+  새창으로 볼 땐 오류나서 일단 수정
+  나중에 플러그인으로 들어갈 땐 괜찮은지 확인 후 코드 수정 */
+  width: 350px;
   height: 75px;
   bottom: 0px;
 
