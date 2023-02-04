@@ -15,7 +15,9 @@ body {
 .wrap {
   position: relative;
   width: 320px;
-  height: auto;
+  /* height: auto; */
+  min-height: 100vh;
+  /* vh -> 뷰포트 높이 : 사용자 뷰의 100퍼센트 */
 
   padding: 25px 15px;
   margin-bottom: 50px;
