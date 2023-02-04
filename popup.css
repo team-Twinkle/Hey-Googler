@@ -49,22 +49,25 @@ body {
   line-height: 60px;
   /* font-size: 32px; */
   /* 피그마에서는 32px던데.. 적용하니까 너무 큰데????? */
-}
 
-.dir-title {
-  /* 일단 잘리게 하고 마우스오버시 정보 뜨게 하도록 */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.dir-title {
+  /* overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; */
 }
 
 .dir-list {
   margin-bottom: 9px;
 
   /* 일단 잘리게 해놨는데 어떻게 할지 고민 */
-  overflow: hidden;
+  /* overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 }
 
 .keyword-box {
@@ -147,6 +150,15 @@ a > p {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* 텍스트 마우스 오버 효과 */
+/* 근데 무작정 이렇게 뜨게 하면 되는것인가.. */
+/* 디자인은? 말풍선으로? 아니면 밑으로 떨어지게 디자인? */
+.dir-text:hover,
+a > h3:hover,
+a > p:hover {
+  overflow: visible;
 }
 
 #addButton {

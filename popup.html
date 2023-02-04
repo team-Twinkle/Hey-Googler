@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./popup.css" />
+
     <title>Hey Googler</title>
+    <link rel="stylesheet" href="./popup.css" />
+    <script type="text/javascript" src="./popup.js"></script>
+    <!-- defer속성 추가 -->
   </head>
   <body>
     <div class="wrap">
@@ -17,7 +20,11 @@
         <div class="keyword-box">
           <h2 class="keyword">검색어A</h2>
           <!-- 저장 경로 변경시 수정 -->
-          <img class="toggle_keyword" src="images/icon_toggle.svg" />
+          <img
+            class="toggle_keyword"
+            src="images/icon_toggle.svg"
+            onclick="keywordToggleClick()"
+          />
         </div>
         <!-- <div class="path_template"> -->
         <!-- 템플릿 태그 주의 -->
@@ -49,6 +56,7 @@
         class="footer-button"
         src="images/icon_start.svg"
         alt="start"
+        onclick="runningButtonClick('start')"
       />
 
       <img
@@ -56,6 +64,7 @@
         class="footer-button"
         src="images/icon_stop.svg"
         alt="stop"
+        onclick="runningButtonClick('stop')"
       />
     </footer>
   </body>
