@@ -38,18 +38,23 @@ body {
 }
 
 /* dir 이름 길어졌을 때 어떻게 처리할지 얘기 안 함 */
-.dir > h1 {
+.dir-text {
   height: 60px;
   overflow: hidden;
   /* 일단 잘리게 하고 마우스오버시 정보 뜨게 하도록 */
 
   margin: 0px;
 
+  color: #000000;
   font-weight: 800;
   /* 피그마 폰트 웨이트는 800설정인데 그대로 해도 느낌이 다른데.. */
   line-height: 60px;
   /* font-size: 32px; */
   /* 피그마에서는 32px던데.. 적용하니까 너무 큰데????? */
+}
+
+.dir-list {
+  margin-bottom: 9px;
 }
 
 .keyword-box {
@@ -99,7 +104,7 @@ body {
   border-radius: 20px;
 }
 
-.path_template > li {
+li {
   list-style-type: none;
 }
 
@@ -127,6 +132,26 @@ a > p {
   width: 288px;
   height: 21.6px;
   overflow: hidden;
+}
+
+#addButton {
+  position: relative;
+  width: 304px;
+
+  margin-bottom: 23px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+
+  background: #34a853;
+  border-radius: 15px;
+}
+
+#addButton > h2 {
+  margin: 0px;
+
+  font-size: 18px;
+  color: #ffffff;
 }
 
 footer {
