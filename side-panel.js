@@ -23,7 +23,7 @@ document.body.appendChild(iframe);
 
 function toggle(){
     if(iframe.style.width == "0px"){
-        iframe.style.width="300px";
+        iframe.style.width="367px";
     }
     else{
         iframe.style.width="0px";
