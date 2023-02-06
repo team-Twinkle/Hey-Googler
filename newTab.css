@@ -5,9 +5,12 @@
     height:44px;
     width:400px;
     display:flex;
+    float:right;
+    margin-top:20%;
+    margin-right:20%;
 }
 .search-box:hover{
-    box-shadow : 4px 3px 11px rgb(0 0 0 / 20%);
+    box-shadow : 4px 3px 17px rgb(0 0 0 / 20%);
 }
 .search-form{
     display:flex;
@@ -24,4 +27,5 @@
 }
 .search-button{
     float:right;
+    margin-left:100px;
 }
