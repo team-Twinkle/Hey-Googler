@@ -8,6 +8,12 @@
         "action": {
             "default_icon": "Temporary_icon.png"
         },
+        "permissions":[
+          "tabs","activeTab"
+        ],
+        "chrome_url_overrides":{
+          "newtab":"newTab.html"
+        },
         "content_scripts": [
           {
             "matches": [
@@ -16,7 +22,8 @@
                 "https://*/*/*/*",
                 "https://*/*/*/*/*",
                 "https://*/*/*/*/*/*/*",
-                "http://*/*"
+                "http://*/*",
+                "file:///*"
             ],
             "js": ["side-panel.js"]
           }
