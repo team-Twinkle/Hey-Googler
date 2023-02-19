@@ -1,7 +1,7 @@
 {
         "version": "1.0",
         "manifest_version": 3,
-        "name": "Side panel",
+        "name": "Hey Googler",
         "background": {
             "service_worker": "background.js"
         },
@@ -9,7 +9,7 @@
             "default_icon": "Temporary_icon.png"
         },
         "permissions":[
-          "tabs","activeTab"
+          "tabs","activeTab","history"
         ],
         "chrome_url_overrides":{
           "newtab":"newTab.html"
