@@ -1,11 +1,6 @@
 chrome.action.onClicked.addListener(tab => {
   chrome.tabs.sendMessage(tab.id,"toggle");
   console.log('message sent');
-  chrome.tabs.create({
-    url: "https://www.naver.com",
-    active:true
-  });
-  console.log('여기까지');
   });
   
 
