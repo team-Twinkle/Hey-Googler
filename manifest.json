@@ -9,18 +9,12 @@
             "default_icon": "Temporary_icon.png"
         },
         "permissions":[
-          "tabs","activeTab","history"
+          "tabs","activeTab","history", "webNavigation", ""
         ],
         "content_scripts": [
           {
             "matches": [
-                "https://*/*",
-                "https://*/*/*",
-                "https://*/*/*/*",
-                "https://*/*/*/*/*",
-                "https://*/*/*/*/*/*/*",
-                "http://*/*",
-                "file:///*"
+            "<all_urls>"
             ],
             "js": ["side-panel.js"]
           }
@@ -28,7 +22,7 @@
         "web_accessible_resources": [
           {
             "resources": ["popup.html"],
-            "matches": ["https://*/*", "http://*/*"]
+            "matches": ["<all_urls>"]
           }
         ]
       }

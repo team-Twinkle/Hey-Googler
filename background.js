@@ -20,6 +20,38 @@
 });}
 
 
+let visitedSites = [];
+let searchKeywords = [];
 
 
+//방문 기록 리스트 추가 및 콘솔 출력
+chrome.history.onVisited.addListener((historyItem) => {
+  visitedSites.push({url: historyItem.url, title: historyItem.title});
+  console.log("Visited Site:", historyItem.url, historyItem.title);
+});
 
+
+//새 탭 기록 리스트 추가 및 콘솔 출력
+chrome.tabs.onCreated.addListener((tab) => {
+  visitedSites.push({url: tab.url, title: tab.title});
+  console.log("Created Tab:", tab.url, tab.title);
+});
+
+//새 창 기록 리스트 추가 및 콘솔 출력
+chrome.windows.onCreated.addListener((window) => {
+  visitedSites.push({url: window.tabs[0].url, title: window.tabs[0].title});
+  console.log("Created Window:", window.tabs[0].url, window.tabs[0].title);
+});
+
+
+//구글 검색어 리스트 추가 및 콘솔 출력
+chrome.webNavigation.onBeforeNavigate.addListener((details) => {
+  const url = new URL(details.url);
+  if (url.hostname === "www.google.com" && url.pathname === "/search") {
+    const query = url.searchParams.get("q");
+    if (query) {
+      searchKeywords.push(query);
+      console.log("Google Search:", query);
+    }
+  }
+});
