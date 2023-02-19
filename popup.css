@@ -1,3 +1,20 @@
+
+/*스크롤바 커스텀*/
+html::-webkit-scrollbar {
+  width: 17px;
+}
+html::-webkit-scrollbar-track {
+  background: #F2F2F2;
+}
+html::-webkit-scrollbar-thumb {
+  background: #79D58F; /* 스크롤바 색깔 */
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  height:1%;
+}
+
+
 body {
   position: relative;
   width: 350px;
@@ -11,6 +28,7 @@ body {
   /* 불투명도 확인하려고 넣어본 테스트용 백그라운드이미지 */
   /* background-image: url(../화면\ 캡처\ 2023-02-03\ 033610.jpg); */
 }
+
 
 .wrap {
   position: relative;
