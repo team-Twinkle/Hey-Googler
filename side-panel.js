@@ -5,12 +5,6 @@ chrome.runtime.onMessage.addListener((msg, sender,sendResponse)=>{
         console.log("message received");
         toggle();
     }
-    else if(msg=="message for getting search term from background.js"){
-        console.log("message received and send data");
-        let search_term = document .querySelectorAll('input.gLFyf')[0].value;
-        console.log("we will send "+ search_term); //검색 키워드
-        sendResponse(search_term);
-    }
 });
 
 var iframe = document.createElement('iframe'); 
