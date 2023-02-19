@@ -11,9 +11,6 @@
         "permissions":[
           "tabs","activeTab","history"
         ],
-        "chrome_url_overrides":{
-          "newtab":"newTab.html"
-        },
         "content_scripts": [
           {
             "matches": [
