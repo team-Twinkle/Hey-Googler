@@ -5,8 +5,9 @@ chrome.runtime.onMessage.addListener((msg, sender,sendResponse)=>{
         console.log("message received");
         toggle();
     }
-    else if(msg=="getReferrer"){
+    else if(msg ==='referrer'){
         var referrer=document.referrer;
+        //console.log(referrer);
         sendResponse(referrer);
     }
 });

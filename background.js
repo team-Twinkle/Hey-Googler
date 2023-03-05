@@ -27,7 +27,7 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
   beforeTab = currentTab;
   console.log("activated changing")
   chrome.tabs.onUpdated.addListener((currentTabId,changingInfo,tabs)=>{
-    console.log(currentTabId);
+    //console.log(currentTabId);
     chrome.tabs.get(currentTabId,Tab=>{
       currentTab=Tab.url;
     })
@@ -43,12 +43,28 @@ let searchKeywords = [];
 
 
 //방문 기록 리스트 추가 및 콘솔 출력
-chrome.history.onVisited.addListener((historyItem) => {
-  visitedSites.push({url: historyItem.url, title: historyItem.title});
+chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문할 때마다 
+  visitedSites.push({url: historyItem.url, title: historyItem.title});   //url 과 title 을 확인하고
   console.log("Visited Site:", historyItem.url, historyItem.title);
-  chrome.tabs.sendMessage("getReferrer",response=>{
-    console.log(response);
+
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo) =>{   //referrer 를 확인한다 ! 
+    if (changeInfo.status === 'complete'){
+      chrome.tabs.sendMessage(tabId,"referrer",response=>{
+        var referrer = response; //referrer 얻은 데이터 !!
+        console.log("===========================>>>>>"+referrer);
+        
+        if(referrer=='https://www.google.com/'){//1차링크 추적 
+            //1차링크의 검색어 추적
+            const url = new URL(beforeTab);
+            keyword1 = url.searchParams.get("q"); //1차링크의 검색어 
+            console.log(keyword1);
+            // 이 if 문 안에서 keyword 랑 url 이랑 title 을 모두 접근 가능하다.
+        }   
+      });
+    }
   });
+  
+  
 });
 
 
