@@ -20,6 +20,24 @@
 });}
 
 
+//현재 탭과 이전 탭 저장
+var beforeTab;
+var currentTab;
+chrome.tabs.onActivated.addListener(activeInfo=>{
+  beforeTab = currentTab;
+  console.log("activated changing")
+  chrome.tabs.onUpdated.addListener((currentTabId,changingInfo,tabs)=>{
+    console.log(currentTabId);
+    chrome.tabs.get(currentTabId,Tab=>{
+      currentTab=Tab.url;
+    })
+    console.log('        b      ' + beforeTab);
+    console.log('   c    '+currentTab);
+  })
+});
+
+
+
 let visitedSites = [];
 let searchKeywords = [];
 
@@ -28,6 +46,9 @@ let searchKeywords = [];
 chrome.history.onVisited.addListener((historyItem) => {
   visitedSites.push({url: historyItem.url, title: historyItem.title});
   console.log("Visited Site:", historyItem.url, historyItem.title);
+  chrome.tabs.sendMessage("getReferrer",response=>{
+    console.log(response);
+  });
 });
 
 

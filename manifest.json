@@ -9,7 +9,7 @@
             "default_icon": "Temporary_icon.png"
         },
         "permissions":[
-          "tabs","activeTab","history", "webNavigation", ""
+          "tabs","activeTab","history", "webNavigation"
         ],
         "content_scripts": [
           {

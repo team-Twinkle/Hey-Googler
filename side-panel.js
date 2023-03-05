@@ -5,9 +5,14 @@ chrome.runtime.onMessage.addListener((msg, sender,sendResponse)=>{
         console.log("message received");
         toggle();
     }
+    else if(msg=="getReferrer"){
+        var referrer=document.referrer;
+        sendResponse(referrer);
+    }
 });
 
 var iframe = document.createElement('iframe'); 
+iframe.id="IFRAME"
 iframe.style.background = "White";
 iframe.style.height = "100%";
 iframe.style.width = "0px";
