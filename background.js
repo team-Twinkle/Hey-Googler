@@ -19,13 +19,21 @@
  });
 });}
 
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.setBadgeText({
+    text: "OFF",
+  });
+});
+
 chrome.runtime.onMessage.addListener((msg)=>{
   //console.log(msg);
   if(msg=="Start the extension from list.js"){
     console.log("extension state : start");
+    chrome.action.setBadgeText({text:"ON"});
   }
   else if(msg=="Stop the extension from list.js"){
     console.log("extension state : stop");
+    chrome.action.setBadgeText({text:"OFF"});
   }
 })
 
