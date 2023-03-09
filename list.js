@@ -14,20 +14,7 @@ function keywordToggleClick() {
 //처음 디폴트는 정지도 눌려있는 상태여야 하는 건가?
 //마우스 오버시 마우스 모양 바뀌는 것도 필요한가?
 //start & stop button
-function runningButtonClick(button) {
-  var start = document.getElementById("button-start");
-  var stop = document.getElementById("button-stop");
 
-  if (running == false && button == "start") {
-    start.src = "./images/icon_start_true.svg";
-    stop.src = "./images/icon_stop.svg";
-    running = true;
-  } else if (running == true && button == "stop") {
-    stop.src = "./images/icon_stop_true.svg";
-    start.src = "./images/icon_start.svg";
-    running = false;
-  }
-}
 
 //dir추가 버튼
 //디자인이나 방식 피드백
@@ -36,3 +23,20 @@ function runningButtonClick(button) {
 //click -> text edit 창 -> ok -> add dir
 //dir이름 수정하기 기능은??
 function addDirButtonClick() {}
+
+
+/********************************************************************************************************* */
+
+var startButton = document.getElementById("button-start");
+var stopButton = doument.getElementById("button-stop"); 
+
+
+startButton.addEventListener("click",function(){
+  startButton.src="images/icon_start_true.svg";
+  chrome.runtime.sendMessage("Start the extension from list.js");
+});
+
+stopButton.addEventListener("click",function(){
+  startButton.src="images/icon_start.svg";
+  chrome.runtime.sendMessage("Stop the extension from list.js");
+});

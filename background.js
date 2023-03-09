@@ -19,6 +19,16 @@
  });
 });}
 
+chrome.runtime.onMessage.addListener((msg)=>{
+  console.log(msg);
+  if(msg=="Start the extension from list.js"){
+    console.log("extension state : start");
+  }
+  else if(msg=="Stop the extension from list.js"){
+    console.log("extension state : stop");
+  }
+})
+
 
 //현재 탭과 이전 탭 저장
 var beforeTab;
@@ -84,7 +94,7 @@ chrome.windows.onCreated.addListener((window) => {
 //구글 검색어 리스트 추가 및 콘솔 출력
 chrome.webNavigation.onBeforeNavigate.addListener((details) => {
   const url = new URL(details.url);
-  if (url.hostname === "www.google.com" && url.pathname === "/search") {
+  if ( url.hostname==="www.google.com" && url.pathname === "/search") {
     const query = url.searchParams.get("q");
     if (query) {
       searchKeywords.push(query);
