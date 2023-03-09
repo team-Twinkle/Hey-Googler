@@ -232,8 +232,10 @@ footer {
 
 #button-start {
   right: 71px;
+  cursor:pointer;
 }
 
 #button-stop {
   right: 27px;
+  cursor:pointer;
 }

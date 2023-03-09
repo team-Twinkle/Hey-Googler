@@ -1,3 +1,5 @@
+var isExtensionOn = false;  //extension 의 현재 상태 저장 
+
 //아이콘 클릭했을 때 이벤트
 {chrome.action.onClicked.addListener(tab => {
   chrome.tabs.query({active: true, currentWindow: true}, tabs=> {
@@ -19,20 +21,22 @@
  });
 });}
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(() => { //action icon 에 extension 의 상태를 표시하기 위한 badge 초기화 시키는 코드
   chrome.action.setBadgeText({
     text: "OFF",
   });
 });
 
-chrome.runtime.onMessage.addListener((msg)=>{
+chrome.runtime.onMessage.addListener((msg)=>{  //list.js 로부터 메시지를 받아서 시작버튼 , 중지버튼 눌림에 따라 isExtensionOn 값 변경 및 badge 의 text 변경
   //console.log(msg);
   if(msg=="Start the extension from list.js"){
-    console.log("extension state : start");
+    isExtensionOn = true;
+    console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({text:"ON"});
   }
   else if(msg=="Stop the extension from list.js"){
-    console.log("extension state : stop");
+    isExtensionOn = false;
+    console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({text:"OFF"});
   }
 })
