@@ -28,7 +28,7 @@ function addDirButtonClick() {}
 /********************************************************************************************************* */
 
 var startButton = document.getElementById("button-start");
-var stopButton = doument.getElementById("button-stop"); 
+var stopButton = document.getElementById("button-stop"); 
 
 
 startButton.addEventListener("click",function(){

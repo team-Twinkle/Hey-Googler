@@ -20,7 +20,7 @@
 });}
 
 chrome.runtime.onMessage.addListener((msg)=>{
-  console.log(msg);
+  //console.log(msg);
   if(msg=="Start the extension from list.js"){
     console.log("extension state : start");
   }
