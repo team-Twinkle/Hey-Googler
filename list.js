@@ -63,3 +63,14 @@ stopButton.addEventListener("click",()=>{
   startButton.src="images/icon_start.svg";
   chrome.runtime.sendMessage("Stop the extension from list.js");
 });
+
+chrome.action.onClicked.addListener(()=>{
+  chrome.action.getBadgeText({},(txt)=>{
+    if(txt=="ON"){
+      startButton.src="images/icon_start_true.svg";
+    }
+    else{
+      startButton.src="images/icon_start.svg";
+    }
+  })
+})
