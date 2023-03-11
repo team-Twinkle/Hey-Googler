@@ -43,6 +43,7 @@ body {
 }
 
 .dir {
+  display: flex;
   position: relative;
   width: 304px;
   min-height: 60px;
@@ -86,6 +87,25 @@ body {
   /* overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; */
+}
+
+#reload{
+  width:30px;
+  height: 30px;
+  border-radius: 20px;
+  margin-block: auto;
+  margin-right: 10px;
+}
+
+#button-reload{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+#reload:hover{
+  background-color:#F2F2F2;
 }
 
 .keyword-box {

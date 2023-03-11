@@ -27,10 +27,15 @@ function addDirButtonClick() {}
 
 /********************************************************************************************************* */
 
+var reloadButton = document.getElementById("button-reload");
 var folderButton = document.getElementById("button-folder");
 var startButton = document.getElementById("button-start");
 var stopButton = document.getElementById("button-stop"); 
 
+reloadButton.addEventListener("click",()=>{
+  location.reload();
+  console.log("reloaded");
+});
 
 //tooltip
 folderButton.addEventListener("mouseover",()=>{
@@ -74,3 +79,14 @@ chrome.action.onClicked.addListener(()=>{
     }
   })
 })
+
+window.addEventListener('beforeunload',()=>{
+  chrome.action.getBadgeText({},(txt)=>{
+    if(txt=="ON"){
+      startButton.src="images/icon_start_true.svg";
+    }
+    else{
+      startButton.src="images/icon_start.svg";
+    }
+  })
+});
