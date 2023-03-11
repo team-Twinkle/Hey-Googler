@@ -40,27 +40,35 @@
       <!-- </div> -->
     </div>
     <footer>
-      <a href="./dirList.html">
-        <img
-          id="button-folder"
-          class="footer-button"
-          src="images/icon_folder.svg"
-          alt="folder icon"
+      <div id="folder" class="icon">
+        <a href="./dirList.html">
+          <img
+            id="button-folder"
+            class="footer-button"
+            src="images/icon_folder.svg"
+            alt="folder icon"
+          />
+        </a>
+        <span id="tooltip-folder" class="tooltip">dir list</span>
+      </div>
+      <div id="start" class="icon">
+        <img 
+          id="button-start" 
+          class="footer-button" 
+          src="images/icon_start.svg" 
+          alt="start" 
         />
-      </a>
-        <img
-        id="button-start"
-        class="footer-button"
-        src="images/icon_start.svg"
-        alt="start"
-         />
-         <img
-         id="button-stop"
-         class="footer-button"
-         src="images/icon_stop.svg"
-         alt="stop"
+        <span id="tooltip-start" class="tooltip">추적 시작</span>
+      </div>
+      <div id="stop" class="icon">
+        <img 
+          id="button-stop" 
+          class="footer-button" 
+          src="images/icon_stop.svg" 
+          alt="stop" 
         />
-
+        <span id="tooltip-stop" class="tooltip">추적 중단</span>
+      </div>  
     </footer>
     <script type="text/javascript" src="./list.js"></script> <!--스크립트 위치바꾸면 에러 남 !!-->
   </body>

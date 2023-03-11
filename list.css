@@ -239,3 +239,27 @@ footer {
   right: 27px;
   cursor:pointer;
 }
+
+.tooltip{
+  display: none;
+  position:absolute;
+  background-color:black;
+  border-radius: 7px;
+  color:white;
+  text-align:center;
+}
+
+#tooltip-folder{
+  left:20px;
+  width:50px;
+}
+
+#tooltip-start{
+  right:55px;
+  width: 60px;
+}
+
+#tooltip-stop{
+  right:14px;
+  width: 60px;
+}
