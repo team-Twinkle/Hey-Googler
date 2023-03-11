@@ -96,17 +96,21 @@ body {
   margin-block: auto;
   margin-right: 10px;
 }
-
+#reload:hover{
+  background-color:#F2F2F2;
+}
 #button-reload{
   width: 20px;
   height: 20px;
   cursor: pointer;
   padding: 5px;
 }
-
-#reload:hover{
-  background-color:#F2F2F2;
+#tooltip-reload{
+  width:45px;
+  left: 10px;
 }
+
+
 
 .keyword-box {
   position: relative;

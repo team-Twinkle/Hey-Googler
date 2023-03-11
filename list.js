@@ -48,6 +48,12 @@ reloadButton.addEventListener("click",()=>{
 });
 
 //tooltip
+reloadButton.addEventListener("mouseover",()=>{
+  document.getElementById("tooltip-reload").style.display="block";
+});
+reloadButton.addEventListener("mouseout",()=>{
+  document.getElementById("tooltip-reload").style.display="none";
+})
 folderButton.addEventListener("mouseover",()=>{
   document.getElementById("tooltip-folder").style.display="block";
 });
