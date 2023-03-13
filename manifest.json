@@ -9,19 +9,19 @@
             "default_icon": "Temporary_icon.png"
         },
         "permissions":[
-          "tabs","activeTab","history", "webNavigation", ""
+          "tabs","activeTab","history", "webNavigation"
         ],
         "content_scripts": [
           {
             "matches": [
             "<all_urls>"
             ],
-            "js": ["side-panel.js"]
+            "js": ["content-script.js"]
           }
         ],
         "web_accessible_resources": [
           {
-            "resources": ["popup.html"],
+            "resources": ["list.html"],
             "matches": ["<all_urls>"]
           }
         ]

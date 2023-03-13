@@ -43,6 +43,7 @@ body {
 }
 
 .dir {
+  display: flex;
   position: relative;
   width: 304px;
   min-height: 60px;
@@ -87,6 +88,29 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis; */
 }
+
+#reload{
+  width:30px;
+  height: 30px;
+  border-radius: 20px;
+  margin-block: auto;
+  margin-right: 10px;
+}
+#reload:hover{
+  background-color:#F2F2F2;
+}
+#button-reload{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+#tooltip-reload{
+  width:45px;
+  left: 10px;
+}
+
+
 
 .keyword-box {
   position: relative;
@@ -232,8 +256,34 @@ footer {
 
 #button-start {
   right: 71px;
+  cursor:pointer;
 }
 
 #button-stop {
   right: 27px;
+  cursor:pointer;
+}
+
+.tooltip{
+  display: none;
+  position:absolute;
+  background-color:black;
+  border-radius: 7px;
+  color:white;
+  text-align:center;
+}
+
+#tooltip-folder{
+  left:20px;
+  width:50px;
+}
+
+#tooltip-start{
+  right:55px;
+  width: 60px;
+}
+
+#tooltip-stop{
+  right:14px;
+  width: 60px;
 }
