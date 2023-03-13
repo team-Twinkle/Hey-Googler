@@ -60,10 +60,7 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
 
 
 
-let visitedSites = [];
-let searchKeywords = [];
-
-
+/*
 //방문 기록 리스트 추가 및 콘솔 출력
 chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문할 때마다 
   visitedSites.push({url: historyItem.url, title: historyItem.title});   //url 과 title 을 확인하고
@@ -87,7 +84,33 @@ chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문�
   });
   
   
+});*/
+
+
+
+const visitedSites = [];
+//중복 확인용으로 이미 추가된 URL을 저장하는 Set 객체 선언
+const visitedUrls = new Set();
+
+//방문 기록 리스트 추가 및 콘솔 출력
+chrome.history.onVisited.addListener((historyItem) => {
+  const url = historyItem.url;
+  console.log(historyItem.title);
+  if (!visitedUrls.has(url)) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
+    visitedUrls.add(url);
+    chrome.history.search({text: url}, (historyItems) => {
+      const title = historyItems[historyItems.length-1].title; 
+      visitedSites.push({url: url, title: title});
+      console.log("Visited Site:", url, title);
+    });
+  }
 });
+
+/* 이전에는
+chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문할 때마다 
+  visitedSites.push({url: historyItem.url, title: historyItem.title});   //url 과 title 을 확인하고
+  console.log("Visited Site:", historyItem.url, historyItem.title);
+*/
 
 
 //새 탭 기록 리스트 추가 및 콘솔 출력
@@ -106,11 +129,22 @@ chrome.windows.onCreated.addListener((window) => {
 //구글 검색어 리스트 추가 및 콘솔 출력
 chrome.webNavigation.onBeforeNavigate.addListener((details) => {
   const url = new URL(details.url);
-  if ( url.hostname==="www.google.com" && url.pathname === "/search") {
-    const query = url.searchParams.get("q");
+  if (url.hostname === "www.google.com" && url.pathname === "/search") {
+    const query = url.searchParams.get("q"); //query에 검색어 저장되어있음.
     if (query) {
-      searchKeywords.push(query);
+      var found = visitedSites.find(e => e.url == url);
+      found.keywords = query;
       console.log("Google Search:", query);
     }
   }
+  else {
+    var found = visitedSites.find(e => e.url == url);
+    found.keywords = "";
+    console.log("Google Search:  ");
+  }
 });
+
+//https://www.google.co.kr/search?q=dsddsdfs
+
+//Google Search: 까지는 콘솔 출력 잘 됨
+//아마 배열에 요소 추가하는 것에서 문제 있는 것으로 추정
