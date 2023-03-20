@@ -55,6 +55,11 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
     })
     //console.log('        b      ' + beforeTab);
     //console.log('   c    '+currentTab);
+    currentURL = new URL(currentTab);
+    if(currentURL.hostname==="www.google.com"){
+      searchTab=currentTab;
+      //console.log("    S       "+searchTab);
+    }
   })
 });
 
@@ -92,9 +97,10 @@ chrome.history.onVisited.addListener((historyItem) => {
         
         if(referrer=='https://www.google.com/'){//1차링크 추적 
             //1차링크의 검색어 추적
-            const url = new URL(beforeTab);
+            const url = new URL(searchTab);
+            //console.log(url);
             keyword1 = url.searchParams.get("q"); //1차링크의 검색어 
-            console.log(keyword1);
+            console.log("검색어는!!!!!!!!!!!!!!!!!!!!"+keyword1);
             // 이 if 문 안에서 keyword 랑 url 이랑 title 을 모두 접근 가능하다.
         }   
       });

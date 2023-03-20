@@ -41,6 +41,14 @@ chrome.action.getBadgeText({},(txt)=>{
   }
 })
 
+//stopButton 눌림 action
+stopButton.addEventListener("mousedown",()=>{
+  stopButton.src="images/icon_stop_true.svg";
+})
+stopButton.addEventListener("mouseup",()=>{
+  stopButton.src="images/icon_stop.svg";
+})
+
 //reload
 reloadButton.addEventListener("click",()=>{
   location.reload();
