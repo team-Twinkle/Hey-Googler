@@ -1,20 +1,8 @@
-//전역 변수
-var running = false;
-
-// 버튼/이미지 클릭 이벤트
-
 //키워드 토글
 function keywordToggleClick() {
   //var toggle = document.getElementsByClassName("toggle_keyword");
   //class로 통채로 받아..? 그럼 전부 지정인가??
 }
-
-// start,stop버튼 누르면 동작되는 자세한 코드들은 background.js 인가?
-//그 떄는 html 함수 여러개 걸기
-//처음 디폴트는 정지도 눌려있는 상태여야 하는 건가?
-//마우스 오버시 마우스 모양 바뀌는 것도 필요한가?
-//start & stop button
-
 
 //dir추가 버튼
 //디자인이나 방식 피드백
@@ -24,6 +12,8 @@ function keywordToggleClick() {
 //dir이름 수정하기 기능은??
 function addDirButtonClick() {}
 
+//dir-name 에 title 부여 
+document.getElementById("dir-name").title=document.getElementById("dir-name").innerHTML;
 
 /********************************************************************************************************* */
 
