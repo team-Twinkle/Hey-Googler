@@ -53,18 +53,36 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
     chrome.tabs.get(currentTabId,Tab=>{
       currentTab=Tab.url;
     })
-    console.log('        b      ' + beforeTab);
-    console.log('   c    '+currentTab);
+    //console.log('        b      ' + beforeTab);
+    //console.log('   c    '+currentTab);
   })
 });
 
 
 
-/*
+
 //방문 기록 리스트 추가 및 콘솔 출력
-chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문할 때마다 
-  visitedSites.push({url: historyItem.url, title: historyItem.title});   //url 과 title 을 확인하고
-  console.log("Visited Site:", historyItem.url, historyItem.title);
+
+
+//중복 확인용으로 이미 추가된 URL을 저장하는 Set 객체 선언
+const visitedUrls = new Set();
+const visitedSites = [];
+
+chrome.history.onVisited.addListener((historyItem) => {
+  const url = historyItem.url;
+//  console.log(historyItem.title);
+  if (!visitedUrls.has(url)) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
+    visitedUrls.add(url);
+    chrome.history.search({text: url}, (historyItems) => {
+      const title = historyItems[historyItems.length-1].title; 
+      visitedSites.push({url: url, title: title});
+      console.log("Visited Site:", url, title);
+    });
+  }
+});
+
+
+
 
   chrome.tabs.onUpdated.addListener((tabId, changeInfo) =>{   //referrer 를 확인한다 ! 
     if (changeInfo.status === 'complete'){
@@ -84,44 +102,17 @@ chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문�
   });
   
   
-});*/
-
-
-
-const visitedSites = [];
-//중복 확인용으로 이미 추가된 URL을 저장하는 Set 객체 선언
-const visitedUrls = new Set();
-
-//방문 기록 리스트 추가 및 콘솔 출력
-chrome.history.onVisited.addListener((historyItem) => {
-  const url = historyItem.url;
-  console.log(historyItem.title);
-  if (!visitedUrls.has(url)) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
-    visitedUrls.add(url);
-    chrome.history.search({text: url}, (historyItems) => {
-      const title = historyItems[historyItems.length-1].title; 
-      visitedSites.push({url: url, title: title});
-      console.log("Visited Site:", url, title);
-    });
-  }
-});
-
-/* 이전에는
-chrome.history.onVisited.addListener((historyItem) => { //url을 새로 방문할 때마다 
-  visitedSites.push({url: historyItem.url, title: historyItem.title});   //url 과 title 을 확인하고
-  console.log("Visited Site:", historyItem.url, historyItem.title);
-*/
 
 
 //새 탭 기록 리스트 추가 및 콘솔 출력
 chrome.tabs.onCreated.addListener((tab) => {
-  visitedSites.push({url: tab.url, title: tab.title});
+  visitedSites.push({url: tab.url, title: tab.title, keywords: " "});
   console.log("Created Tab:", tab.url, tab.title);
 });
 
 //새 창 기록 리스트 추가 및 콘솔 출력
 chrome.windows.onCreated.addListener((window) => {
-  visitedSites.push({url: window.tabs[0].url, title: window.tabs[0].title});
+  visitedSites.push({url: window.tabs[0].url, title: window.tabs[0].title, keywords: " "});
   console.log("Created Window:", window.tabs[0].url, window.tabs[0].title);
 });
 
@@ -132,19 +123,57 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
   if (url.hostname === "www.google.com" && url.pathname === "/search") {
     const query = url.searchParams.get("q"); //query에 검색어 저장되어있음.
     if (query) {
-      var found = visitedSites.find(e => e.url == url);
-      found.keywords = query;
+      var index = visitedSites.findIndex(e => e.url == currentTab);
+      visitedSites[index].keywords = query;
+      console.log(index,"번 인덱스에 ", query, "검색어를 저장!!");
       console.log("Google Search:", query);
     }
   }
   else {
-    var found = visitedSites.find(e => e.url == url);
-    found.keywords = "";
-    console.log("Google Search:  ");
+    var index = visitedSites.findIndex(e => e.url == currentTab);
+    visitedSites[index].keywords = " ";
+    console.log("Google Search: ");
   }
 });
 
-//https://www.google.co.kr/search?q=dsddsdfs
 
-//Google Search: 까지는 콘솔 출력 잘 됨
-//아마 배열에 요소 추가하는 것에서 문제 있는 것으로 추정
+
+
+/*
+//데이터베이스 생성
+
+const dbName = "the_url";
+
+const urlData = [
+    { url: "https://www.google.com", title: " ", keywords: " ", order: 0, dir: 1 },
+    { url: "https://www.google.com/search?q=hahaha", title: "hahaha - Google Search",  keywords: "hahaha", order: 1, dir: 1 }
+  ];
+
+//DB 오픈
+var request = indexedDB.open(dbName, 2);
+
+request.onerror = function(event) {
+  console.log("indexedDB error: " + event.target.errorCode);
+};
+
+//onupgradeneeded 이벤트 핸들러 실행 
+    //Object Store나 인덱스의 구조를 변경하는 작업을 수행하는 경우 (데베 스키마 변경)
+    //ex) createObjectStore 메서드, createIndex 메서드  
+request.onupgradeneeded = function(event) {
+  var db = event.target.result;
+    //객체 저장소 생성
+  var objectStore = db.createObjectStore("urls", { keyPath: "id", autoIncrement: true });
+    //인덱스 생성
+  objectStore.createIndex("keywords", "keywords", { unique: false });
+  objectStore.createIndex("dir", "dir", { unique: false });
+  objectStore.createIndex("order", "order", { unique: true });
+
+    //트랙젝션이 성공하면 다음 작업을 수행
+    //객체 저장소 urls에 urlData의 모든 자료를 반복문으로 저장
+  objectStore.transaction.oncomplete = function(event) {
+    var urlObjectStore = db.transaction("urls", "readwrite").objectStore("urls");
+    urlData.forEach(function(url) {
+      urlObjectStore.add(url);
+    });
+  };
+};*/
