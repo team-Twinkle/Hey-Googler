@@ -102,6 +102,9 @@ chrome.history.onVisited.addListener((historyItem) => {
             keyword1 = url.searchParams.get("q"); //1차링크의 검색어 
             console.log("검색어는!!!!!!!!!!!!!!!!!!!!"+keyword1);
             // 이 if 문 안에서 keyword 랑 url 이랑 title 을 모두 접근 가능하다.
+            var index = visitedSites.findIndex(e => e.url == currentTab);
+            visitedSites[index].keywords = keyword1;
+            console.log(index,"번 인덱스에 ", keyword1, "검색어를 저장!!");
         }   
       });
     }
@@ -122,7 +125,7 @@ chrome.windows.onCreated.addListener((window) => {
   console.log("Created Window:", window.tabs[0].url, window.tabs[0].title);
 });
 
-
+/*
 //구글 검색어 리스트 추가 및 콘솔 출력
 chrome.webNavigation.onBeforeNavigate.addListener((details) => {
   const url = new URL(details.url);
@@ -141,7 +144,7 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
     console.log("Google Search: ");
   }
 });
-
+*/
 
 
 
