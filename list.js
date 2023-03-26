@@ -5,12 +5,20 @@ function keywordToggleClick() {
 }
 
 //dir추가 버튼
-//디자인이나 방식 피드백
-//prompt창은 디자인이 안 예뻐 .. 제이쿼리
-//input방식?
-//click -> text edit 창 -> ok -> add dir
-//dir이름 수정하기 기능은??
-function addDirButtonClick() {}
+function dirAddButtonClick() {
+  var dir = document.getElementById("dir_template");
+  var copy = dir.content.cloneNode(true);
+  document.getElementById("dir_container").appendChild(copy);
+  // id를 부여하기 위해 db에 접근해서 몇번까지 아이디 있는지 확인하는 과정
+  // 새로 생성된 디렉토리 id를 부여하고 indexeddb 에 집어넣는 과정
+}
+
+function dirEdit(){
+}
+
+function dirDel(){
+
+}
 
 //dir-name 에 title 부여 
 document.getElementById("dir-name").title=document.getElementById("dir-name").innerHTML;

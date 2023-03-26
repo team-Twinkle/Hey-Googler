@@ -203,7 +203,7 @@ a > p:hover {
   overflow: visible;
 }
 
-#addButton {
+#dirAddButton {
   position: relative;
   width: 304px;
 
@@ -216,12 +216,26 @@ a > p:hover {
   border-radius: 15px;
 }
 
-#addButton > h2 {
+#dirAddButton > h2 {
   margin: 0px;
 
   font-size: 18px;
   color: #ffffff;
+  cursor: pointer;
 }
+/* 
+.input_dir {
+  display: none;
+} */
+
+.button-edit {
+  cursor: pointer;
+}
+
+.button-del {
+  cursor: pointer;
+}
+
 
 footer {
   position: fixed;
