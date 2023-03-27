@@ -57,6 +57,20 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
     searchTab=currentTab;
     //console.log("    S       "+searchTab);
   }
+  chrome.tabs.onUpdated.addListener((currentTabId,changingInfo,tabs)=>{
+    if(changingInfo.status==='complete'){
+      //console.log(currentTabId);
+      chrome.tabs.get(currentTabId,Tab=>{
+      currentTab=Tab.url;
+      currentURL = new URL(currentTab);
+      console.log(currentURL);
+      if(currentURL.hostname==="www.google.com"){
+        searchTab=currentTab;
+        //console.log("    S       "+searchTab);
+      }
+      })
+    }
+  });
 });
 
 
@@ -76,21 +90,21 @@ const visitedSites = []; //방문 기록
               var str = url.substr(0, 32);
               if (str == "https://www.google.com/search?q=") {
                 return 1;
-        }   
+              }   
               //console.log(historyItem.title);
               if (!visitedUrls.has(url)) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
                 visitedUrls.add(url);
                 chrome.history.search({text: url}, (historyItems) => {
-                const title = historyItems[historyItems.length-1].title; 
-                const url_ = new URL(searchTab);
-                //console.log(url_);
-                keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-                visitedSites.push({url: url, title: title, keyword: keyword1});
-                console.log("Visited Site:", url, title, keyword1);
-      });
-    }
-  });
-        }
+                  const title = historyItems[historyItems.length-1].title; 
+                  const url_ = new URL(searchTab);
+                  //console.log(url_);
+                  keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
+                  visitedSites.push({url: url, title: title, keyword: keyword1});
+                  console.log("Visited Site:", url, title, keyword1);
+                });
+              }
+            });
+          }
         else console.log("이전 링크가 검색창이 아님!!!!");   
       });
     }
