@@ -80,7 +80,7 @@ const visitedSites = []; //방문 기록
               var str = url.substr(0, 32);
               if (str == "https://www.google.com/search?q=") {
                 return 1;
-              }
+        }   
               //console.log(historyItem.title);
               if (!visitedUrls.has(url)) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
                 visitedUrls.add(url);
@@ -91,15 +91,15 @@ const visitedSites = []; //방문 기록
                 keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
                 visitedSites.push({url: url, title: title, keyword: keyword1});
                 console.log("Visited Site:", url, title, keyword1);
-                });
-              }
-            });
+      });
+    }
+  });
         }
         else console.log("이전 링크가 검색창이 아님!!!!");   
       });
     }
-  });
-  
+});
+
 //해결된 부분: 키워드 이제 잘 잡힘. url title keyword 동시에 푸시(시간 복잡도 줄임). 중복 기록 발생 x
 //문제인 부분: 분명히 referrer if문 안에서 돌렸는데 자꾸 2차, 3차 링크도 같이 잡힘. 
 //(이전 링크가 google인 얘들만 잡혀야 하는데.. 그렇게 거르고 했는데 어째서인지 2차 이상도 같이 기록되네?? )
