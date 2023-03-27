@@ -63,7 +63,6 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
   })
 });
 
-
 const visitedUrls = new Set(); //중복 확인용으로 이미 추가된 URL을 저장하는 Set 객체
 const visitedSites = []; //방문 기록 
 // 새 탭, 검색창, 2차 이상 링크 모두 제외하고 ***1차 링크만*** 기록
@@ -93,19 +92,14 @@ const visitedSites = []; //방문 기록
                 console.log("Visited Site:", url, title, keyword1);
 
                 //db로 data 전송
-                chrome.runtime.sendMessage({
-                      "url": url, "title": title, "keyword": keyword1, "storeName" : 'urlStore'
-                      },
-                      (result) => {
-                        if (window.chrome.runtime.lastError){
-                          console.log('여기서 오류');
-                        }
-                      }
-                      );		
+                const request = indexedDB.open('HeyGoogler');
 
-                      // chrome.tabs.query({active: true, currentWindow: true},function(tabs) {
-                      //   chrome.tabs.sendMessage({"url": url, "title": title, "keyword": keyword1, "storeName" : 'urlStore'});
-                      // });
+                request.onerror = function(event){
+                  console.log('error');
+                };
+                request.onsuccess = function(event){
+                  console.log('성공');
+                }
                 
                 });
               }
