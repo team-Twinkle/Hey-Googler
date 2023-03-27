@@ -45,22 +45,18 @@ chrome.runtime.onMessage.addListener((msg)=>{  //list.js 로부터 메시지를 
 //현재 탭과 이전 탭 저장
 var beforeTab;
 var currentTab;
+var searchTab;
 chrome.tabs.onActivated.addListener(activeInfo=>{
   beforeTab = currentTab;
   console.log("activated changing")
-  chrome.tabs.onUpdated.addListener((currentTabId,changingInfo,tabs)=>{
-    //console.log(currentTabId);
-    chrome.tabs.get(currentTabId,Tab=>{
-      currentTab=Tab.url;
-    })
-    //console.log('        b      ' + beforeTab);
-    //console.log('   c    '+currentTab);
-    currentURL = new URL(currentTab);
-    if(currentURL.hostname==="www.google.com"){
-      searchTab=currentTab;
-      //console.log("    S       "+searchTab);
-    }
+  chrome.tabs.get(activeInfo.tabId,Tab=>{
+    currentTab=Tab.url;
   })
+  currentURL = new URL(currentTab);
+  if(currentURL.hostname==="www.google.com"){
+    searchTab=currentTab;
+    //console.log("    S       "+searchTab);
+  }
 });
 
 
