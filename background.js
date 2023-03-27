@@ -91,6 +91,22 @@ const visitedSites = []; //방문 기록
                 keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
                 visitedSites.push({url: url, title: title, keyword: keyword1});
                 console.log("Visited Site:", url, title, keyword1);
+
+                //db로 data 전송
+                chrome.runtime.sendMessage({
+                      "url": url, "title": title, "keyword": keyword1, "storeName" : 'urlStore'
+                      },
+                      (result) => {
+                        if (window.chrome.runtime.lastError){
+                          console.log('여기서 오류');
+                        }
+                      }
+                      );		
+
+                      // chrome.tabs.query({active: true, currentWindow: true},function(tabs) {
+                      //   chrome.tabs.sendMessage({"url": url, "title": title, "keyword": keyword1, "storeName" : 'urlStore'});
+                      // });
+                
                 });
               }
             });

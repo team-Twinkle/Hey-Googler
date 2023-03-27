@@ -82,3 +82,15 @@ function writeDB(datas, store_name) {
 // ];
 
 // writeDB(datas, 'urlStore');
+
+chrome.runtime.onMessage.addListener(
+    function (request) {
+       console.log('data받음');
+       if(request.storeName == 'urlStore'){
+           const datas = [
+               {url: request.url, title: request.title, memo: " ", keyword: request.keyword, dir_id:1}
+           ];
+           console.log(datas);
+           // writeDB(datas, 'urlStore');
+       }
+})
