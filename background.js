@@ -91,15 +91,33 @@ const visitedSites = []; //방문 기록
                 visitedSites.push({url: url, title: title, keyword: keyword1});
                 console.log("Visited Site:", url, title, keyword1);
 
-                //db로 data 전송
-                const request = indexedDB.open('HeyGoogler');
+                //db에 data 입력
+                //함수호출 방식x => 나중에 다른 db도 background에서 처리하게 된다면, 함수화 고려
+                const datas = [
+                  {url:url, title:title, memo:"o", keyword:keyword1, dir_id : 1}
+                ];
 
+                const request = indexedDB.open('HeyGoogler');
                 request.onerror = function(event){
-                  console.log('error');
+                  console.log('db 접근 error');
                 };
                 request.onsuccess = function(event){
-                  console.log('성공');
-                }
+                  console.log('db 접근 성공');
+                  const db = request.result;
+                  const transaction = db.transaction(["urlStore"], 'readwrite');
+
+                  transaction.oncomplete = function(event){
+                    console.log('tx 성공');
+                  };
+                  transaction.onerror = function(event){
+                    console.log('tx 실패');
+                  };
+
+                  const objectStore = transaction.objectStore('urlStore');
+                  for (const data of datas){
+                    const request = objectStore.add(data);
+                  }
+                };
                 
                 });
               }
