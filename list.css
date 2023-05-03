@@ -1,19 +1,17 @@
-
 /*스크롤바 커스텀*/
 html::-webkit-scrollbar {
   width: 17px;
 }
 html::-webkit-scrollbar-track {
-  background: #F2F2F2;
+  background: #f2f2f2;
 }
 html::-webkit-scrollbar-thumb {
-  background: #79D58F; /* 스크롤바 색깔 */
+  background: #79d58f; /* 스크롤바 색깔 */
   background-clip: padding-box;
   border: 3px solid transparent;
   border-radius: 8px;
-  height:1%;
+  height: 1%;
 }
-
 
 body {
   position: relative;
@@ -28,7 +26,6 @@ body {
   /* 불투명도 확인하려고 넣어본 테스트용 백그라운드이미지 */
   /* background-image: url(../화면\ 캡처\ 2023-02-03\ 033610.jpg); */
 }
-
 
 .wrap {
   position: relative;
@@ -89,28 +86,26 @@ body {
   text-overflow: ellipsis; */
 }
 
-#reload{
-  width:30px;
+#reload {
+  width: 30px;
   height: 30px;
   border-radius: 20px;
   margin-block: auto;
   margin-right: 10px;
 }
-#reload:hover{
-  background-color:#F2F2F2;
+#reload:hover {
+  background-color: #f2f2f2;
 }
-#button-reload{
+#button-reload {
   width: 20px;
   height: 20px;
   cursor: pointer;
   padding: 5px;
 }
-#tooltip-reload{
-  width:45px;
+#tooltip-reload {
+  width: 45px;
   left: 10px;
 }
-
-
 
 .keyword-box {
   position: relative;
@@ -236,6 +231,18 @@ a > p:hover {
   cursor: pointer;
 }
 
+/* style.css */
+.input-dir {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #333;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: inherit;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  outline: none;
+}
 
 footer {
   position: fixed;
@@ -270,34 +277,34 @@ footer {
 
 #button-start {
   right: 71px;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 #button-stop {
   right: 27px;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-.tooltip{
+.tooltip {
   display: none;
-  position:absolute;
-  background-color:black;
+  position: absolute;
+  background-color: black;
   border-radius: 7px;
-  color:white;
-  text-align:center;
+  color: white;
+  text-align: center;
 }
 
-#tooltip-folder{
-  left:20px;
-  width:50px;
+#tooltip-folder {
+  left: 20px;
+  width: 50px;
 }
 
-#tooltip-start{
-  right:55px;
+#tooltip-start {
+  right: 55px;
   width: 60px;
 }
 
-#tooltip-stop{
-  right:14px;
+#tooltip-stop {
+  right: 14px;
   width: 60px;
 }
