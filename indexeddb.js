@@ -1,4 +1,4 @@
-var db;
+let db;
 const request = window.indexedDB.open("HeyGoogler", 1);
 
 request.onerror = function (event) {
@@ -15,7 +15,7 @@ request.onupgradeneeded = function (event) {
 
   var urlStore = db.createObjectStore("urlStore", {
     keyPath: "id",
-    autoIncrement: true
+    autoIncrement: true,
   });
 
   urlStore.createIndex("url", "url", { unique: false });
@@ -26,18 +26,18 @@ request.onupgradeneeded = function (event) {
 
   var keywordStore = db.createObjectStore("keywordStore", {
     keyPath: "k_id",
-    autoIncrement: true
+    autoIncrement: true,
   });
   keywordStore.createIndex("keyword", "keyword", { unique: false });
   keywordStore.createIndex("dir_id", "dir_id", { unique: false });
 
   var dirStore = db.createObjectStore("dirStore", {
     keyPath: "d_id",
-    autoIncrement: true
+    autoIncrement: true,
   });
   dirStore.createIndex("dir_id", "dir_id", { unique: false });
   dirStore.createIndex("dir_name", "dir_name", { unique: false });
-  
+
   request.onerror = function (event) {
     console.log("failed");
   };
@@ -48,31 +48,41 @@ request.onupgradeneeded = function (event) {
 
 //db입력 함수
 function writeDB(datas, store_name) {
-  const request = window.indexedDB.open('HeyGoogler');
+  const request = window.indexedDB.open("HeyGoogler");
 
-  request.onerror = function(event){
-    console.log('DB error', event.target.errorCode);
+  request.onerror = function (event) {
+    console.log("DB error", event.target.errorCode);
   };
 
-  request.onsuccess  = function(event){
+  request.onsuccess = function (event) {
     const db = request.result;
-    const transaction = db.transaction([store_name], 'readwrite');
+    const transaction = db.transaction([store_name], "readwrite");
 
-    transaction.oncomplete = function(event){
-      console.log ('성공');
+    transaction.oncomplete = function (event) {
+      console.log("성공");
     };
-    transaction.onerror = function(event){
-      console.log('실패');
+    transaction.onerror = function (event) {
+      console.log("실패");
     };
 
     const objectStore = transaction.objectStore(store_name);
-    for (const data of datas){
+    for (const data of datas) {
       const request = objectStore.add(data);
-      request.onsuccess = function(event){
+      request.onsuccess = function (event) {
         console.log(event.target.result);
       };
     }
+  };
+}
 
+// db에서 데이터를 읽는 함수
+function readDB(store_name, callback) {
+  const transaction = db.transaction([store_name], "readonly");
+  const objectStore = transaction.objectStore(store_name);
+  const request = objectStore.getAll();
+
+  request.onsuccess = function (event) {
+    callback(event.target.result);
   };
 }
 

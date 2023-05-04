@@ -1,28 +1,24 @@
 {
-        "version": "1.0",
-        "manifest_version": 3,
-        "name": "Hey Googler",
-        "background": {
-            "service_worker": "background.js"
-        },
-        "action": {
-            "default_icon": "Temporary_icon.png"
-        },
-        "permissions":[
-          "tabs","activeTab","history", "webNavigation", "storage"
-        ],
-        "content_scripts": [
-          {
-            "matches": [
-            "<all_urls>"
-            ],
-            "js": ["content-script.js", "indexeddb.js"]
-          }
-        ],
-        "web_accessible_resources": [
-          {
-            "resources": ["list.html"],
-            "matches": ["<all_urls>"]
-          }
-        ]
-      }
+  "version": "1.0",
+  "manifest_version": 3,
+  "name": "Hey Googler",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "Temporary_icon.png"
+  },
+  "permissions": ["tabs", "activeTab", "history", "webNavigation", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["list.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
