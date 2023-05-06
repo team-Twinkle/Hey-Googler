@@ -1,6 +1,6 @@
 var isExtensionOn = false; //extension 의 현재 상태 저장
 
-//indexedDB 코드
+/****************************************************indexedDB 코드*************************************************************/
 let db;
 const request = indexedDB.open("HeyGoogler", 1);
 
@@ -89,23 +89,24 @@ function readDB(store_name, callback) {
   };
 }
 
-//아이콘 클릭했을 때 이벤트
+
+/*********************************************************************************************************************/
+
+//액션 아이콘 클릭 이벤트 <extension 실행 유무와 상관없이 실행되어야함>
 {
   chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       currentTab = tabs[0];
       currentURL = currentTab.url;
       let URLstart = currentURL.substr(0, 9);
-      //console.log(URLstart);
-      //console.log(currentURL);
       if (URLstart == "chrome://") {
-        // URL이 'chrome://' 로 시작한다면 새탭 생성
+        // URL이 'chrome://' 로 시작한다면 새탭 열어서 예외처리 창 띄우기
         chrome.tabs.create({
           url: "newTab.html",
           active: true,
         });
       } else {
-        // 아니라면 사이드바 생성
+        // 아니라면 사이드바 띄우기 
         chrome.tabs.sendMessage(tab.id, "toggle");
         console.log("message sent");
       }
@@ -113,35 +114,37 @@ function readDB(store_name, callback) {
   });
 }
 
+//액션 아이콘에 extension 의 상태를 표시하기 위한 badge 초기화 시키는 코드 <extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onInstalled.addListener(() => {
-  //action icon 에 extension 의 상태를 표시하기 위한 badge 초기화 시키는 코드
   chrome.action.setBadgeText({
     text: "OFF",
   });
 });
 
+//list.js 로부터 메시지를 받아서 사이드바에서 시작버튼이나 중지 버튼을 누르면 isExtensionOn 의 값과 액션 아이콘 뱃지의 텍스트가 변경되도록 하는 코드
+//<extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onMessage.addListener((msg) => {
-  //list.js 로부터 메시지를 받아서 시작버튼 , 중지버튼 눌림에 따라 isExtensionOn 값 변경 및 badge 의 text 변경
   //console.log(msg);
-  if (msg == "Start the extension from list.js") {
+  if (msg == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
-    console.log("is the extension ON? : " + isExtensionOn);
+    //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
-  } else if (msg == "Stop the extension from list.js") {
+  } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
     isExtensionOn = false;
-    console.log("is the extension ON? : " + isExtensionOn);
+    //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "OFF" });
   }
 });
 
-//현재 탭과 이전 탭 저장
+//현재 보고있는 탭(currentTab), 가장 최근까지 보고있던 탭(beforeTab), 검색창(searchTab) 저장 
+//<extension 실행 유무와 상관없이 실행되어야함>
 var beforeTab;
 var currentTab;
-
 var searchTab;
+
 chrome.tabs.onActivated.addListener(activeInfo=>{
   beforeTab = currentTab;
-  console.log("activated changing")
+  //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId,Tab=>{
     currentTab=Tab.url;
   })
@@ -174,18 +177,18 @@ const visitedSites = []; //방문 기록
     if (changeInfo.status === 'complete'){
       chrome.tabs.sendMessage(tabId,"referrer",response=>{
         var referrer = response; //referrer 얻은 데이터 !!
-        console.log("===========================>>>>>"+referrer);
+        //console.log("===========================>>>>>"+referrer);
         
         if(referrer=='https://www.google.com/'){//1차링크인 경우 추적 
             chrome.history.onVisited.addListener((historyItem) => {
               const url = historyItem.url;
               //검색창인 경우 제외
-              var str = url.substr(0, 32);
-              if (str == "https://www.google.com/search?q=") {
-                return 1;
+              var str = url.substr(0, 29);
+              if (str == "https://www.google.com/search") {
+                return;
               }   
               //console.log(historyItem.title);
-              if (!visitedUrls.has(url)) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
+              if (!visitedUrls.has(url) && isExtensionOn==true) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
                 visitedUrls.add(url);
                 chrome.history.search({text: url}, (historyItems) => {
                   const title = historyItems[historyItems.length-1].title; 
@@ -195,16 +198,16 @@ const visitedSites = []; //방문 기록
                   visitedSites.push({url: url, title: title, keyword: keyword1});
                   console.log("Visited Site:", url, title, keyword1);
                   //db에 data 입력
-              const datas = [
-                {
-                  url: url,
-                  title: title,
-                  memo: " ",
-                  keyword: keyword1,
-                  dir_id: 1,
-                },
-              ];
-              writeDB(datas, "urlStore");
+                  const datas = [
+                    {
+                      url: url,
+                      title: title,
+                      memo: " ",
+                      keyword: keyword1,
+                      dir_id: 1,
+                    },
+                  ];
+                  writeDB(datas, "urlStore");
                 });
               }
             });
