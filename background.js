@@ -159,7 +159,7 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
       chrome.tabs.get(currentTabId,Tab=>{
       currentTab=Tab.url;
       currentURL = new URL(currentTab);
-      console.log(currentURL);
+      //console.log(currentURL);
       if(currentURL.hostname==="www.google.com"){
         searchTab=currentTab;
         //console.log("    S       "+searchTab);
