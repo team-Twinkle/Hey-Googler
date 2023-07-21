@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>DirList</title>
+    <link rel="stylesheet" href="./list.css" />
+    <script type="text/javascript" src="./list.js" defer="defer"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- dirList페이지 헤더에 헤이구글러 로고..? -->
+
+      <!-- 얘 고정하는 건가?? -->
+      <div id="addButton">
+        <!-- 일단 이걸 그냥 div 처리하긴 했는데 어떻게 추가할지에 따라 태그를 form,input,button 으로 바꾸게 될 듯 -->
+        <h2>+ 디렉토리 추가하기</h2>
+      </div>
+
+      <!-- <div class="dir_template"> -->
+      <template id="dir_template">
+        <li class="dir-list dir">
+          <a href="#">
+            <h1 class="dir-text">DIR 1</h1>
+          </a>
+        </li>
+      </template>
+      <!-- </div> -->
+    </div>
+    <footer>
+      <a href="./dirList.html">
+        <img
+          id="button-folder"
+          class="footer-button"
+          src="images/icon_folder_true.svg"
+          alt="folder icon"
+        />
+      </a>
+
+    </footer>
+  </body>
+</html>
