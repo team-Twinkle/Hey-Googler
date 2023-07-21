@@ -165,5 +165,66 @@ chrome.action.onClicked.addListener(() => {
     } else {
       startButton.src = "images/icon_start.svg";
     }
-  });
-});
+
+    else{
+      startButton.src="images/icon_start.svg";
+    }
+  })
+})
+
+
+/********************************************************************************************************* */
+
+//열려있는 객체 저장소 정보를 open_Obs 변수로 전달
+var open_Obs = 'urlStore';
+
+// 데이터를 화면에 출력하는 함수
+function displayData(data) {
+  var container = document.getElementById('dataContainer');
+  container.innerHTML = ''; 
+
+  // 데이터를 텍스트로 변환하여 화면에 추가
+  for (var i = 0; i < data.length; i++) {
+    //하나의 데이터마다 p 태그로 묶어서 div id = 'datacontainer' 영역에 동적으로 계속 추가!
+    //!!!!template 태그를 공부했는데... 어떻게 하는지 모르겠어서 일단 p 태그 씀.. 나중에 반복문 놔두고 이 부분만 수정
+    var item = document.createElement('p');
+    item.textContent = "keyword: " + JSON.stringify(data[i].keyword) +
+    ", url: " + JSON.stringify(data[i].url) +
+    ", title: " + JSON.stringify(data[i].title);
+    container.appendChild(item);
+  }
+}
+
+//혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
+function readDB() {
+  var request = indexedDB.open("HeyGoogler", 1);
+
+  request.onerror = function(event) {
+    console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+  };
+
+  //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
+  request.onsuccess = function(event) {
+    var db = event.target.result;
+    var transaction = db.transaction([open_Obs], 'readonly');
+    var objectStore = transaction.objectStore('urlStore');
+    var request = objectStore.getAll();
+    //2. getAll() 함수 성공 시, 화면에 출력
+    request.onsuccess = function(event) {
+      var data = event.target.result;
+      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+      displayData(data); 
+    };
+
+    transaction.onerror = function(event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function(event) {
+      db.close();
+    };
+  };
+}
+
+// readDB() 함수 호출
+readDB();
