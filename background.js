@@ -16,6 +16,7 @@ request.onsuccess = function (event) {
 request.onupgradeneeded = function (event) {
   db = event.target.result;
 
+  //url store
   var urlStore = db.createObjectStore("urlStore", {
     keyPath: "id",
     autoIncrement: true,
@@ -27,13 +28,12 @@ request.onupgradeneeded = function (event) {
   urlStore.createIndex("keyword", "keyword", { unique: false });
   urlStore.createIndex("dir_id", "dir_id", { unique: false });
 
+  //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {
-    keyPath: "k_id",
-    autoIncrement: true,
+    keyPath: ["keyword"]
   });
-  keywordStore.createIndex("keyword", "keyword", { unique: false });
-  keywordStore.createIndex("dir_id", "dir_id", { unique: false });
 
+  //dir store
   var dirStore = db.createObjectStore("dirStore", {
     keyPath: "d_id",
     autoIncrement: true,
@@ -147,6 +147,7 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId,Tab=>{
     currentTab=Tab.url;
+    console.log(currentTab);
   })
   currentURL = new URL(currentTab);
   if(currentURL.hostname==="www.google.com"){
@@ -196,6 +197,8 @@ const visitedSites = []; //방문 기록
                   //console.log(url_);
                   keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
                   visitedSites.push({url: url, title: title, keyword: keyword1});
+                  const keyData = [{keyword:keyword1}];
+                  writeDB(keyData,"keywordStore");
                   console.log("Visited Site:", url, title, keyword1);
                   //db에 data 입력
                   const datas = [
