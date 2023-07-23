@@ -166,11 +166,8 @@ chrome.action.onClicked.addListener(() => {
       startButton.src = "images/icon_start.svg";
     }
 
-    else{
-      startButton.src="images/icon_start.svg";
-    }
-  })
-})
+  });
+});
 
 
 /********************************************************************************************************* */
