@@ -177,18 +177,36 @@ var open_Obs = 'urlStore';
 
 // 데이터를 화면에 출력하는 함수
 function displayData(data) {
+  //컨텐츠 들어갈 위치
   var container = document.getElementById('dataContainer');
   container.innerHTML = ''; 
 
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
-    //하나의 데이터마다 p 태그로 묶어서 div id = 'datacontainer' 영역에 동적으로 계속 추가!
-    //!!!!template 태그를 공부했는데... 어떻게 하는지 모르겠어서 일단 p 태그 씀.. 나중에 반복문 놔두고 이 부분만 수정
+    var k = JSON.stringify(data[i].keyword);
+    var t = JSON.stringify(data[i].title);
+    var p = JSON.stringify(data[i].url);
+    console.log(p);
+
+    var template = document.getElementById("keyword_template");
+    var clone = template.content.cloneNode(true);
+
+    var path_template = document.getElementById("path_template");
+    var path_clone = path_template.content.cloneNode(true);
+ 
+    clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
+    path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
+    path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+  
+    container.appendChild(clone);
+    container.appendChild(path_clone);
+
+    /*
     var item = document.createElement('p');
     item.textContent = "keyword: " + JSON.stringify(data[i].keyword) +
     ", url: " + JSON.stringify(data[i].url) +
     ", title: " + JSON.stringify(data[i].title);
-    container.appendChild(item);
+    container.appendChild(item);*/
   }
 }
 
