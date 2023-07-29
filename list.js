@@ -186,6 +186,7 @@ function displayData(data) {
     var k = JSON.stringify(data[i].keyword);
     var t = JSON.stringify(data[i].title);
     var p = JSON.stringify(data[i].url);
+<<<<<<< HEAD
     console.log(p);
 
     var template = document.getElementById("keyword_template");
@@ -198,6 +199,18 @@ function displayData(data) {
     path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
   
+=======
+
+    var template = document.getElementById("keyword_template");
+    var path_template = document.querySelector(".path_template");
+    var clone = template.content.cloneNode(true);
+    var path_clone = path_template.cloneNode(true);
+/*
+    clone.querySelector(".keyword").innerHTML = k;
+    path_clone.querySelector(".title").innerHTML = t;
+    path_clone.querySelector(".path").innerHTML = p;
+    */
+>>>>>>> 6de4d7582a1a68efa7c174823bf5fd8137eaac77
     container.appendChild(clone);
     container.appendChild(path_clone);
 
@@ -243,3 +256,5 @@ function readDB() {
 
 // readDB() 함수 호출
 readDB();
+
+

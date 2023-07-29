@@ -1,68 +1,84 @@
 <!DOCTYPE html>
 <html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Hey Googler</title>
-  <link rel="stylesheet" href="./list.css" />
-  <!-- defer속성 추가 -->
-</head>
-
-<body>
-  <div class="wrap">
-    <header class="dir">
-      <div id="reload">
-        <img id="button-reload" src="images/icon_reload.png" />
-      </div>
-      <span id="tooltip-reload" class="tooltip">reload</span>
-      <h1 id="dir-name" class="dir-text dir-title">
-        <span id="dir-name"></span>
-      </h1>
-    </header>
-    <h1>HeyGoogler 데이터 출력</h1>
-    <div id="dataContainer"></div>
-    <!-- <div id="keyword_template"> -->
-    <template id="keyword_template">
-      <div class="keyword-box">
-        <h2 class="keyword"></h2>
-        <!-- 저장 경로 변경시 수정 -->
-        <img class="toggle_keyword" src="images/icon_toggle.svg" onclick="keywordToggleClick()" />
-      </div>
-      <!-- <div class="path_template"> -->
-      <!-- 템플릿 태그 주의 -->
-
+    <title>Hey Googler</title>
+    <link rel="stylesheet" href="./list.css" />
+    <!-- defer속성 추가 -->
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="dir">
+        <div id="reload">
+          <img id="button-reload" src="images/icon_reload.png" />
+        </div>
+        <span id="tooltip-reload" class="tooltip">reload</span>
+        <h1 id="dir-name" class="dir-text dir-title">
+          <span id="dir-name"></span>
+        </h1>
+      </header>
+      <h1>HeyGoogler 데이터 출력</h1>
+      <div id="dataContainer"></div>
+      <!-- <div id="keyword_template"> -->
+      <template id="keyword_template">
+        <div class="keyword-box">
+          <h2 class="keyword">검색어A</h2>
+          <!-- 저장 경로 변경시 수정 -->
+          <img
+            class="toggle_keyword"
+            src="images/icon_toggle.svg"
+            onclick="keywordToggleClick()"
+          />
+        </div>
+        <!-- <div class="path_template"> -->
+        <!-- 템플릿 태그 주의 -->
+        <template class="path_template">
+          <li>
+            <a href="#">
+              <h3 class="title">페이지 제목</h3>
+              <p class="path">링크</p>
+            </a>
+          </li>
+        </template>
+        <!-- </div> -->
+      </template>
       <!-- </div> -->
-    </template>
-    
-    <template id="path_template">
-      <div class="path-box">
-        <h3 class="title"></h3>
-        <p class="path"></p>
+    </div>
+    <footer>
+      <div id="folder" class="icon">
+        <a href="./dirList.html">
+          <img
+            id="button-folder"
+            class="footer-button"
+            src="images/icon_folder.svg"
+            alt="folder icon"
+          />
+        </a>
+        <span id="tooltip-folder" class="tooltip">dir list</span>
       </div>
-    </template>
-    <!-- </div> -->
-  </div>
-  <footer>
-    <div id="folder" class="icon">
-      <a href="./dirList.html">
-        <img id="button-folder" class="footer-button" src="images/icon_folder.svg" alt="folder icon" />
-      </a>
-      <span id="tooltip-folder" class="tooltip">dir list</span>
-    </div>
-    <div id="start" class="icon">
-      <img id="button-start" class="footer-button" src="images/icon_start.svg" alt="start icon" />
-      <span id="tooltip-start" class="tooltip">추적 시작</span>
-    </div>
-    <div id="stop" class="icon">
-      <img id="button-stop" class="footer-button" src="images/icon_stop.svg" alt="stop icon" />
-      <span id="tooltip-stop" class="tooltip">추적 중단</span>
-    </div>
-  </footer>
-  <script type="text/javascript" src="./list.js"></script>
-  <!--스크립트 위치바꾸면 에러 남 !!-->
-</body>
-
+      <div id="start" class="icon">
+        <img
+          id="button-start"
+          class="footer-button"
+          src="images/icon_start.svg"
+          alt="start icon"
+        />
+        <span id="tooltip-start" class="tooltip">추적 시작</span>
+      </div>
+      <div id="stop" class="icon">
+        <img
+          id="button-stop"
+          class="footer-button"
+          src="images/icon_stop.svg"
+          alt="stop icon"
+        />
+        <span id="tooltip-stop" class="tooltip">추적 중단</span>
+      </div>
+    </footer>
+    <script type="text/javascript" src="./list.js"></script>
+    <!--스크립트 위치바꾸면 에러 남 !!-->
+  </body>
 </html>
