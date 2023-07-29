@@ -12,9 +12,13 @@
   <body>
     <div class="wrap">
       <header class="dir">
-        <div id="reload"><img id="button-reload" src="images/icon_reload.png"></div>
+        <div id="reload">
+          <img id="button-reload" src="images/icon_reload.png" />
+        </div>
         <span id="tooltip-reload" class="tooltip">reload</span>
-        <h1 id="dir-name" class="dir-text dir-title">DIR 1</h1>
+        <h1 id="dir-name" class="dir-text dir-title">
+          <span id="dir-name"></span>
+        </h1>
       </header>
       <div id="dataContainer"></div>
       <!-- <div id="keyword_template"> -->
@@ -55,24 +59,25 @@
         <span id="tooltip-folder" class="tooltip">dir list</span>
       </div>
       <div id="start" class="icon">
-        <img 
-          id="button-start" 
-          class="footer-button" 
-          src="images/icon_start.svg" 
-          alt="start icon" 
+        <img
+          id="button-start"
+          class="footer-button"
+          src="images/icon_start.svg"
+          alt="start icon"
         />
         <span id="tooltip-start" class="tooltip">추적 시작</span>
       </div>
       <div id="stop" class="icon">
-        <img 
-          id="button-stop" 
-          class="footer-button" 
-          src="images/icon_stop.svg" 
-          alt="stop icon" 
+        <img
+          id="button-stop"
+          class="footer-button"
+          src="images/icon_stop.svg"
+          alt="stop icon"
         />
         <span id="tooltip-stop" class="tooltip">추적 중단</span>
-      </div>  
+      </div>
     </footer>
-    <script type="text/javascript" src="./list.js"></script> <!--스크립트 위치바꾸면 에러 남 !!-->
+    <script type="text/javascript" src="./list.js"></script>
+    <!--스크립트 위치바꾸면 에러 남 !!-->
   </body>
 </html>
