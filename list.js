@@ -190,12 +190,12 @@ function displayData(data) {
     var template = document.getElementById("keyword_template");
     var path_template = document.querySelector(".path_template");
     var clone = template.content.cloneNode(true);
-    var path_clone = path_template.cloneNode(true);
-/*
-    clone.querySelector(".keyword").innerHTML = k;
+    var path_clone = path_template.content.cloneNode(true);
+
+    clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
     path_clone.querySelector(".title").innerHTML = t;
     path_clone.querySelector(".path").innerHTML = p;
-    */
+    
     container.appendChild(clone);
     container.appendChild(path_clone);
 
@@ -241,5 +241,3 @@ function readDB() {
 
 // readDB() 함수 호출
 readDB();
-
-
