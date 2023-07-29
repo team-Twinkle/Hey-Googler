@@ -177,6 +177,7 @@ var open_Obs = 'urlStore';
 
 // 데이터를 화면에 출력하는 함수
 function displayData(data) {
+
   //컨텐츠 들어갈 위치
   var container = document.getElementById('dataContainer');
   container.innerHTML = ''; 
@@ -187,15 +188,19 @@ function displayData(data) {
     var t = JSON.stringify(data[i].title);
     var p = JSON.stringify(data[i].url);
 
-    var template = document.getElementById("keyword_template");
-    var path_template = document.querySelector(".path_template");
-    var clone = template.content.cloneNode(true);
-    var path_clone = path_template.content.cloneNode(true);
+    console.log(p);
 
+    var template = document.getElementById("keyword_template");
+    var clone = template.content.cloneNode(true);
+
+    var path_template = document.getElementById("path_template");
+    var path_clone = path_template.content.cloneNode(true);
+ 
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
-    path_clone.querySelector(".title").innerHTML = t;
-    path_clone.querySelector(".path").innerHTML = p;
-    
+    path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
+    path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+  
+
     container.appendChild(clone);
     container.appendChild(path_clone);
 
