@@ -173,43 +173,50 @@ chrome.action.onClicked.addListener(() => {
 /********************************************************************************************************* */
 
 //열려있는 객체 저장소 정보를 open_Obs 변수로 전달
-var open_Obs = 'urlStore';
+var urlStore = 'urlStore';
+var keyStore = 'keywordStore';
 
 // 데이터를 화면에 출력하는 함수
-function displayData(data) {
+function displayURL(data) {
 
   //컨텐츠 들어갈 위치
-  var container = document.getElementById('dataContainer');
-  container.innerHTML = ''; 
+  const container = document.getElementById('dataContainer');
 
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
-    var k = JSON.stringify(data[i].keyword);
-    var t = JSON.stringify(data[i].title);
-    var p = JSON.stringify(data[i].url);
+    const k = data[i].keyword;
+    const t = data[i].title;
+    const p = data[i].url;
 
-    console.log(p);
+    const area = container.querySelector('[data-keyword="'+k+'"]');
 
-    var template = document.getElementById("keyword_template");
-    var clone = template.content.cloneNode(true);
-
-    var path_template = document.getElementById("path_template");
-    var path_clone = path_template.content.cloneNode(true);
+    const template = document.getElementById("path_template");
+    const clone = template.content.cloneNode(true);
  
-    clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
-    path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
-    path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+    clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
+    clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
   
 
-    container.appendChild(clone);
-    container.appendChild(path_clone);
+    area.appendChild(clone);
+  }
+}
 
-    /*
-    var item = document.createElement('p');
-    item.textContent = "keyword: " + JSON.stringify(data[i].keyword) +
-    ", url: " + JSON.stringify(data[i].url) +
-    ", title: " + JSON.stringify(data[i].title);
-    container.appendChild(item);*/
+function displayKeyword(data) {
+
+  //컨텐츠 들어갈 위치
+  const container = document.getElementById('dataContainer');
+
+  // 데이터를 텍스트로 변환하여 화면에 추가
+  for (var i = 0; i < data.length; i++) {
+    const k = data[i].keyword;
+
+    const template = document.getElementById("keyword_template");
+    const clone = template.content.cloneNode(true);
+ 
+    clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
+    clone.querySelector(".path-area").dataset.keyword = k;
+
+    container.appendChild(clone);
   }
 }
 
@@ -223,15 +230,16 @@ function readDB() {
 
   //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
   request.onsuccess = function(event) {
-    var db = event.target.result;
-    var transaction = db.transaction([open_Obs], 'readonly');
-    var objectStore = transaction.objectStore('urlStore');
-    var request = objectStore.getAll();
-    //2. getAll() 함수 성공 시, 화면에 출력
+    const db = event.target.result;
+    
+    /* 키워드 출력 (초록 박스) */
+    let transaction = db.transaction([keyStore], 'readonly');
+    let objectStore = transaction.objectStore(keyStore);
+    let request = objectStore.getAll();
+
     request.onsuccess = function(event) {
       var data = event.target.result;
-      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
-      displayData(data); 
+      displayKeyword(data); 
     };
 
     transaction.onerror = function(event) {
@@ -241,6 +249,26 @@ function readDB() {
     transaction.oncomplete = function(event) {
       db.close();
     };
+
+    /* url 출력 (하얀 박스) */
+    transaction = db.transaction([urlStore], 'readonly');
+    objectStore = transaction.objectStore('urlStore');
+    request = objectStore.getAll();
+    //2. getAll() 함수 성공 시, 화면에 출력
+    request.onsuccess = function(event) {
+      var data = event.target.result;
+      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+      displayURL(data); 
+    };
+
+    transaction.onerror = function(event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function(event) {
+      db.close();
+    };
+
   };
 }
 
