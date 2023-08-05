@@ -192,11 +192,11 @@ a > p {
 /* 텍스트 마우스 오버 효과 */
 /* 근데 무작정 이렇게 뜨게 하면 되는것인가.. */
 /* 디자인은? 말풍선으로? 아니면 밑으로 떨어지게 디자인? */
-.dir-text:hover,
+/*.dir-text:hover,
 a > h3:hover,
 a > p:hover {
   overflow: visible;
-}
+}*/
 
 #dirAddButton {
   position: relative;

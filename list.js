@@ -198,18 +198,28 @@ function displayData(data) {
  
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
     path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
+    path_clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
-  
-
+    
+    path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseover", () => {
+      path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "block";
+    });
+    path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseout", () => {
+      path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "none";
+    });
+    
     container.appendChild(clone);
     container.appendChild(path_clone);
 
-    /*
-    var item = document.createElement('p');
-    item.textContent = "keyword: " + JSON.stringify(data[i].keyword) +
-    ", url: " + JSON.stringify(data[i].url) +
-    ", title: " + JSON.stringify(data[i].title);
-    container.appendChild(item);*/
+    //타이틀용 툴팁 만들기 위한 작업
+
+    /*document.getElementsByClassName("title")[i].addEventListener("mouseover", () => {
+     document.getElementById("tooltip-title").style.display = "block";
+    });
+    document.getElementsByClassName("title")[i].addEventListener("mouseout", () => {
+    document.getElementById("tooltip-title").style.display = "none";
+    });*/
+
   }
 }
 
