@@ -139,6 +139,50 @@ body {
   right: 16px;
 }
 
+.menubar {
+  position: relative;
+  display: block;
+  left: 90%;
+}
+
+.wrap .path-box .menubar > ul {
+  background: rgb(109, 109, 109);
+  display: none; 
+  height: auto;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  position: absolute;
+  width: 100px;
+  z-index: 200;
+  top: 100%;
+  right:94%;
+  border-radius: 10%;
+}
+
+.wrap .path-box .menubar.active > ul {
+  display: block;
+}
+
+.wrap .path-box .menubar li {
+  padding: 8px;
+  list-style: none;
+}
+
+.wrap .path-box .menubar li a {
+  color:black;
+}
+
+.menubar li:hover {
+  background-color: #ddd; 
+}
+
+.menu_white {
+  width: 16px;
+  height: auto;
+  right: 10px;
+}
+
 .path-box {
   position: relative;
 

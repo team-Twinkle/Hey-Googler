@@ -37,9 +37,17 @@
     <template id="path_template">
       <div class="path-box">
         <a>
+          <div class="menubar">
+            <img class="menu_white" src="images/icon_menu.png" id="menuIcon"/>
+            <ul>
+              <li><a href="#">삭제</a></li>
+              <li><a href="#">타이틀 수정</a></li>
+              <li><a href="#">메모</a></li>
+            </ul>
+          </div>
           <h3 class="title">페이지 제목</h3>
-          <span id="tooltip-title" class="tooltip" style="display: block;">툴팁용 페이지 제목</span>
-          <p class="path">링크</p>
+          <span id="tooltip-title" class="tooltip" style="display: none;">툴팁용 페이지 제목</span>
+          <a id="hyperLink" href="javascript:goToLink()"><p class="path">링크</p></a>
         </a>
       </div>
     </template>

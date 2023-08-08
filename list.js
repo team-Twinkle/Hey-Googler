@@ -94,6 +94,7 @@ document.getElementById("dir-name").title =
 
 /********************************************************************************************************* */
 
+
 var reloadButton = document.getElementById("button-reload");
 var folderButton = document.getElementById("button-folder");
 var startButton = document.getElementById("button-start");
@@ -188,8 +189,6 @@ function displayData(data) {
     var t = JSON.stringify(data[i].title);
     var p = JSON.stringify(data[i].url);
 
-    console.log(p);
-
     var template = document.getElementById("keyword_template");
     var clone = template.content.cloneNode(true);
 
@@ -200,28 +199,41 @@ function displayData(data) {
     path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+    //path_clone.querySelector('.path-box').querySelector("#hyperLink").href = p;
+
+    //var linkElement = clone.querySelector("a");
+    //linkElement.href = p;
+    /*툴팁 작업 진행 중
     
     path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseover", () => {
       path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "block";
     });
     path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseout", () => {
       path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "none";
-    });
-    
+    });*/
+
     container.appendChild(clone);
     container.appendChild(path_clone);
 
-    //타이틀용 툴팁 만들기 위한 작업
+    displayMenu();
 
-    /*document.getElementsByClassName("title")[i].addEventListener("mouseover", () => {
-     document.getElementById("tooltip-title").style.display = "block";
-    });
-    document.getElementsByClassName("title")[i].addEventListener("mouseout", () => {
-    document.getElementById("tooltip-title").style.display = "none";
-    });*/
-
+    function displayMenu(){
+      var selectedMenu = document.getElementsByClassName("menu_white");
+      selectedMenu = selectedMenu[i];
+      var menubar = document.getElementsByClassName('menubar');
+      menubar = menubar[i];
+  
+      if (selectedMenu){
+        selectedMenu.addEventListener("click", function(){
+          menubar.classList.toggle('active');
+        })
+      }
+      console.log("displayMenu() 실행됨"+ i);
+    }
+  
   }
 }
+
 
 //혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
 function readDB() {
