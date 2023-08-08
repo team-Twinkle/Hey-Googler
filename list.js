@@ -200,22 +200,16 @@ function displayData(data) {
     path_clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
     //path_clone.querySelector('.path-box').querySelector("#hyperLink").href = p;
-
     //var linkElement = clone.querySelector("a");
     //linkElement.href = p;
-    /*툴팁 작업 진행 중
-    
-    path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseover", () => {
-      path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "block";
-    });
-    path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseout", () => {
-      path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "none";
-    });*/
 
     container.appendChild(clone);
     container.appendChild(path_clone);
 
+
+    //흰색 박스 메뉴바 
     displayMenu();
+    displayTooltip();
 
     function displayMenu(){
       var selectedMenu = document.getElementsByClassName("menu_white");
@@ -229,6 +223,29 @@ function displayData(data) {
         })
       }
       console.log("displayMenu() 실행됨"+ i);
+    }
+
+    function displayTooltip(){
+      
+      //툴팁 작업 진행 중
+      var selectedTitle = document.getElementsByClassName("title");
+      selectedTitle = selectedTitle[i];
+      var titleTooltip = document.getElementsByClassName("tooltip");
+      titleTooltip = titleTooltip[i+1];
+
+      selectedTitle.addEventListener("mouseover", () => {
+        titleTooltip.style.display = "block";
+      });
+      selectedTitle.addEventListener("mouseout", () => {
+        titleTooltip.style.display = "none";
+      });
+      
+      // path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseover", () => {
+      //   path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "block";
+      // });
+      // path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseout", () => {
+      //   path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "none";
+      // });
     }
   
   }
