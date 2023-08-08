@@ -239,13 +239,6 @@ function displayData(data) {
       selectedTitle.addEventListener("mouseout", () => {
         titleTooltip.style.display = "none";
       });
-      
-      // path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseover", () => {
-      //   path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "block";
-      // });
-      // path_clone.querySelector(".path-box").querySelector(".title").addEventListener("mouseout", () => {
-      //   path_clone.querySelector(".path-box").querySelector("#tooltip-title").style.display = "none";
-      // });
     }
   
   }
