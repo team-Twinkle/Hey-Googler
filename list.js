@@ -188,7 +188,7 @@ function displayURL(data) {
     const t = data[i].title;
     const p = data[i].url;
 
-    const area = container.querySelector('[data-keyword="'+k+'"]');
+    const area = document.getElementById(k);
 
     const template = document.getElementById("path_template");
     const clone = template.content.cloneNode(true);
@@ -214,7 +214,7 @@ function displayKeyword(data) {
     const clone = template.content.cloneNode(true);
  
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
-    clone.querySelector(".path-area").dataset.keyword = k;
+    clone.querySelector(".path-area").id = k;
 
     container.appendChild(clone);
   }
