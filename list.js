@@ -199,9 +199,11 @@ function displayData(data) {
     path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
-    //path_clone.querySelector('.path-box').querySelector("#hyperLink").href = p;
-    //var linkElement = clone.querySelector("a");
-    //linkElement.href = p;
+
+
+    // 바로 가기 방법 2 - 새 창은 켜지지만 보안정책 위반으로
+    // var linkElement =  path_clone.querySelector('.path-box').querySelector("#hyperLink");
+    // linkElement.href = p;
 
     container.appendChild(clone);
     container.appendChild(path_clone);
@@ -222,12 +224,9 @@ function displayData(data) {
           menubar.classList.toggle('active');
         })
       }
-      console.log("displayMenu() 실행됨"+ i);
     }
 
     function displayTooltip(){
-      
-      //툴팁 작업 진행 중
       var selectedTitle = document.getElementsByClassName("title");
       selectedTitle = selectedTitle[i];
       var titleTooltip = document.getElementsByClassName("tooltip");
@@ -275,6 +274,30 @@ function readDB() {
     };
   };
 }
+
+
+
+function deleteDB(key) {
+  // 1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);    
+  request.onerror =(e)=> console.log(e.target.errorCode);
+  // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess =(e)=> {
+    const db = request.result;
+    const transaction = db.transaction([open_Obs], 'readwrite');
+    transaction.onerror =(e)=> console.log('fail');
+    transaction.oncomplete =(e)=> console.log('success');
+    // 2-2. url 저장소 접근
+    const objStore = transaction.objectStore([open_Obs]);   
+    // 3. 삭제하기 (키 값인 id로 지정해야 함)
+    const objStoreRequest = objStore.delete(key);       
+    objStoreRequest.onsuccess =(e)=> {
+      console.log('deleted');
+    }
+  }
+}
+
+
 
 // readDB() 함수 호출
 readDB();

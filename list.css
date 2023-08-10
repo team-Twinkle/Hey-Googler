@@ -123,7 +123,7 @@ body {
 }
 
 .keyword {
-  display: inline-block;
+  display: block;
   margin: 0px 35px 0px 0px;
   font-size: 18px;
   font-weight: 600;
@@ -141,7 +141,7 @@ body {
 
 .menubar {
   position: relative;
-  display: inline-block;
+  display: block;
   left: 90%;
 }
 
