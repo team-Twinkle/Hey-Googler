@@ -176,6 +176,33 @@ chrome.action.onClicked.addListener(() => {
 var urlStore = 'urlStore';
 var keyStore = 'keywordStore';
 
+
+var isToggled = true;
+
+function Toggle(data) {
+  for (var i = 0; i < data.length; i++) {
+    const k = data[i].keyword;
+
+    const kwBox = document.getElementById("green-"+k);
+    const pathArea = document.getElementById("white-"+k);
+    const toggleButton = kwBox.querySelector(".toggle_keyword");
+
+    toggleButton.addEventListener("click", () => {  //여기만 성공하면 된다!!
+      isToggled = !isToggled;
+
+      // 토글 상태에 따라 컨텐츠 표시/숨김
+      if (isToggled) {
+        pathArea.style.maxHeight = '100px'; // 토글될 컨텐츠의 최대 높이로 지정
+        pathArea.style.opacity = '1'; // 투명도를 1로 지정
+      } else {
+        // 토글될 컨텐츠 숨김 (애니메이션 포함)
+        pathArea.style.maxHeight = '0'; // 높이를 0으로 지정하여 사라지도록 함
+        pathArea.style.opacity = '0'; // 투명도를 0으로 지정하여 사라지도록 함
+      }
+    })
+  }
+}
+
 // 데이터를 화면에 출력하는 함수
 function displayURL(data) {
 
@@ -188,7 +215,7 @@ function displayURL(data) {
     const t = data[i].title;
     const p = data[i].url;
 
-    const area = document.getElementById(k);
+    const area = document.getElementById("white-"+k);
 
     const template = document.getElementById("path_template");
     const clone = template.content.cloneNode(true);
@@ -214,7 +241,8 @@ function displayKeyword(data) {
     const clone = template.content.cloneNode(true);
  
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
-    clone.querySelector(".path-area").id = k;
+    clone.querySelector(".keyword-box").id="green-"+k;
+    clone.querySelector(".path-area").id = "white-"+k;
 
     container.appendChild(clone);
   }
@@ -272,5 +300,36 @@ function readDB() {
   };
 }
 
-// readDB() 함수 호출
-readDB();
+function addEvent() {
+  var request = indexedDB.open("HeyGoogler", 1);
+
+  request.onerror = function (event) {
+    console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+  };
+
+  //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
+  request.onsuccess = function (event) {
+    const db = event.target.result;
+    let transaction = db.transaction([keyStore], 'readonly');
+    let objectStore = transaction.objectStore(keyStore);
+    let request = objectStore.getAll();
+    //2. getAll() 함수 성공 시, 화면에 출력
+    request.onsuccess = function (event) {
+      var data = event.target.result;
+      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+      Toggle(data);
+    };
+
+    transaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function (event) {
+      db.close();
+    };
+  }
+}
+
+  // readDB() 함수 호출
+  readDB();
+  addEvent();
