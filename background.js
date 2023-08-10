@@ -30,8 +30,12 @@ request.onupgradeneeded = function (event) {
 
   //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {
-    keyPath: ["keyword"]
+    keyPath: "id",
+    autoIncrement:true
   });
+
+  keywordStore.createIndex("dir_id","dir_id",{unique:false});
+  keywordStore.createIndex("keyword",["dir_id","keyword"],{unique:true});
 
   //dir store
   var dirStore = db.createObjectStore("dirStore", {
@@ -199,7 +203,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
             const url_ = new URL(searchTab);
             //console.log(url_);
             keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-            const keyData = [{ keyword: keyword1 }];
+            const keyData = [{ keyword: keyword1 , dir_id:"1"}];
             writeDB(keyData, "keywordStore");
             console.log("Visited Site:", url, title, keyword1);
             //db에 data 입력
