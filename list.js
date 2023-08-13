@@ -201,6 +201,34 @@ function Toggle(data) {
   }
 }
 
+function displayMenu(){
+  var selectedMenu = document.getElementsByClassName("menu_white");
+  selectedMenu = selectedMenu[i];
+  var menubar = document.getElementsByClassName('menubar');
+  menubar = menubar[i];
+
+  if (selectedMenu){
+    selectedMenu.addEventListener("click", function(){
+      menubar.classList.toggle('active');
+    })
+  }
+}
+
+function displayTooltip(){
+  var selectedTitle = document.getElementsByClassName("title");
+  selectedTitle = selectedTitle[i];
+  var titleTooltip = document.getElementsByClassName("tooltip");
+  titleTooltip = titleTooltip[i+1];
+
+  selectedTitle.addEventListener("mouseover", () => {
+    titleTooltip.style.display = "block";
+  });
+  selectedTitle.addEventListener("mouseout", () => {
+    titleTooltip.style.display = "none";
+  });
+}
+
+
 // 데이터를 화면에 출력하는 함수
 function displayURL(data) {
 
@@ -253,35 +281,6 @@ function displayKeyword(data) {
 
     container.appendChild(clone);
 
-    displayMenu();
-    displayTooltip();
-
-    function displayMenu(){
-      var selectedMenu = document.getElementsByClassName("menu_white");
-      selectedMenu = selectedMenu[i];
-      var menubar = document.getElementsByClassName('menubar');
-      menubar = menubar[i];
-  
-      if (selectedMenu){
-        selectedMenu.addEventListener("click", function(){
-          menubar.classList.toggle('active');
-        })
-      }
-    }
-
-    function displayTooltip(){
-      var selectedTitle = document.getElementsByClassName("title");
-      selectedTitle = selectedTitle[i];
-      var titleTooltip = document.getElementsByClassName("tooltip");
-      titleTooltip = titleTooltip[i+1];
-
-      selectedTitle.addEventListener("mouseover", () => {
-        titleTooltip.style.display = "block";
-      });
-      selectedTitle.addEventListener("mouseout", () => {
-        titleTooltip.style.display = "none";
-      });
-    }
 
   }
 }
@@ -335,6 +334,8 @@ function readDB() {
       db.close();
     };
 
+    displayMenu();
+    displayTooltip();
   };
 }
 
