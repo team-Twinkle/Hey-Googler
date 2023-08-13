@@ -141,7 +141,7 @@ body {
 
 .menubar {
   position: relative;
-  display: block;
+  display: inline-block;
   left: 90%;
 }
 
@@ -156,7 +156,7 @@ body {
   width: 100px;
   z-index: 200;
   top: 100%;
-  right:94%;
+  right:0%;
 
 }
 
