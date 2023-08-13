@@ -278,10 +278,7 @@ function displayURL(data) {
     }
     
     function displayTooltip(){
-      var element = document.getElementsByClassName('title');
-      element = element[i];
 
-      if(parseInt(element.style.width) > 260){
         var selectedTitle = document.getElementsByClassName("title");
         selectedTitle = selectedTitle[i];
         var titleTooltip = document.getElementsByClassName("tooltip");
@@ -293,7 +290,7 @@ function displayURL(data) {
         selectedTitle.addEventListener("mouseout", () => {
           titleTooltip.style.display = "none";
         });
-      }
+      
     }
 
   }
