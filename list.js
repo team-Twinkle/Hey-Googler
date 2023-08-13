@@ -278,17 +278,22 @@ function displayURL(data) {
     }
     
     function displayTooltip(){
-      var selectedTitle = document.getElementsByClassName("title");
-      selectedTitle = selectedTitle[i];
-      var titleTooltip = document.getElementsByClassName("tooltip");
-      titleTooltip = titleTooltip[i+1];
-    
-      selectedTitle.addEventListener("mouseover", () => {
-        titleTooltip.style.display = "block";
-      });
-      selectedTitle.addEventListener("mouseout", () => {
-        titleTooltip.style.display = "none";
-      });
+      var element = document.getElementsByClassName('title');
+      element = element[i];
+
+      if(parseInt(element.style.width) > 260){
+        var selectedTitle = document.getElementsByClassName("title");
+        selectedTitle = selectedTitle[i];
+        var titleTooltip = document.getElementsByClassName("tooltip");
+        titleTooltip = titleTooltip[i+1];
+      
+        selectedTitle.addEventListener("mouseover", () => {
+          titleTooltip.style.display = "block";
+        });
+        selectedTitle.addEventListener("mouseout", () => {
+          titleTooltip.style.display = "none";
+        });
+      }
     }
 
   }
