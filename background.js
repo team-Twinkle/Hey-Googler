@@ -203,7 +203,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
             const url_ = new URL(searchTab);
             //console.log(url_);
             keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-            const keyData = [{ keyword: keyword1 , dir_id:"1"}];
+            const keyData = [{ dir_id:"1",keyword: keyword1}];
             writeDB(keyData, "keywordStore");
             console.log("Visited Site:", url, title, keyword1);
             //db에 data 입력

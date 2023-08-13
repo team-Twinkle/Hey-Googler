@@ -22,7 +22,6 @@
         <span id="dir-name"></span>
       </h1>
     </header>
-    <h1>HeyGoogler 데이터 출력</h1>
     <div id="dataContainer"></div>
     <!-- <div id="keyword_template"> -->
     <template id="keyword_template">
@@ -40,7 +39,16 @@
       <div class="path-box">
         <a>
           <h3 class="title">페이지 제목</h3>
-          <p class="path">링크</p>
+          <span id="tooltip-title" class="tooltip" style="display: none;">툴팁용 페이지 제목</span>
+          <div class="menubar">
+            <img class="menu_white" src="images/icon_menu.png" id="menuIcon"/>
+            <ul>
+              <li><a href="#" class = "white-delete" key="">삭제</a></li>
+              <li><a href="#">타이틀 수정</a></li>
+              <li><a href="#">메모</a></li>
+            </ul>
+          </div>
+          <a class="hyperLink"><p class="path" id="link">링크</p></a>
         </a>
       </div>
     </template>

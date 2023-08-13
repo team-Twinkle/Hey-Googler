@@ -201,6 +201,34 @@ function Toggle(data) {
   }
 }
 
+function displayMenu(){
+  var selectedMenu = document.getElementsByClassName("menu_white");
+  selectedMenu = selectedMenu[i];
+  var menubar = document.getElementsByClassName('menubar');
+  menubar = menubar[i];
+
+  if (selectedMenu){
+    selectedMenu.addEventListener("click", function(){
+      menubar.classList.toggle('active');
+    })
+  }
+}
+
+function displayTooltip(){
+  var selectedTitle = document.getElementsByClassName("title");
+  selectedTitle = selectedTitle[i];
+  var titleTooltip = document.getElementsByClassName("tooltip");
+  titleTooltip = titleTooltip[i+1];
+
+  selectedTitle.addEventListener("mouseover", () => {
+    titleTooltip.style.display = "block";
+  });
+  selectedTitle.addEventListener("mouseout", () => {
+    titleTooltip.style.display = "none";
+  });
+}
+
+
 // 데이터를 화면에 출력하는 함수
 function displayURL(data) {
 
@@ -212,6 +240,7 @@ function displayURL(data) {
     const k = data[i].keyword;
     const t = data[i].title;
     const p = data[i].url;
+    var key = JSON.stringify(data[i].id);
 
     const area = document.getElementById("white-"+k);
 
@@ -220,9 +249,54 @@ function displayURL(data) {
  
     clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
-  
+    clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
+    
+    //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
+    var deleteKey = clone.querySelector('.white-delete');
+    deleteKey.setAttribute('key', key);
+
+    // 바로 가기 방법 2 - 새 창은 켜지지만 보안정책 위반으로
+    // var linkElement =  path_clone.querySelector('.path-box').querySelector("#hyperLink");
+    // linkElement.href = p;
 
     area.appendChild(clone);
+
+    displayMenu();
+    displayTooltip();
+
+    function displayMenu(){
+      var selectedMenu = document.getElementsByClassName("menu_white");
+      selectedMenu = selectedMenu[i];
+      var menubar = document.getElementsByClassName('menubar');
+      menubar = menubar[i];
+    
+      if (selectedMenu){
+        selectedMenu.addEventListener("click", function(){
+          menubar.classList.toggle('active');
+        })
+      }
+    }
+    
+    function displayTooltip(){
+      const textElement = document.getElementsByClassName("title")[i];
+      const textContent = textElement.textContent; 
+      const textLength = textContent.length;
+
+      if(textLength > 22){
+        var selectedTitle = document.getElementsByClassName("title");
+        selectedTitle = selectedTitle[i];
+        var titleTooltip = document.getElementsByClassName("tooltip");
+        titleTooltip = titleTooltip[i+1];
+      
+        selectedTitle.addEventListener("mouseover", () => {
+          titleTooltip.style.display = "block";
+        });
+        selectedTitle.addEventListener("mouseout", () => {
+          titleTooltip.style.display = "none";
+        });
+      }
+    }
+
   }
 }
 
@@ -243,6 +317,8 @@ function displayKeyword(data) {
     clone.querySelector(".path-area").id = "white-"+k;
 
     container.appendChild(clone);
+
+
   }
 }
 
@@ -328,6 +404,42 @@ function addEvent() {
   }
 }
 
+function deleteDB(key) {
+  // 1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);    
+  request.onerror =(e)=> console.log(e.target.errorCode);
+  // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess =(e)=> {
+    const db = request.result;
+    const transaction = db.transaction([open_Obs], 'readwrite');
+    transaction.onerror =(e)=> console.log('fail');
+    transaction.oncomplete =(e)=> console.log('success');
+    // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
+    const objStore = transaction.objectStore([open_Obs]);   
+    // 3. 삭제하기 (키 값인 id로 지정해야 함)
+    const objStoreRequest = objStore.delete(key);       
+    objStoreRequest.onsuccess =(e)=> {
+      console.log('deleted '+key);
+    }
+  }
+}
+
   // readDB() 함수 호출
   readDB();
   addEvent();
+
+//**************************************삭제 기능 수정중 
+var deleteElements = document.querySelectorAll(".white-delete");
+
+
+//각 삭제 버튼에 클릭 이벤트 리스너를 추가
+deleteElements.forEach(function(element) {
+  element.addEventListener('click', handleClick);
+  console.log(element);
+});
+
+// 삭제 링크를 클릭할 때 실행되는 함수를 정의
+function handleClick(event) {
+  var keyValue = event.target.getAttribute("key");
+  deleteDB(keyValue);
+}
