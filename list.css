@@ -134,7 +134,7 @@ body {
 .menubar {
   position: relative;
   display: inline-block;
-  left: 90%;
+  left: 3%;
 }
 
 .wrap .path-box .menubar > ul {
@@ -216,7 +216,8 @@ a {
 /* 페이지 제목과 링크는 길이 넘어가면 자동 숨김처리 함 */
 /* 넘친 부분에 대해서 마우스 오버시 보이게 하기 등의 조작 필요 */
 a > h3 {
-  width: 288px;
+  display:inline-block;
+  width: 260px;
   height: 21.6px;
   overflow: hidden;
   white-space: nowrap;
