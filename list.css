@@ -311,7 +311,7 @@ footer {
 }
 
 .path-area{
-  max-height: 100px;
+  max-height: auto;
   opacity: 1;
   overflow: hidden;
   transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
