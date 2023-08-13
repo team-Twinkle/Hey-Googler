@@ -192,12 +192,10 @@ function Toggle(data) {
 
       // 토글 상태에 따라 컨텐츠 표시/숨김
       if (isToggled) {
-        pathArea.style.maxHeight = '100px'; // 토글될 컨텐츠의 최대 높이로 지정
-        pathArea.style.opacity = '1'; // 투명도를 1로 지정
+        pathArea.style.display='block';
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
-        pathArea.style.maxHeight = '0'; // 높이를 0으로 지정하여 사라지도록 함
-        pathArea.style.opacity = '0'; // 투명도를 0으로 지정하여 사라지도록 함
+        pathArea.style.display='none';
       }
     })
   }
