@@ -188,6 +188,8 @@ function displayData(data) {
     var k = JSON.stringify(data[i].keyword);
     var t = JSON.stringify(data[i].title);
     var p = JSON.stringify(data[i].url);
+    var key = JSON.stringify(data[i].id);
+
 
     var template = document.getElementById("keyword_template");
     var clone = template.content.cloneNode(true);
@@ -199,6 +201,10 @@ function displayData(data) {
     path_clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
     path_clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+   
+    //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
+    var deleteKey = path_clone.querySelector('.white-delete');
+    deleteKey.setAttribute('key', key);
 
 
     // 바로 가기 방법 2 - 새 창은 켜지지만 보안정책 위반으로
@@ -287,12 +293,12 @@ function deleteDB(key) {
     const transaction = db.transaction([open_Obs], 'readwrite');
     transaction.onerror =(e)=> console.log('fail');
     transaction.oncomplete =(e)=> console.log('success');
-    // 2-2. url 저장소 접근
+    // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
     const objStore = transaction.objectStore([open_Obs]);   
     // 3. 삭제하기 (키 값인 id로 지정해야 함)
     const objStoreRequest = objStore.delete(key);       
     objStoreRequest.onsuccess =(e)=> {
-      console.log('deleted');
+      console.log('deleted '+key);
     }
   }
 }
@@ -301,3 +307,20 @@ function deleteDB(key) {
 
 // readDB() 함수 호출
 readDB();
+
+
+//**************************************삭제 기능 수정중 
+var deleteElements = document.querySelectorAll(".white-delete");
+
+
+//각 삭제 버튼에 클릭 이벤트 리스너를 추가
+deleteElements.forEach(function(element) {
+  element.addEventListener('click', handleClick);
+  console.log(element);
+});
+
+// 삭제 링크를 클릭할 때 실행되는 함수를 정의
+function handleClick(event) {
+  var keyValue = event.target.getAttribute("key");
+  deleteDB(keyValue);
+}
