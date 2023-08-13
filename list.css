@@ -135,6 +135,7 @@ body {
   position: relative;
   display: inline-block;
   left: 3%;
+  cursor: pointer;
 }
 
 .wrap .path-box .menubar > ul {
