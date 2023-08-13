@@ -250,10 +250,6 @@ function displayURL(data) {
     clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
     clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
-
-    clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click",()=>{
-      chrome.tabs.create({ url: p });
-    })
     
     //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
     var deleteKey = clone.querySelector('.white-delete');
@@ -282,7 +278,11 @@ function displayURL(data) {
     }
     
     function displayTooltip(){
+      const textElement = document.getElementsByClassName("title")[i];
+      const textContent = textElement.textContent; 
+      const textLength = textContent.length;
 
+      if(textLength > 22){
         var selectedTitle = document.getElementsByClassName("title");
         selectedTitle = selectedTitle[i];
         var titleTooltip = document.getElementsByClassName("tooltip");
@@ -294,7 +294,7 @@ function displayURL(data) {
         selectedTitle.addEventListener("mouseout", () => {
           titleTooltip.style.display = "none";
         });
-      
+      }
     }
 
   }

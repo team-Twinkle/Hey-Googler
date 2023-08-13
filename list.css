@@ -331,6 +331,8 @@ footer {
   border-radius: 7px;
   color: white;
   text-align: center;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 #tooltip-folder {
