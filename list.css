@@ -137,6 +137,7 @@ body {
   /* 이미지 높이의 절반값 */
   top: 50%;
   right: 16px;
+  cursor:pointer;
 }
 
 .path-box {
@@ -307,4 +308,11 @@ footer {
 #tooltip-stop {
   right: 14px;
   width: 60px;
+}
+
+.path-area{
+  max-height: 100px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
 }
