@@ -129,6 +129,7 @@ body {
   font-weight: 600;
   line-height: 25px;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .menubar {

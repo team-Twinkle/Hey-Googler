@@ -251,7 +251,7 @@ function displayURL(data) {
     clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
     clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
-    
+
     clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click",()=>{
       chrome.tabs.create({ url: p });
     })
@@ -320,6 +320,11 @@ function displayKeyword(data) {
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
     clone.querySelector(".keyword-box").id="green-"+k;
     clone.querySelector(".path-area").id = "white-"+k;
+
+    clone.querySelector(".keyword-box").querySelector(".keyword").addEventListener("click",()=>{
+      const url = "https://www.google.com/search?q="+k;
+      chrome.tabs.create({ url: url });
+    })
 
     container.appendChild(clone);
 
