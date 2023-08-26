@@ -190,7 +190,7 @@ function Toggle(data) {
     toggleButton.addEventListener("click", () => {  
       // 토글 상태에 따라 컨텐츠 표시/숨김
       if (isToggled) {
-        pathArea.style.maxHeight = '100vh' =
+        pathArea.style.maxHeight = '100vh' 
         pathArea.style.opacity = '1'; 
         isToggled = !isToggled;
       } else {
