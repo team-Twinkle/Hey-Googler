@@ -138,33 +138,106 @@ body {
   left: 3%;
   cursor: pointer;
 }
-
+.menubar.active{
+  left:95px;
+}
+@keyframes ul_fadeIn {
+  0% {
+      opacity: 0;
+      transform: translate3d(100%, 0, 0);
+  }
+  to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes ul_fadeOut {
+  0% {
+      opacity: 1;
+      transform: translate3d(10%, 0, 0);
+  }
+  to {
+      opacity: 0;
+      transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes menubar_fadeIn {
+  0% {
+      transform: translate3d(75px, 0, 0);
+  }
+  to {
+      transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes menubar_fadeOut {
+  0% {
+      transform: translate3d(20%, 0, 0);
+  }
+  to {
+      transform: translate3d(0, 0, 0);
+  }
+}
 .wrap .path-box .menubar > ul {
   background: rgb(109, 109, 109);
   display: none; 
-  height: auto;
+  height: 87px;
   padding: 0;
   margin: 0;
   border: 0;
   position: absolute;
-  width: 100px;
+  width: 75px;
   z-index: 200;
-  top: 100%;
-  right:0%;
+  top: -20px;
+  right:100%;
+  border-radius: 15px;
+}
 
+.wrap .path-box .title.active{
+  width:175px;
+}
+.wrap .path-box .title.inactive{
+  width:260px;
+}
+
+.wrap .path-box .menubar.active a img{
+  position:relative;
+  right:80px;
+  animation: menubar_fadeIn 0.5s;
+}
+.wrap .path-box .menubar.inactive a img{
+  position:relative;
+  left:2px;
+  animation:menubar_fadeOut 0.5s;
 }
 
 .wrap .path-box .menubar.active > ul {
   display: block;
+  right:-14px;
+  animation: ul_fadeIn 0.5s;
+}
+.wrap .path-box .menubar.inactive > ul {
+  display: block;
+  left:200%;
+  animation: ul_fadeOut 0.5s;
+}
+
+.wrap .path-box .menubar.active ~ .hyperLink p{
+  width:165px;
+}
+.wrap .path-box .menubar.inactive ~ .hyperLink p{
+  width:288;
 }
 
 .wrap .path-box .menubar li {
-  padding: 8px;
-  list-style: none;
+  height: 25px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-align: center;
 }
 
 .wrap .path-box .menubar li a {
   color:black;
+  font-size:x-small;
 }
 
 .menubar li:hover {
@@ -225,6 +298,10 @@ a > h3 {
   white-space: nowrap;
   text-overflow: ellipsis;
   margin: 0px;
+}
+
+.title{
+  transition: width 0.5s ease;
 }
 
 a > p {
@@ -298,6 +375,7 @@ footer {
   padding: 0px;
 
   background-color: #ffffff;
+  z-index:10000000;
 }
 
 .footer-button {
@@ -363,4 +441,7 @@ footer {
 
 .hyperLink{
   cursor:pointer;
+}
+.hyperLink p{
+  transition: width 0.5s ease;
 }

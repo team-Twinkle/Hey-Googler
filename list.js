@@ -205,14 +205,22 @@ function Toggle(data) {
 }
 
 function displayMenu() {
-  var selectedMenu = document.getElementsByClassName("menu_white");
+  let isSelected = false;
+  let selectedMenu = document.getElementsByClassName("menu_white");
   selectedMenu = selectedMenu[i];
-  var menubar = document.getElementsByClassName('menubar');
+  let menubar = document.getElementsByClassName('menubar');
   menubar = menubar[i];
 
   if (selectedMenu) {
     selectedMenu.addEventListener("click", function () {
-      menubar.classList.toggle('active');
+      isSelected = !isSelected;
+      if (isSelected) {
+        menubar.classList.remove('inactive');
+        menubar.classList.add('active');
+      } else {
+        menubar.classList.remove('active');
+        menubar.classList.add('inactive');
+      }
     })
   }
 }
@@ -250,9 +258,11 @@ function displayURL(data) {
 
     const template = document.getElementById("path_template");
     const clone = template.content.cloneNode(true);
+    const title = clone.querySelector(".path-box").querySelector(".title");
+    const path = clone.querySelector(".path-box").querySelector(".path")
 
-    clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
-    clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+    title.innerHTML = t;
+    path.innerHTML = p;
     clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
 
     clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click", () => {
@@ -264,7 +274,7 @@ function displayURL(data) {
     deleteKey.setAttribute('key', key);
     //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
     deleteKey.addEventListener('click', () => {
-      deleteDB(urlStore,key);
+      deleteDB(urlStore, key);
       location.reload();
     });
 
@@ -274,14 +284,33 @@ function displayURL(data) {
     displayTooltip();
 
     function displayMenu() {
-      var selectedMenu = document.getElementsByClassName("menu_white");
+      let isSelected = false;
+      let selectedMenu = document.getElementsByClassName("menu_white");
       selectedMenu = selectedMenu[i];
-      var menubar = document.getElementsByClassName('menubar');
+      let menubar = document.getElementsByClassName('menubar');
       menubar = menubar[i];
 
       if (selectedMenu) {
         selectedMenu.addEventListener("click", function () {
-          menubar.classList.toggle('active');
+          isSelected = !isSelected;
+          if (isSelected) {
+            menubar.classList.remove('inactive');
+            title.classList.remove('inactive');
+            menubar.classList.add('active');
+            title.classList.add('active');
+            setTimeout(() => {
+              isSelected = !isSelected;
+              menubar.classList.remove('active');
+              title.classList.remove('active');
+              menubar.classList.add('inactive');
+              title.classList.add('inactive');
+            },5000);
+          } else {
+            menubar.classList.remove('active');
+            title.classList.remove('active');
+            menubar.classList.add('inactive');
+            title.classList.add('inactive');
+          }
         })
       }
     }
@@ -419,7 +448,7 @@ function addEvent() {
   }
 }
 
-function deleteDB(obs,key) {
+function deleteDB(obs, key) {
   // 1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
   request.onerror = (e) => console.log(e.target.errorCode);
