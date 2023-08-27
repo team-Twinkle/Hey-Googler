@@ -254,10 +254,8 @@ function displayURL(data) {
     //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
     var deleteKey = clone.querySelector('.white-delete');
     deleteKey.setAttribute('key', key);
-
-    // 바로 가기 방법 2 - 새 창은 켜지지만 보안정책 위반으로
-    // var linkElement =  path_clone.querySelector('.path-box').querySelector("#hyperLink");
-    // linkElement.href = p;
+    //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
+    deleteKey.addEventListener('click', handleClick);
 
     area.appendChild(clone);
 
@@ -410,6 +408,7 @@ function deleteDB(key) {
   request.onerror =(e)=> console.log(e.target.errorCode);
   // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
   request.onsuccess =(e)=> {
+    var open_Obs = 'urlStore'
     const db = request.result;
     const transaction = db.transaction([open_Obs], 'readwrite');
     transaction.onerror =(e)=> console.log('fail');
@@ -420,6 +419,7 @@ function deleteDB(key) {
     const objStoreRequest = objStore.delete(key);       
     objStoreRequest.onsuccess =(e)=> {
       console.log('deleted '+key);
+      transaction.commit();
     }
   }
 }
@@ -428,17 +428,8 @@ function deleteDB(key) {
   readDB();
   addEvent();
 
-//**************************************삭제 기능 수정중 
-var deleteElements = document.querySelectorAll(".white-delete");
 
-
-//각 삭제 버튼에 클릭 이벤트 리스너를 추가
-deleteElements.forEach(function(element) {
-  element.addEventListener('click', handleClick);
-  console.log(element);
-});
-
-// 삭제 링크를 클릭할 때 실행되는 함수를 정의
+// 삭제 버튼을 클릭할 때 실행되는 함수를 정의
 function handleClick(event) {
   var keyValue = event.target.getAttribute("key");
   deleteDB(keyValue);

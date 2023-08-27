@@ -356,8 +356,8 @@ footer {
 .path-area{
   max-height: auto;
   opacity: 1;
-  overflow: hidden;
   transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+  overflow: visible;
 }
 
 .hyperLink{
