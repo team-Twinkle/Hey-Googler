@@ -16,13 +16,13 @@ body{
     align-items: center;
 }
 #logo{
-    width:500px;
+    width:40em;
     transition:width 0.2s;
 }
 #logo:hover{
     content:url(./images/logo_color.svg);
     cursor:pointer;
-    width:550px;
+    width:45em;
 
 }
 .search-box{
