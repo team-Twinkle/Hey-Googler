@@ -204,42 +204,6 @@ function Toggle(data) {
   }
 }
 
-function displayMenu() {
-  let isSelected = false;
-  let selectedMenu = document.getElementsByClassName("menu_white");
-  selectedMenu = selectedMenu[i];
-  let menubar = document.getElementsByClassName('menubar');
-  menubar = menubar[i];
-
-  if (selectedMenu) {
-    selectedMenu.addEventListener("click", function () {
-      isSelected = !isSelected;
-      if (isSelected) {
-        menubar.classList.remove('inactive');
-        menubar.classList.add('active');
-      } else {
-        menubar.classList.remove('active');
-        menubar.classList.add('inactive');
-      }
-    })
-  }
-}
-
-function displayTooltip() {
-  var selectedTitle = document.getElementsByClassName("title");
-  selectedTitle = selectedTitle[i];
-  var titleTooltip = document.getElementsByClassName("tooltip");
-  titleTooltip = titleTooltip[i + 1];
-
-  selectedTitle.addEventListener("mouseover", () => {
-    titleTooltip.style.display = "block";
-  });
-  selectedTitle.addEventListener("mouseout", () => {
-    titleTooltip.style.display = "none";
-  });
-}
-
-
 // 데이터를 화면에 출력하는 함수
 function displayURL(data) {
 
@@ -280,60 +244,10 @@ function displayURL(data) {
 
     area.appendChild(clone);
 
-    displayMenu();
-    displayTooltip();
+    // displayMenu();
+    // displayTooltip();
 
-    function displayMenu() {
-      let isSelected = false;
-      let selectedMenu = document.getElementsByClassName("menu_white");
-      selectedMenu = selectedMenu[i];
-      let menubar = document.getElementsByClassName('menubar');
-      menubar = menubar[i];
 
-      if (selectedMenu) {
-        selectedMenu.addEventListener("click", function () {
-          isSelected = !isSelected;
-          if (isSelected) {
-            menubar.classList.remove('inactive');
-            title.classList.remove('inactive');
-            menubar.classList.add('active');
-            title.classList.add('active');
-            setTimeout(() => {
-              isSelected = !isSelected;
-              menubar.classList.remove('active');
-              title.classList.remove('active');
-              menubar.classList.add('inactive');
-              title.classList.add('inactive');
-            },5000);
-          } else {
-            menubar.classList.remove('active');
-            title.classList.remove('active');
-            menubar.classList.add('inactive');
-            title.classList.add('inactive');
-          }
-        })
-      }
-    }
-
-    function displayTooltip() {
-      const textElement = document.getElementsByClassName("title")[i];
-      const textContent = textElement.textContent;
-      const textLength = textContent.length;
-
-      if (textLength > 22) {
-        var selectedTitle = document.getElementsByClassName("title");
-        selectedTitle = selectedTitle[i];
-        var titleTooltip = document.getElementsByClassName("tooltip");
-        titleTooltip = titleTooltip[i + 1];
-
-        selectedTitle.addEventListener("mouseover", () => {
-          titleTooltip.style.display = "block";
-        });
-        selectedTitle.addEventListener("mouseout", () => {
-          titleTooltip.style.display = "none";
-        });
-      }
-    }
 
   }
 }
@@ -364,6 +278,58 @@ function displayKeyword(data) {
 
   }
 }
+
+function displayMenu() {
+  let isSelected = false;
+  let selectedMenu = document.getElementsByClassName("menu_white");
+  selectedMenu = selectedMenu[i];
+  let menubar = document.getElementsByClassName('menubar');
+  menubar = menubar[i];
+  if (selectedMenu) {
+    selectedMenu.addEventListener("click", function () {
+      isSelected = !isSelected;
+      if (isSelected) {
+        menubar.classList.remove('inactive');
+        title.classList.remove('inactive');
+        menubar.classList.add('active');
+        title.classList.add('active');
+        setTimeout(() => {
+          isSelected = !isSelected;
+          menubar.classList.remove('active');
+          title.classList.remove('active');
+          menubar.classList.add('inactive');
+          title.classList.add('inactive');
+        }, 5000);
+      } else {
+        menubar.classList.remove('active');
+        title.classList.remove('active');
+        menubar.classList.add('inactive');
+        title.classList.add('inactive');
+      }
+    })
+  }
+}
+
+function displayTooltip() {
+  const textElement = document.getElementsByClassName("title")[i];
+  const textContent = textElement.textContent;
+  const textLength = textContent.length;
+
+  if (textLength > 22) {
+    var selectedTitle = document.getElementsByClassName("title");
+    selectedTitle = selectedTitle[i];
+    var titleTooltip = document.getElementsByClassName("tooltip");
+    titleTooltip = titleTooltip[i + 1];
+
+    selectedTitle.addEventListener("mouseover", () => {
+      titleTooltip.style.display = "block";
+    });
+    selectedTitle.addEventListener("mouseout", () => {
+      titleTooltip.style.display = "none";
+    });
+  }
+}
+
 
 
 //혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
@@ -405,6 +371,76 @@ function readDB() {
       var data = event.target.result;
       //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
       displayURL(data);
+    };
+
+    transaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function (event) {
+      db.close();
+    };
+
+    /* 하얀 박스에 이벤트 추가 (menu , tooltip) */
+
+    transaction = db.transaction([urlStore], 'readonly');
+    objectStore = transaction.objectStore('urlStore');
+    request = objectStore.getAll();
+    //2. getAll() 함수 성공 시, 화면에 출력
+    request.onsuccess = function (event) {
+      var data = event.target.result;
+      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+      for (var i = 0; i < data.length; i++) {
+        //displayMenu
+        let isSelected = false;
+        let selectedMenu = document.getElementsByClassName("menu_white");
+        selectedMenu = selectedMenu[i];
+        let menubar = document.getElementsByClassName('menubar');
+        menubar = menubar[i];
+        let title = document.getElementsByClassName("title");
+        title = title[i];
+        if (selectedMenu) {
+          selectedMenu.addEventListener("click", function () {
+            isSelected = !isSelected;
+            if (isSelected) {
+              menubar.classList.remove('inactive');
+              title.classList.remove('inactive');
+              menubar.classList.add('active');
+              title.classList.add('active');
+              setTimeout(() => {
+                isSelected = !isSelected;
+                menubar.classList.remove('active');
+                title.classList.remove('active');
+                menubar.classList.add('inactive');
+                title.classList.add('inactive');
+              }, 5000);
+            } else {
+              menubar.classList.remove('active');
+              title.classList.remove('active');
+              menubar.classList.add('inactive');
+              title.classList.add('inactive');
+            }
+          })
+        }
+        //displayTooltip
+        const textElement = document.getElementsByClassName("title")[i];
+        const textContent = textElement.textContent;
+        const textLength = textContent.length;
+
+        if (textLength > 22) {
+          var selectedTitle = document.getElementsByClassName("title");
+          selectedTitle = selectedTitle[i];
+          var titleTooltip = document.getElementsByClassName("tooltip");
+          titleTooltip = titleTooltip[i + 1];
+
+          selectedTitle.addEventListener("mouseover", () => {
+            titleTooltip.style.display = "block";
+          });
+          selectedTitle.addEventListener("mouseout", () => {
+            titleTooltip.style.display = "none";
+          });
+        }
+      }
     };
 
     transaction.onerror = function (event) {
