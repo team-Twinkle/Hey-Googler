@@ -244,7 +244,7 @@ stopButton.addEventListener("mouseout", () => {
 startButton.addEventListener("click", () => {
   startButton.src = "images/icon_start_true.svg";
   onDirId = currenDirId;
-  chrome.runtime.sendMessage(nowDirId, { msg: "Start the extension from list.js" });
+  chrome.runtime.sendMessage("Start the extension from list.js");
 });
 
 stopButton.addEventListener("click", () => {

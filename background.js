@@ -125,7 +125,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //<extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onMessage.addListener((msg) => {
   //console.log(msg);
-  if (msg.txt == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
+  if (msg == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
     //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
