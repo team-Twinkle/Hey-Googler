@@ -151,7 +151,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-    console.log(currentTab);
+
   })
   currentURL = new URL(currentTab);
   if (currentURL.hostname === "www.google.com") {
@@ -187,6 +187,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         chrome.history.onVisited.addListener((historyItem) => {
           const url = historyItem.url;
           //검색창인 경우 제외
+
           var str1 = url.substr(0, 22);
           var str2 = url.substr(0, 19);
           if (str1 == "https://www.google.com") {
@@ -218,6 +219,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
             ];
             writeDB(datas, "urlStore");
           });
+
 
         });
       }
