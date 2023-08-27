@@ -424,6 +424,29 @@ function deleteDB(key) {
   }
 }
 
+/* 나중에 open_Obs 변수에 원하는 저장소 불러올 수 있다면 위의 deleteDB()와 
+통일해서 사용 가능. deleteDB2()는 키워드 삭제용 임시 함수 */
+function deleteDB2(key) {
+  // 1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);    
+  request.onerror =(e)=> console.log(e.target.errorCode);
+  // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess =(e)=> {
+    var open_Obs = 'keywordStore'
+    const db = request.result;
+    const transaction = db.transaction([open_Obs], 'readwrite');
+    transaction.onerror =(e)=> console.log('fail');
+    transaction.oncomplete =(e)=> console.log('success');
+    // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
+    const objStore = transaction.objectStore([open_Obs]);   
+    // 3. 삭제하기 (키 값인 id로 지정해야 함)
+    const objStoreRequest = objStore.delete(key);       
+    objStoreRequest.onsuccess =(e)=> {
+      console.log('deleted '+key);
+      transaction.commit();
+    }
+  }
+}
   // readDB() 함수 호출
   readDB();
   addEvent();
@@ -432,5 +455,5 @@ function deleteDB(key) {
 // 삭제 버튼을 클릭할 때 실행되는 함수를 정의
 function handleClick(event) {
   var keyValue = event.target.getAttribute("key");
-  deleteDB(parseInt(keyValue));
+  deleteDB(parseInt(keyValue)); //keyValue 값이 string.. 주의
 }
