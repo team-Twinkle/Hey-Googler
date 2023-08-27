@@ -16,24 +16,28 @@ request.onsuccess = function (event) {
 request.onupgradeneeded = function (event) {
   db = event.target.result;
 
+  //url store
   var urlStore = db.createObjectStore("urlStore", {
     keyPath: "id",
     autoIncrement: true,
   });
 
-  urlStore.createIndex("url", "url", { unique: false });
+  urlStore.createIndex("url", ["dir_id","url"], { unique: true });
   urlStore.createIndex("title", "title", { unique: false });
   urlStore.createIndex("memo", "memo", { unique: false });
   urlStore.createIndex("keyword", "keyword", { unique: false });
   urlStore.createIndex("dir_id", "dir_id", { unique: false });
 
+  //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {
-    keyPath: "k_id",
-    autoIncrement: true,
+    keyPath: "id",
+    autoIncrement:true
   });
-  keywordStore.createIndex("keyword", "keyword", { unique: false });
-  keywordStore.createIndex("dir_id", "dir_id", { unique: false });
 
+  keywordStore.createIndex("dir_id","dir_id",{unique:false});
+  keywordStore.createIndex("keyword",["dir_id","keyword"],{unique:true});
+
+  //dir store
   var dirStore = db.createObjectStore("dirStore", {
     keyPath: "d_id",
     autoIncrement: true,
@@ -147,6 +151,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
+
   })
   currentURL = new URL(currentTab);
   if (currentURL.hostname === "www.google.com") {
@@ -170,8 +175,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   });
 });
 
-const visitedUrls = new Set(); //중복 확인용으로 이미 추가된 URL을 저장하는 Set 객체
-const visitedSites = []; //방문 기록
+
 // 새 탭, 검색창, 2차 이상 링크 모두 제외하고 ***1차 링크만*** 기록
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확인한다 ! 
   if (changeInfo.status === 'complete') {
@@ -183,33 +187,40 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         chrome.history.onVisited.addListener((historyItem) => {
           const url = historyItem.url;
           //검색창인 경우 제외
-          var str = url.substr(0, 29);
-          if (str == "https://www.google.com/search") {
+
+          var str1 = url.substr(0, 22);
+          var str2 = url.substr(0, 19);
+          if (str1 == "https://www.google.com") {
+            return;
+          }
+          if (str2 == "chrome-extension://") {
             return;
           }
           //console.log(historyItem.title);
-          if (!visitedUrls.has(url) && isExtensionOn == true) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
-            visitedUrls.add(url);
-            chrome.history.search({ text: url }, (historyItems) => {
-              const title = historyItems[historyItems.length - 1].title;
-              const url_ = new URL(searchTab);
-              //console.log(url_);
-              keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-              visitedSites.push({ url: url, title: title, keyword: keyword1 });
-              console.log("Visited Site:", url, title, keyword1);
-              //db에 data 입력
-              const datas = [
-                {
-                  url: url,
-                  title: title,
-                  memo: " ",
-                  keyword: keyword1,
-                  dir_id: 1,
-                },
-              ];
-              writeDB(datas, "urlStore");
-            });
-          }
+
+
+          chrome.history.search({ text: url }, (historyItems) => {
+            const title = historyItems[historyItems.length - 1].title;
+            const url_ = new URL(searchTab);
+            //console.log(url_);
+            keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
+            const keyData = [{ dir_id:"1",keyword: keyword1}];
+            writeDB(keyData, "keywordStore");
+            console.log("Visited Site:", url, title, keyword1);
+            //db에 data 입력
+            const datas = [
+              {
+                url: url,
+                title: title,
+                memo: " ",
+                keyword: keyword1,
+                dir_id: "1"
+              },
+            ];
+            writeDB(datas, "urlStore");
+          });
+
+
         });
       }
       else console.log("이전 링크가 검색창이 아님!!!!");

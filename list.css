@@ -129,6 +129,52 @@ body {
   font-weight: 600;
   line-height: 25px;
   color: #ffffff;
+  cursor: pointer;
+}
+
+.menubar {
+  position: relative;
+  display: inline-block;
+  left: 3%;
+  cursor: pointer;
+}
+
+.wrap .path-box .menubar > ul {
+  background: rgb(109, 109, 109);
+  display: none; 
+  height: auto;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  position: absolute;
+  width: 100px;
+  z-index: 200;
+  top: 100%;
+  right:0%;
+
+}
+
+.wrap .path-box .menubar.active > ul {
+  display: block;
+}
+
+.wrap .path-box .menubar li {
+  padding: 8px;
+  list-style: none;
+}
+
+.wrap .path-box .menubar li a {
+  color:black;
+}
+
+.menubar li:hover {
+  background-color: #ddd; 
+}
+
+.menu_white {
+  width: 16px;
+  height: auto;
+  right: 10px;
 }
 
 .toggle_keyword {
@@ -137,9 +183,10 @@ body {
   /* 이미지 높이의 절반값 */
   top: 50%;
   right: 16px;
+  cursor:pointer;
 }
 
-.path_template {
+.path-box {
   position: relative;
 
   width: 304px;
@@ -171,7 +218,8 @@ a {
 /* 페이지 제목과 링크는 길이 넘어가면 자동 숨김처리 함 */
 /* 넘친 부분에 대해서 마우스 오버시 보이게 하기 등의 조작 필요 */
 a > h3 {
-  width: 288px;
+  display:inline-block;
+  width: 260px;
   height: 21.6px;
   overflow: hidden;
   white-space: nowrap;
@@ -189,14 +237,6 @@ a > p {
   text-overflow: ellipsis;
 }
 
-/* 텍스트 마우스 오버 효과 */
-/* 근데 무작정 이렇게 뜨게 하면 되는것인가.. */
-/* 디자인은? 말풍선으로? 아니면 밑으로 떨어지게 디자인? */
-.dir-text:hover,
-a > h3:hover,
-a > p:hover {
-  overflow: visible;
-}
 
 #dirAddButton {
   position: relative;
@@ -292,6 +332,11 @@ footer {
   border-radius: 7px;
   color: white;
   text-align: center;
+  padding-top: 2px;
+  padding-bottom:2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  z-index: 50;
 }
 
 #tooltip-folder {
@@ -307,4 +352,15 @@ footer {
 #tooltip-stop {
   right: 14px;
   width: 60px;
+}
+
+.path-area{
+  max-height: 100vh;
+  opacity: 1;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+  overflow: visible;
+}
+
+.hyperLink{
+  cursor:pointer;
 }

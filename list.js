@@ -187,6 +187,7 @@ function initListPage() {
 
 /********************************************************************************************************* */
 
+
 var reloadButton = document.getElementById("button-reload");
 var folderButton = document.getElementById("button-folder");
 var startButton = document.getElementById("button-start");
@@ -261,6 +262,7 @@ chrome.action.onClicked.addListener(() => {
     } else {
       startButton.src = "images/icon_start.svg";
     }
+
   });
 });
 
@@ -374,8 +376,222 @@ function deleteDirDB(id) {
       console.log("dir 삭제 성공");
     }
 
+
+/********************************************************************************************************* */
+
+//열려있는 객체 저장소 정보를 open_Obs 변수로 전달
+var urlStore = 'urlStore';
+var keyStore = 'keywordStore';
+
+
+function Toggle(data) {
+  for (var i = 0; i < data.length; i++) {
+    const k = data[i].keyword;
+
+    const kwBox = document.getElementById("green-"+k);
+    const pathArea = document.getElementById("white-"+k);
+    const toggleButton = kwBox.querySelector(".toggle_keyword");
+    let isToggled = false;
+
+    toggleButton.addEventListener("click", () => {  
+      // 토글 상태에 따라 컨텐츠 표시/숨김
+      if (isToggled) {
+        pathArea.style.maxHeight = '100vh' 
+        pathArea.style.opacity = '1'; 
+        isToggled = !isToggled;
+      } else {
+        // 토글될 컨텐츠 숨김 (애니메이션 포함)
+        pathArea.style.maxHeight = '0'; 
+        isToggled = !isToggled;
+      }
+
+
+    })
+  }
+}
+
+function displayMenu(){
+  var selectedMenu = document.getElementsByClassName("menu_white");
+  selectedMenu = selectedMenu[i];
+  var menubar = document.getElementsByClassName('menubar');
+  menubar = menubar[i];
+
+  if (selectedMenu){
+    selectedMenu.addEventListener("click", function(){
+      menubar.classList.toggle('active');
+    })
+  }
+}
+
+function displayTooltip(){
+  var selectedTitle = document.getElementsByClassName("title");
+  selectedTitle = selectedTitle[i];
+  var titleTooltip = document.getElementsByClassName("tooltip");
+  titleTooltip = titleTooltip[i+1];
+
+  selectedTitle.addEventListener("mouseover", () => {
+    titleTooltip.style.display = "block";
+  });
+  selectedTitle.addEventListener("mouseout", () => {
+    titleTooltip.style.display = "none";
+  });
+}
+
+
+// 데이터를 화면에 출력하는 함수
+function displayURL(data) {
+
+  //컨텐츠 들어갈 위치
+  const container = document.getElementById('dataContainer');
+
+  // 데이터를 텍스트로 변환하여 화면에 추가
+  for (var i = 0; i < data.length; i++) {
+    const k = data[i].keyword;
+    const t = data[i].title;
+    const p = data[i].url;
+    var key = JSON.stringify(data[i].id);
+
+    const area = document.getElementById("white-"+k);
+
+    const template = document.getElementById("path_template");
+    const clone = template.content.cloneNode(true);
+ 
+    clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
+    clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
+    clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
+
+    clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click",()=>{
+      chrome.tabs.create({ url: p });
+    })
+
+    //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
+    var deleteKey = clone.querySelector('.white-delete');
+    deleteKey.setAttribute('key', key);
+    //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
+    deleteKey.addEventListener('click', handleClick);
+
+    area.appendChild(clone);
+
+    displayMenu();
+    displayTooltip();
+
+    function displayMenu(){
+      var selectedMenu = document.getElementsByClassName("menu_white");
+      selectedMenu = selectedMenu[i];
+      var menubar = document.getElementsByClassName('menubar');
+      menubar = menubar[i];
+    
+      if (selectedMenu){
+        selectedMenu.addEventListener("click", function(){
+          menubar.classList.toggle('active');
+        })
+      }
+    }
+    
+    function displayTooltip(){
+      const textElement = document.getElementsByClassName("title")[i];
+      const textContent = textElement.textContent; 
+      const textLength = textContent.length;
+
+      if(textLength > 22){
+        var selectedTitle = document.getElementsByClassName("title");
+        selectedTitle = selectedTitle[i];
+        var titleTooltip = document.getElementsByClassName("tooltip");
+        titleTooltip = titleTooltip[i+1];
+      
+        selectedTitle.addEventListener("mouseover", () => {
+          titleTooltip.style.display = "block";
+        });
+        selectedTitle.addEventListener("mouseout", () => {
+          titleTooltip.style.display = "none";
+        });
+      }
+    }
+
+  }
+}
+
+function displayKeyword(data) {
+
+  //컨텐츠 들어갈 위치
+  const container = document.getElementById('dataContainer');
+
+  // 데이터를 텍스트로 변환하여 화면에 추가
+  for (var i = 0; i < data.length; i++) {
+    const k = data[i].keyword;
+
+    const template = document.getElementById("keyword_template");
+    const clone = template.content.cloneNode(true);
+ 
+    clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
+    clone.querySelector(".keyword-box").id="green-"+k;
+    clone.querySelector(".path-area").id = "white-"+k;
+
+    clone.querySelector(".keyword-box").querySelector(".keyword").addEventListener("click",()=>{
+      const url = "https://www.google.com/search?q="+k;
+      chrome.tabs.create({ url: url });
+    })
+
+    container.appendChild(clone);
+
+
+  }
+}
+
+
+//혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
+function readDB() {
+  var request = indexedDB.open("HeyGoogler", 1);
+
+  request.onerror = function(event) {
+    console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+  };
+
+  //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
+  request.onsuccess = function(event) {
+    const db = event.target.result;
+    
+    /* 키워드 출력 (초록 박스) */
+    let transaction = db.transaction([keyStore], 'readonly');
+    let objectStore = transaction.objectStore(keyStore);
+    let request = objectStore.getAll();
+
+    request.onsuccess = function(event) {
+      var data = event.target.result;
+      displayKeyword(data); 
+    };
+
+    transaction.onerror = function(event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function(event) {
+      db.close();
+    };
+
+    /* url 출력 (하얀 박스) */
+    transaction = db.transaction([urlStore], 'readonly');
+    objectStore = transaction.objectStore('urlStore');
+    request = objectStore.getAll();
+    //2. getAll() 함수 성공 시, 화면에 출력
+    request.onsuccess = function(event) {
+      var data = event.target.result;
+      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+      displayURL(data); 
+    };
+
+    transaction.onerror = function(event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function(event) {
+      db.close();
+    };
+
+
   };
 }
+
 
 //dirlist에서
 // 데이터베이스 읽어서 화면에 표시
@@ -433,3 +649,90 @@ function displayData(data) {
     container.appendChild(copy);
   });
 }
+
+function addEvent() {
+  var request = indexedDB.open("HeyGoogler", 1);
+
+  request.onerror = function (event) {
+    console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+  };
+
+  //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
+  request.onsuccess = function (event) {
+    const db = event.target.result;
+    let transaction = db.transaction([keyStore], 'readonly');
+    let objectStore = transaction.objectStore(keyStore);
+    let request = objectStore.getAll();
+    //2. getAll() 함수 성공 시, 화면에 출력
+    request.onsuccess = function (event) {
+      var data = event.target.result;
+      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+      Toggle(data);
+    };
+
+    transaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function (event) {
+      db.close();
+    };
+  }
+}
+
+function deleteDB(key) {
+  // 1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);    
+  request.onerror =(e)=> console.log(e.target.errorCode);
+  // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess =(e)=> {
+    var open_Obs = 'urlStore'
+    const db = request.result;
+    const transaction = db.transaction([open_Obs], 'readwrite');
+    transaction.onerror =(e)=> console.log('fail');
+    transaction.oncomplete =(e)=> console.log('success');
+    // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
+    const objStore = transaction.objectStore([open_Obs]);   
+    // 3. 삭제하기 (키 값인 id로 지정해야 함)
+    const objStoreRequest = objStore.delete(key);       
+    objStoreRequest.onsuccess =(e)=> {
+      console.log('deleted '+key);
+      transaction.commit();
+    }
+  }
+}
+
+/* 나중에 open_Obs 변수에 원하는 저장소 불러올 수 있다면 위의 deleteDB()와 
+통일해서 사용 가능. deleteDB2()는 키워드 삭제용 임시 함수 */
+function deleteDB2(key) {
+  // 1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);    
+  request.onerror =(e)=> console.log(e.target.errorCode);
+  // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess =(e)=> {
+    var open_Obs = 'keywordStore'
+    const db = request.result;
+    const transaction = db.transaction([open_Obs], 'readwrite');
+    transaction.onerror =(e)=> console.log('fail');
+    transaction.oncomplete =(e)=> console.log('success');
+    // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
+    const objStore = transaction.objectStore([open_Obs]);   
+    // 3. 삭제하기 (키 값인 id로 지정해야 함)
+    const objStoreRequest = objStore.delete(key);       
+    objStoreRequest.onsuccess =(e)=> {
+      console.log('deleted '+key);
+      transaction.commit();
+    }
+  }
+}
+  // readDB() 함수 호출
+  readDB();
+  addEvent();
+
+
+// 삭제 버튼을 클릭할 때 실행되는 함수를 정의
+function handleClick(event) {
+  var keyValue = event.target.getAttribute("key");
+  deleteDB(parseInt(keyValue)); //keyValue 값이 string.. 주의
+}
+

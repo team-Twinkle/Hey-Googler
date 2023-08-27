@@ -18,28 +18,44 @@
         <img id="button-reload" src="images/icon_reload.png" />
       </div>
       <span id="tooltip-reload" class="tooltip">reload</span>
+
       <h1 id="dir-title" class="dir-text dir-title">
         <span id="dir-name"></span>
       </h1>
     </header>
+
+    <div id="dataContainer"></div>
     <!-- <div id="keyword_template"> -->
     <template id="keyword_template">
-      <div class="keyword-box">
+      <div class="keyword-box" greenKey="">
+
         <h2 class="keyword">검색어A</h2>
         <!-- 저장 경로 변경시 수정 -->
         <img class="toggle_keyword" src="images/icon_toggle.svg" />
       </div>
       <!-- <div class="path_template"> -->
       <!-- 템플릿 태그 주의 -->
-      <template class="path_template">
-        <li>
-          <a href="#">
-            <h3 class="title">페이지 제목</h3>
-            <p class="path">링크</p>
-          </a>
-        </li>
-      </template>
+
       <!-- </div> -->
+      <div class="path-area"></div>
+    </template>
+    <template id="path_template">
+      <div class="path-box">
+        <a>
+          <h3 class="title">페이지 제목</h3>
+          <span id="tooltip-title" class="tooltip" style="display: none;">툴팁용 페이지 제목</span>
+          <div class="menubar">
+            <img class="menu_white" src="images/icon_menu.png" id="menuIcon"/>
+            <ul>
+              <li><a href="#" class = "white-delete" key="">삭제</a></li>
+              <li><a href="#">타이틀 수정</a></li>
+              <li><a href="#">메모</a></li>
+            </ul>
+          </div>
+          <a class="hyperLink"><p class="path" id="link">링크</p></a>
+        </a>
+      </div>
+
     </template>
     <!-- </div> -->
   </div>
