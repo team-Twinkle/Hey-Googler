@@ -239,10 +239,10 @@ function displayURL(data) {
     })
 
     //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
-    var deleteKey = clone.querySelector('.white-delete');
-    deleteKey.setAttribute('key', key);
+    var deleteBtn = clone.querySelector('.white-delete');
+    deleteBtn.setAttribute('key', key);
     //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
-    deleteKey.addEventListener('click', () => {
+    deleteBtn.addEventListener('click', () => {
       deleteDB(urlStore, key);
     });
 
