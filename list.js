@@ -94,6 +94,7 @@ document.getElementById("dir-name").title =
 
 /********************************************************************************************************* */
 
+
 var reloadButton = document.getElementById("button-reload");
 var folderButton = document.getElementById("button-folder");
 var startButton = document.getElementById("button-start");
@@ -177,8 +178,6 @@ var urlStore = 'urlStore';
 var keyStore = 'keywordStore';
 
 
-var isToggled = true;
-
 function Toggle(data) {
   for (var i = 0; i < data.length; i++) {
     const k = data[i].keyword;
@@ -186,17 +185,21 @@ function Toggle(data) {
     const kwBox = document.getElementById("green-"+k);
     const pathArea = document.getElementById("white-"+k);
     const toggleButton = kwBox.querySelector(".toggle_keyword");
+    let isToggled = false;
 
-    toggleButton.addEventListener("click", () => {  //여기만 성공하면 된다!!
-      isToggled = !isToggled;
-
+    toggleButton.addEventListener("click", () => {  
       // 토글 상태에 따라 컨텐츠 표시/숨김
       if (isToggled) {
-        pathArea.style.display='block';
+        pathArea.style.maxHeight = '100vh' 
+        pathArea.style.opacity = '1'; 
+        isToggled = !isToggled;
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
-        pathArea.style.display='none';
+        pathArea.style.maxHeight = '0'; 
+        isToggled = !isToggled;
       }
+
+
     })
   }
 }
@@ -250,7 +253,11 @@ function displayURL(data) {
     clone.querySelector(".path-box").querySelector(".title").innerHTML = t;
     clone.querySelector(".path-box").querySelector(".path").innerHTML = p;
     clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
-    
+
+    clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click",()=>{
+      chrome.tabs.create({ url: p });
+    })
+
     //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
     var deleteKey = clone.querySelector('.white-delete');
     deleteKey.setAttribute('key', key);
@@ -314,11 +321,17 @@ function displayKeyword(data) {
     clone.querySelector(".keyword-box").id="green-"+k;
     clone.querySelector(".path-area").id = "white-"+k;
 
+    clone.querySelector(".keyword-box").querySelector(".keyword").addEventListener("click",()=>{
+      const url = "https://www.google.com/search?q="+k;
+      chrome.tabs.create({ url: url });
+    })
+
     container.appendChild(clone);
 
 
   }
 }
+
 
 //혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
 function readDB() {
