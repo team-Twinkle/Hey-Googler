@@ -432,5 +432,5 @@ function deleteDB(key) {
 // 삭제 버튼을 클릭할 때 실행되는 함수를 정의
 function handleClick(event) {
   var keyValue = event.target.getAttribute("key");
-  deleteDB(keyValue);
+  deleteDB(parseInt(keyValue));
 }
