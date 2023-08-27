@@ -142,28 +142,28 @@ var beforeTab;
 var currentTab;
 var searchTab;
 
-chrome.tabs.onActivated.addListener(activeInfo=>{
+chrome.tabs.onActivated.addListener(activeInfo => {
   beforeTab = currentTab;
   //console.log("activated changing")
-  chrome.tabs.get(activeInfo.tabId,Tab=>{
-    currentTab=Tab.url;
+  chrome.tabs.get(activeInfo.tabId, Tab => {
+    currentTab = Tab.url;
   })
   currentURL = new URL(currentTab);
-  if(currentURL.hostname==="www.google.com"){
-    searchTab=currentTab;
+  if (currentURL.hostname === "www.google.com") {
+    searchTab = currentTab;
     //console.log("    S       "+searchTab);
   }
-  chrome.tabs.onUpdated.addListener((currentTabId,changingInfo,tabs)=>{
-    if(changingInfo.status==='complete'){
+  chrome.tabs.onUpdated.addListener((currentTabId, changingInfo, tabs) => {
+    if (changingInfo.status === 'complete') {
       //console.log(currentTabId);
-      chrome.tabs.get(currentTabId,Tab=>{
-      currentTab=Tab.url;
-      currentURL = new URL(currentTab);
-      //console.log(currentURL);
-      if(currentURL.hostname==="www.google.com"){
-        searchTab=currentTab;
-        //console.log("    S       "+searchTab);
-      }
+      chrome.tabs.get(currentTabId, Tab => {
+        currentTab = Tab.url;
+        currentURL = new URL(currentTab);
+        //console.log(currentURL);
+        if (currentURL.hostname === "www.google.com") {
+          searchTab = currentTab;
+          //console.log("    S       "+searchTab);
+        }
       })
 
     }
@@ -173,48 +173,48 @@ chrome.tabs.onActivated.addListener(activeInfo=>{
 const visitedUrls = new Set(); //중복 확인용으로 이미 추가된 URL을 저장하는 Set 객체
 const visitedSites = []; //방문 기록
 // 새 탭, 검색창, 2차 이상 링크 모두 제외하고 ***1차 링크만*** 기록
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo) =>{   //referrer 를 확인한다 ! 
-    if (changeInfo.status === 'complete'){
-      chrome.tabs.sendMessage(tabId,"referrer",response=>{
-        var referrer = response; //referrer 얻은 데이터 !!
-        //console.log("===========================>>>>>"+referrer);
-        
-        if(referrer=='https://www.google.com/'){//1차링크인 경우 추적 
-            chrome.history.onVisited.addListener((historyItem) => {
-              const url = historyItem.url;
-              //검색창인 경우 제외
-              var str = url.substr(0, 29);
-              if (str == "https://www.google.com/search") {
-                return;
-              }   
-              //console.log(historyItem.title);
-              if (!visitedUrls.has(url) && isExtensionOn==true) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
-                visitedUrls.add(url);
-                chrome.history.search({text: url}, (historyItems) => {
-                  const title = historyItems[historyItems.length-1].title; 
-                  const url_ = new URL(searchTab);
-                  //console.log(url_);
-                  keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-                  visitedSites.push({url: url, title: title, keyword: keyword1});
-                  console.log("Visited Site:", url, title, keyword1);
-                  //db에 data 입력
-                  const datas = [
-                    {
-                      url: url,
-                      title: title,
-                      memo: " ",
-                      keyword: keyword1,
-                      dir_id: 1,
-                    },
-                  ];
-                  writeDB(datas, "urlStore");
-                });
-              }
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확인한다 ! 
+  if (changeInfo.status === 'complete') {
+    chrome.tabs.sendMessage(tabId, "referrer", response => {
+      var referrer = response; //referrer 얻은 데이터 !!
+      //console.log("===========================>>>>>"+referrer);
+
+      if (referrer == 'https://www.google.com/') {//1차링크인 경우 추적 
+        chrome.history.onVisited.addListener((historyItem) => {
+          const url = historyItem.url;
+          //검색창인 경우 제외
+          var str = url.substr(0, 29);
+          if (str == "https://www.google.com/search") {
+            return;
+          }
+          //console.log(historyItem.title);
+          if (!visitedUrls.has(url) && isExtensionOn == true) { // Set 객체에 URL이 포함되어 있지 않은 경우에만 추가
+            visitedUrls.add(url);
+            chrome.history.search({ text: url }, (historyItems) => {
+              const title = historyItems[historyItems.length - 1].title;
+              const url_ = new URL(searchTab);
+              //console.log(url_);
+              keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
+              visitedSites.push({ url: url, title: title, keyword: keyword1 });
+              console.log("Visited Site:", url, title, keyword1);
+              //db에 data 입력
+              const datas = [
+                {
+                  url: url,
+                  title: title,
+                  memo: " ",
+                  keyword: keyword1,
+                  dir_id: 1,
+                },
+              ];
+              writeDB(datas, "urlStore");
             });
           }
-        else console.log("이전 링크가 검색창이 아님!!!!");   
-      });
-    }
+        });
+      }
+      else console.log("이전 링크가 검색창이 아님!!!!");
+    });
+  }
 
 });
 
