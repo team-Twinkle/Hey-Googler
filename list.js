@@ -194,14 +194,14 @@ function Toggle(data) {
       if (isToggled) {
         toggleButton.classList.add("toggleShown");
         toggleButton.classList.remove("toggleHidden");
-        
+
         pathArea.style.maxHeight = '100vh'
         pathArea.style.opacity = '1';
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
         toggleButton.classList.add("toggleHidden");
         toggleButton.classList.remove("toggleShown");
-        
+
         pathArea.style.maxHeight = '0';
       }
       isToggled = !isToggled;
@@ -239,12 +239,27 @@ function displayURL(data) {
     })
 
     //삭제 기능을 위해 삭제 버튼에 데이터 id 값 추가
-    var deleteBtn = clone.querySelector('.white-delete');
+    var deleteBtn = clone.querySelector('.white-menu1');
     deleteBtn.setAttribute('key', key);
     //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
     deleteBtn.addEventListener('click', () => {
       deleteDB(urlStore, key);
     });
+    const memoBtn = clone.querySelector('.white-menu3');
+    const modal = document.getElementById("modal")
+    memoBtn.addEventListener('click', () => {
+      modal.style.display = "flex";
+    })
+    const closeBtn = modal.querySelector(".closeBtn")
+    closeBtn.addEventListener("click", e => {
+      modal.style.display = "none"
+    })
+    modal.addEventListener("click", e => {
+      const evTarget = e.target
+      if (evTarget.classList.contains("modal-overlay")) {
+        modal.style.display = "none"
+      }
+    })
 
     area.appendChild(clone);
 
