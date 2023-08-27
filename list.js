@@ -164,7 +164,7 @@ function initListPage() {
 
   console.log("initListPage");
   console.log(dirName, dirId);
-  console.log(currentDirLink, currenDirId);
+  // console.log(currentDirLink, currenDirId);
 
   //NULL체크는 필수! -> 왜냐하면 dirlist.html에서는 dirName이 null이기 때문에
   if (dirName != null) {
