@@ -244,6 +244,14 @@ body {
   background-color: #ddd; 
 }
 
+.white-menu1{
+  border-radius: 15px 15px 0 0;
+}
+
+.white-menu3{
+  border-radius: 0 0 15px 15px;
+}
+
 .menu_white {
   width: 16px;
   height: auto;

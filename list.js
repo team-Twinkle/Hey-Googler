@@ -1,3 +1,5 @@
+window.history.scrollRestoration = "auto";
+
 //키워드 토글
 function keywordToggleClick() {
   //var toggle = document.getElementsByClassName("toggle_keyword");
@@ -239,7 +241,6 @@ function displayURL(data) {
     //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
     deleteKey.addEventListener('click', () => {
       deleteDB(urlStore, key);
-      location.reload();
     });
 
     area.appendChild(clone);
@@ -501,6 +502,7 @@ function deleteDB(obs, key) {
     objStoreRequest.onsuccess = (e) => {
       console.log('deleted ' + key);
       transaction.commit();
+      location.reload();
     }
   }
 }
