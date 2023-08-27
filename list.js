@@ -192,16 +192,19 @@ function Toggle(data) {
     toggleButton.addEventListener("click", () => {
       // 토글 상태에 따라 컨텐츠 표시/숨김
       if (isToggled) {
+        toggleButton.classList.add("toggleShown");
+        toggleButton.classList.remove("toggleHidden");
+        
         pathArea.style.maxHeight = '100vh'
         pathArea.style.opacity = '1';
-        isToggled = !isToggled;
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
+        toggleButton.classList.add("toggleHidden");
+        toggleButton.classList.remove("toggleShown");
+        
         pathArea.style.maxHeight = '0';
-        isToggled = !isToggled;
       }
-
-
+      isToggled = !isToggled;
     })
   }
 }
