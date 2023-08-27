@@ -243,7 +243,7 @@ stopButton.addEventListener("mouseout", () => {
 //send message to background.js when the start/stop button clicked
 startButton.addEventListener("click", () => {
   startButton.src = "images/icon_start_true.svg";
-  onDirId = currenDirId;
+  // onDirId = currenDirId; 
   chrome.runtime.sendMessage("Start the extension from list.js");
 });
 
