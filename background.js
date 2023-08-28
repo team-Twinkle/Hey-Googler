@@ -22,7 +22,7 @@ request.onupgradeneeded = function (event) {
     autoIncrement: true,
   });
 
-  urlStore.createIndex("url", ["dir_id","url"], { unique: true });
+  urlStore.createIndex("url", "url", { unique: false });
   urlStore.createIndex("title", "title", { unique: false });
   urlStore.createIndex("memo", "memo", { unique: false });
   urlStore.createIndex("keyword", "keyword", { unique: false });
@@ -31,18 +31,17 @@ request.onupgradeneeded = function (event) {
   //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {
     keyPath: "id",
-    autoIncrement:true
+    autoIncrement: true
   });
 
-  keywordStore.createIndex("dir_id","dir_id",{unique:false});
-  keywordStore.createIndex("keyword",["dir_id","keyword"],{unique:true});
+  keywordStore.createIndex("dir_id", "dir_id", { unique: false });
+  keywordStore.createIndex("keyword", "keyword", { unique: false });
 
   //dir store
   var dirStore = db.createObjectStore("dirStore", {
     keyPath: "d_id",
     autoIncrement: true,
   });
-  dirStore.createIndex("dir_id", "dir_id", { unique: false });
   dirStore.createIndex("dir_name", "dir_name", { unique: false });
 
   request.onerror = function (event) {
@@ -204,13 +203,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
             const url_ = new URL(searchTab);
             //console.log(url_);
             keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-            const keyData = [{ dir_id:"1",keyword: keyword1}];
+            const keyData = [{ dir_id: "1", keyword: keyword1 }];
             writeDB(keyData, "keywordStore");
             console.log("Visited Site:", url, title, keyword1);
             //db에 data 입력
             const datas = [
               {
-                url: url,
+                url: ['1', url],
                 title: title,
                 memo: " ",
                 keyword: keyword1,
