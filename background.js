@@ -22,7 +22,7 @@ request.onupgradeneeded = function (event) {
     autoIncrement: true,
   });
 
-  urlStore.createIndex("url", ["dir_id","url"], { unique: true });
+  urlStore.createIndex("url", ["dir_id", "url"], { unique: true });
   urlStore.createIndex("title", "title", { unique: false });
   urlStore.createIndex("memo", "memo", { unique: false });
   urlStore.createIndex("keyword", "keyword", { unique: false });
@@ -31,11 +31,11 @@ request.onupgradeneeded = function (event) {
   //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {
     keyPath: "id",
-    autoIncrement:true
+    autoIncrement: true
   });
 
-  keywordStore.createIndex("dir_id","dir_id",{unique:false});
-  keywordStore.createIndex("keyword",["dir_id","keyword"],{unique:true});
+  keywordStore.createIndex("dir_id", "dir_id", { unique: false });
+  keywordStore.createIndex("keyword", ["dir_id", "keyword"], { unique: true });
 
   //dir store
   var dirStore = db.createObjectStore("dirStore", {
@@ -180,48 +180,42 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확인한다 ! 
   if (changeInfo.status === 'complete') {
     chrome.tabs.sendMessage(tabId, "referrer", response => {
-      var referrer = response; //referrer 얻은 데이터 !!
+      var referrer = response.referrer; //referrer 얻은 데이터 !!
       //console.log("===========================>>>>>"+referrer);
 
       if (referrer == 'https://www.google.com/') {//1차링크인 경우 추적 
-        chrome.history.onVisited.addListener((historyItem) => {
-          const url = historyItem.url;
-          //검색창인 경우 제외
-          var str1 = url.substr(0, 22);
-          var str2 = url.substr(0, 19);
-          if (str1 == "https://www.google.com") {
-            return;
-          }
-          if (str2 == "chrome-extension://") {
-            return;
-          }
-          //console.log(historyItem.title);
+        let url = response.url;
+        let title = response.title;
+        //검색창인 경우 제외
+        let str1 = url.substr(0, 22);
+        let str2 = url.substr(0, 19);
+        if (str1 == "https://www.google.com") {
+          return;
+        }
+        if (str2 == "chrome-extension://") {
+          return;
+        }
+        //console.log(historyItem.title);
 
-
-          chrome.history.search({ text: url }, (historyItems) => {
-            const title = historyItems[historyItems.length - 1].title;
-            const url_ = new URL(searchTab);
-            //console.log(url_);
-            keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
-            if (keyword1 != null) {
-              const keyData = [{ dir_id: "1", keyword: keyword1 }];
-              writeDB(keyData, "keywordStore");
-              console.log("Visited Site:", url, title, keyword1);
-              //db에 data 입력
-              const datas = [
-                {
-                  url: url,
-                  title: title,
-                  memo: " ",
-                  keyword: keyword1,
-                  dir_id: "1"
-                },
-              ];
-              writeDB(datas, "urlStore");
-            }
-          });
-
-        });
+        const url_ = new URL(searchTab);
+        //console.log(url_);
+        keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
+        if (keyword1 != null) {
+          const keyData = [{ dir_id: "1", keyword: keyword1 }];
+          writeDB(keyData, "keywordStore");
+          console.log("Visited Site:", url, title, keyword1);
+          //db에 data 입력
+          const datas = [
+            {
+              url: url,
+              title: title,
+              memo: " ",
+              keyword: keyword1,
+              dir_id: "1"
+            },
+          ];
+          writeDB(datas, "urlStore");
+        }
       }
       else console.log("이전 링크가 검색창이 아님!!!!");
     });

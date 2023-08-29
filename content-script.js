@@ -6,9 +6,11 @@ chrome.runtime.onMessage.addListener((msg, sender,sendResponse)=>{
         toggle();
     }
     else if(msg ==='referrer'){
-        var referrer=document.referrer;
+        const referrer= document.referrer;
+        const title = document.title;
+        const url = document.baseURI;
         //console.log(referrer);
-        sendResponse(referrer);
+        sendResponse({referrer:referrer,title:title,url:url});
     }
 });
 
