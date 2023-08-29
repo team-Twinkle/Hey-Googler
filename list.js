@@ -264,6 +264,8 @@ function displayURL(data) {
     //각 삭제 버튼에 클릭 이벤트 리스너를 추가 
     deleteKey.addEventListener('click', handleClick);
 
+    
+
     area.appendChild(clone);
 
     displayMenu();
@@ -313,18 +315,22 @@ function displayKeyword(data) {
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
     const k = data[i].keyword;
+    const gk = data[i].id;
 
     const template = document.getElementById("keyword_template");
     const clone = template.content.cloneNode(true);
  
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
-    clone.querySelector(".keyword-box").id="green-"+k;
+    clone.querySelector(".keyword-box").id= "green-"+k;
     clone.querySelector(".path-area").id = "white-"+k;
 
     clone.querySelector(".keyword-box").querySelector(".keyword").addEventListener("click",()=>{
       const url = "https://www.google.com/search?q="+k;
       chrome.tabs.create({ url: url });
     })
+
+    var greenBox = clone.getElementById("green-" + k);
+    greenBox.setAttribute('Key', gk);
 
     container.appendChild(clone);
 
@@ -437,29 +443,6 @@ function deleteDB(key) {
   }
 }
 
-/* 나중에 open_Obs 변수에 원하는 저장소 불러올 수 있다면 위의 deleteDB()와 
-통일해서 사용 가능. deleteDB2()는 키워드 삭제용 임시 함수 */
-function deleteDB2(key) {
-  // 1. db 열기
-  var request = indexedDB.open("HeyGoogler", 1);    
-  request.onerror =(e)=> console.log(e.target.errorCode);
-  // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
-  request.onsuccess =(e)=> {
-    var open_Obs = 'keywordStore'
-    const db = request.result;
-    const transaction = db.transaction([open_Obs], 'readwrite');
-    transaction.onerror =(e)=> console.log('fail');
-    transaction.oncomplete =(e)=> console.log('success');
-    // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
-    const objStore = transaction.objectStore([open_Obs]);   
-    // 3. 삭제하기 (키 값인 id로 지정해야 함)
-    const objStoreRequest = objStore.delete(key);       
-    objStoreRequest.onsuccess =(e)=> {
-      console.log('deleted '+key);
-      transaction.commit();
-    }
-  }
-}
   // readDB() 함수 호출
   readDB();
   addEvent();
@@ -470,3 +453,33 @@ function handleClick(event) {
   var keyValue = event.target.getAttribute("key");
   deleteDB(parseInt(keyValue)); //keyValue 값이 string.. 주의
 }
+
+
+    // whiteBox에 element 0개면 greenBox도 삭제
+    /*****************여기 수정중 */
+
+    for(var i=0; i<data.length; i++){
+      var ele = document.getElementById('white-'+k);
+      var eleCount = ele.childElementCount;
+      if (eleCount == 0){
+          // 1. db 열기
+        var request = indexedDB.open("HeyGoogler", 1);    
+        request.onerror =(e)=> console.log(e.target.errorCode);
+        // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+        request.onsuccess =(e)=> {
+          var open_Obs = 'keywordStore'
+          const db = request.result;
+          const transaction = db.transaction([open_Obs], 'readwrite');
+          transaction.onerror =(e)=> console.log('fail');
+          transaction.oncomplete =(e)=> console.log('success');
+          // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
+          const objStore = transaction.objectStore([open_Obs]);   
+          // 3. 삭제하기 (키 값인 id로 지정해야 함)
+          const objStoreRequest = objStore.delete(gk);       
+          objStoreRequest.onsuccess =(e)=> {
+            console.log('deleted '+ gk);
+            transaction.commit();
+        }
+      }
+      }
+    }
