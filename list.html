@@ -41,17 +41,33 @@
           <h3 class="title">페이지 제목</h3>
           <span id="tooltip-title" class="tooltip" style="display: none;">툴팁용 페이지 제목</span>
           <div class="menubar">
-            <img class="menu_white" src="images/icon_menu.png" id="menuIcon"/>
+            <img class="menu_white" src="images/icon_menu.png" id="menuIcon" />
             <ul>
-              <li><a href="#" class = "white-delete" key="">삭제</a></li>
-              <li><a href="#">타이틀 수정</a></li>
-              <li><a href="#">메모</a></li>
+              <li class="white-menu1"><a class="white-delete" key="">삭제</a></li>
+              <li class="white-menu2"><a>타이틀 수정</a></li>
+              <li class="white-menu3"><a class="white-memo">메모</a></li>
             </ul>
           </div>
-          <a class="hyperLink"><p class="path" id="link">링크</p></a>
+          <a class="hyperLink">
+            <p class="path" id="link">링크</p>
+          </a>
         </a>
       </div>
     </template>
+    <div id="modal" class="modal-overlay">
+      <div class="modal-window">
+        <div class="title">
+          <b>메모를 작성해주세요 !</b> <br>(20글자 미만)
+        </div>
+        <div class="content">
+          <input type="text" maxlength='20'>
+        </div>
+        <div class="btn-area">
+          <button class="modalBtn closeBtn">취소</button>
+          <button class="modalBtn saveBtn">저장</button>
+        </div>
+      </div>
+    </div>
     <!-- </div> -->
   </div>
   <footer>
