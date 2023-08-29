@@ -404,6 +404,26 @@ function readDB() {
       db.close();
     };
 
+    /* url 없을 경우 초록 박스 자동 삭제 */
+    transaction = db.transaction([keyStore, urlStore], 'readwrite');
+    objectStore = transaction.objectStore(keyStore);
+    request = objectStore.getAll();
+
+    request.onsuccess = function (event) {
+      //여기에서 keyStore의 자료와 urlStore의 자료를 따로따로 받아오는 법을 알려줘.
+      var data = event.target.result;
+      
+    };
+
+    transaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function (event) {
+      db.close();
+    };
+
+
     /* 하얀 박스에 이벤트 추가 (menu , tooltip) */
 
     transaction = db.transaction([urlStore], 'readonly');
@@ -528,30 +548,27 @@ function deleteDB(obs, key) {
   }
 }
 
-function deleteGreenBox(){
-  var greenList = document.querySelectorAll(".keyword-box");
-  greenList = Array.from(greenList);
-  console.log("1번");
-  for (var i = 0; i<greenList.length; i++){
-    console.log("2번");
-    var idValue = greenList[i].id;
-    var keyValue = parseInt(greenList[i].getAttribute('key'));
-    var parsedIdValue = idValue.replace('green-', '');
+// function deleteGreenBox(){
+//   var greenList = document.querySelectorAll(".keyword-box");
+//   console.log(greenList);
+//   for (var i = 0; i<greenList.length; i++){
+//     var idValue = greenList[i].id;
+//     var keyValue = parseInt(greenList[i].getAttribute('key'));
+//     var parsedIdValue = idValue.replace('green-', '');
      
-    var whiteEle = document.getElementById("white-"+parsedIdValue);
-    var whiteEleCount = whiteEle.childElementCount;
+//     var whiteEle = document.getElementById("white-"+parsedIdValue);
+//     var whiteEleCount = whiteEle.childElementCount;
 
-    if(whiteEleCount == 0){
-      deleteDB(keyStore, keyValue);
-      location.reload();
-    }
-  }
-}
+//     if(whiteEleCount == 0){
+//       deleteDB(keyStore, keyValue);
+//       location.reload();
+//     }
+//   }
+// }
 
   // readDB() 함수 호출
   readDB();
   addEvent();
-  deleteGreenBox();
 
 
 // 삭제 버튼을 클릭할 때 실행되는 함수를 정의
