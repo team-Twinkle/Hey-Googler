@@ -27,7 +27,7 @@ request.onupgradeneeded = function (event) {
   urlStore.createIndex("memo", "memo", { unique: false });
   urlStore.createIndex("keyword", "keyword", { unique: false });
   urlStore.createIndex("dir_id", "dir_id", { unique: false });
-  urlStore.createIndex('by_dir_id_keyword', ['dir_id', 'keyword']);
+  urlStore.createIndex("dir_id_keyword", ["dir_id", "keyword"], { unique: false });
 
   //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {

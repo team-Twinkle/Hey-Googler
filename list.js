@@ -406,13 +406,32 @@ function readDB() {
 
     /* url 없을 경우 초록 박스 자동 삭제 */
     transaction = db.transaction([keyStore, urlStore], 'readwrite');
-    objectStore = transaction.objectStore(keyStore);
-    request = objectStore.getAll();
+    objectStoreKey = transaction.objectStore(keyStore);
+    objectStoreUrl = transaction.objectStore(urlStore);
 
-    request.onsuccess = function (event) {
-      //여기에서 keyStore의 자료와 urlStore의 자료를 따로따로 받아오는 법을 알려줘.
-      var data = event.target.result;
+    requestKey = objectStoreKey.getAll();
+
+    requestKey.onsuccess = function(event) {
+      var keyData = event.target.result;
+      // keyStore의 데이터를 keyData 변수에 저장
       
+      // keyData 배열의 각 요소에 대해 반복
+      for (var i = 0; i < keyData.length; i++) {
+        var dirId = keyData[i].dir_id;
+        var keyword = keyData[i].keyword;
+        var id = keyData[i].id;
+
+        // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
+        var requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
+
+        requestUrlSearch.onsuccess = function(event) {
+          var matchingUrlData = event.target.result;
+          if (!matchingUrlData) {
+            deleteDB(keyStore, id);
+            console.log("GreenBox deleted");
+          }
+        };
+      }
     };
 
     transaction.onerror = function (event) {
