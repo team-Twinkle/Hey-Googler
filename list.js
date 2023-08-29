@@ -490,10 +490,9 @@ function addEvent() {
     let transaction = db.transaction([keyStore], 'readonly');
     let objectStore = transaction.objectStore(keyStore);
     let request = objectStore.getAll();
-    //2. getAll() 함수 성공 시, 화면에 출력
+    //2. getAll() 함수 성공 시, 각각의 키워드에 토글 이벤트 추가
     request.onsuccess = function (event) {
       var data = event.target.result;
-      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
       Toggle(data);
     };
 
@@ -529,9 +528,30 @@ function deleteDB(obs, key) {
   }
 }
 
+function deleteGreenBox(){
+  var greenList = document.querySelectorAll(".keyword-box");
+  greenList = Array.from(greenList);
+  console.log("1번");
+  for (var i = 0; i<greenList.length; i++){
+    console.log("2번");
+    var idValue = greenList[i].id;
+    var keyValue = parseInt(greenList[i].getAttribute('key'));
+    var parsedIdValue = idValue.replace('green-', '');
+     
+    var whiteEle = document.getElementById("white-"+parsedIdValue);
+    var whiteEleCount = whiteEle.childElementCount;
+
+    if(whiteEleCount == 0){
+      deleteDB(keyStore, keyValue);
+      location.reload();
+    }
+  }
+}
+
   // readDB() 함수 호출
   readDB();
   addEvent();
+  deleteGreenBox();
 
 
 // 삭제 버튼을 클릭할 때 실행되는 함수를 정의
@@ -540,32 +560,3 @@ function handleClick(event) {
   deleteDB(parseInt(keyValue)); //keyValue 값이 string.. 주의
 }
 
-
-    // whiteBox에 element 0개면 greenBox도 삭제
-    /*****************여기 수정중 */
-
-    for(var i=0; i<data.length; i++){
-      var ele = document.getElementById('white-'+k);
-      var eleCount = ele.childElementCount;
-      if (eleCount == 0){
-          // 1. db 열기
-        var request = indexedDB.open("HeyGoogler", 1);    
-        request.onerror =(e)=> console.log(e.target.errorCode);
-        // 2-1. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
-        request.onsuccess =(e)=> {
-          var open_Obs = 'keywordStore'
-          const db = request.result;
-          const transaction = db.transaction([open_Obs], 'readwrite');
-          transaction.onerror =(e)=> console.log('fail');
-          transaction.oncomplete =(e)=> console.log('success');
-          // 2-2. 열려있는 저장소(현재는 url 저장소) 접근
-          const objStore = transaction.objectStore([open_Obs]);   
-          // 3. 삭제하기 (키 값인 id로 지정해야 함)
-          const objStoreRequest = objStore.delete(gk);       
-          objStoreRequest.onsuccess =(e)=> {
-            console.log('deleted '+ gk);
-            transaction.commit();
-        }
-      }
-      }
-    }
