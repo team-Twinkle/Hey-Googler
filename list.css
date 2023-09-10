@@ -257,7 +257,7 @@ body {
 
 .wrap .path-box .menubar li a {
   color: black;
-  font-size: x-small;
+  font-size: small;
 }
 
 .menubar li:hover {
