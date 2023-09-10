@@ -261,7 +261,10 @@ function displayURL(data) {
       }
     })
 
-    area.appendChild(clone);
+    if(area){
+      area.appendChild(clone);
+    }
+    
 
     // displayMenu();
     // displayTooltip();
