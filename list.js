@@ -587,23 +587,31 @@ function deleteDB(obs, key) {
   }
 }
 
-// function deleteGreenBox(){
-//   var greenList = document.querySelectorAll(".keyword-box");
-//   console.log(greenList);
-//   for (var i = 0; i<greenList.length; i++){
-//     var idValue = greenList[i].id;
-//     var keyValue = parseInt(greenList[i].getAttribute('key'));
-//     var parsedIdValue = idValue.replace('green-', '');
-     
-//     var whiteEle = document.getElementById("white-"+parsedIdValue);
-//     var whiteEleCount = whiteEle.childElementCount;
+function editDB(obs, key, value) {
+  //value는 변경하려는 값
+  //1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);
+  request.onerror = (e) => console.log(e.target.errorCode);
+  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess = (e) => {
+    const db = request.result;
+    const transaction = db.transaction([obs], 'readwrite');
+    transaction.onerror = (e) => console.log('fail');
+    transaction.oncomplete = (e) =>console.log('success');
+    const objStore = transaction.objectStore([obs]);
+    //3. key 값을 가진 데이터 불러오기
+    const objStoreRequest = objStore.get(key);
+    objStoreRequest.onsuccess = function (event) {
+      var data = event.target.result;
+      data.title = value;
+      var updateRequest = objStore.put(data);
+      updateRequest.onerror = (e) => console.log('update error');
+      updateRequest.onsuccess = (e) => console.log('update success');
+    }
+    location.reload();
+  }
+}
 
-//     if(whiteEleCount == 0){
-//       deleteDB(keyStore, keyValue);
-//       location.reload();
-//     }
-//   }
-// }
 
   // readDB() 함수 호출
   readDB();
