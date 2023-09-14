@@ -260,7 +260,21 @@ function displayURL(data) {
         modal.style.display = "none"
       }
     })
-
+    const editBtn = clone.querySelector('.white-menu2');
+    const editmodal = document.getElementById("modal-t")
+    editBtn.addEventListener('click', () => {
+     editmodal.style.display = "flex";
+    })
+    const editcloseBtn = editmodal.querySelector(".closeBtn")
+    editcloseBtn.addEventListener("click", e => {
+    editmodal.style.display = "none"
+    })
+    editmodal.addEventListener("click", e => {
+      const editevTarget = e.target
+      if (editevTarget.classList.contains("modal-overlay")) {
+        editmodal.style.display = "none"
+      }
+    })
     if(area){
       area.appendChild(clone);
     }
@@ -488,23 +502,25 @@ function readDB() {
           })
         }
         //displayTooltip
-        const textElement = document.getElementsByClassName("title")[i];
-        const textContent = textElement.textContent;
-        const textLength = textContent.length;
-
-        if (textLength > 22) {
-          var selectedTitle = document.getElementsByClassName("title");
-          selectedTitle = selectedTitle[i];
-          var titleTooltip = document.getElementsByClassName("tooltip");
-          titleTooltip = titleTooltip[i + 1];
-
-          selectedTitle.addEventListener("mouseover", () => {
-            titleTooltip.style.display = "block";
-          });
-          selectedTitle.addEventListener("mouseout", () => {
-            titleTooltip.style.display = "none";
-          });
-        }
+        (function(index) {
+          const textElement = document.getElementsByClassName("title")[index];
+          const textContent = textElement.textContent;
+          const textLength = textContent.length;
+          
+          if(textLength > 22){
+            var selectedTitle = document.getElementsByClassName("title");
+            selectedTitle = selectedTitle[index];
+            var titleTooltip = document.getElementsByClassName("tooltipTitle");
+            titleTooltip = titleTooltip[index];
+        
+            selectedTitle.addEventListener("mouseover", () => {
+              titleTooltip.style.display = "block";
+            });
+            selectedTitle.addEventListener("mouseout", () => {
+              titleTooltip.style.display = "none";
+            });
+          }
+        })(i);
       }
     };
 
