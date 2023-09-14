@@ -429,20 +429,20 @@ function readDB() {
     requestKey = objectStoreKey.getAll();
 
     requestKey.onsuccess = function(event) {
-      var keyData = event.target.result;
+      let keyData = event.target.result;
       // keyStore의 데이터를 keyData 변수에 저장
       
       // keyData 배열의 각 요소에 대해 반복
       for (var i = 0; i < keyData.length; i++) {
-        var dirId = keyData[i].dir_id;
-        var keyword = keyData[i].keyword;
-        var id = keyData[i].id;
+        let dirId = keyData[i].dir_id;
+        let keyword = keyData[i].keyword;
+        let id = keyData[i].id;
 
         // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
-        var requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
+        let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
 
         requestUrlSearch.onsuccess = function(event) {
-          var matchingUrlData = event.target.result;
+          let matchingUrlData = event.target.result;
           if (!matchingUrlData) {
             deleteDB(keyStore, id);
             console.log("GreenBox deleted");
@@ -502,16 +502,17 @@ function readDB() {
           })
         }
         //displayTooltip
-        (function(index) {
-          const textElement = document.getElementsByClassName("title")[index];
+
+          const textElement = document.getElementsByClassName("title")[i];
           const textContent = textElement.textContent;
           const textLength = textContent.length;
           
           if(textLength > 22){
-            var selectedTitle = document.getElementsByClassName("title");
-            selectedTitle = selectedTitle[index];
-            var titleTooltip = document.getElementsByClassName("tooltipTitle");
-            titleTooltip = titleTooltip[index];
+            //주의: var 아닌 let으로 선언해줘야함.
+            let selectedTitle = document.getElementsByClassName("title");
+            selectedTitle = selectedTitle[i];
+            let titleTooltip = document.getElementsByClassName("tooltipTitle");
+            titleTooltip = titleTooltip[i];
         
             selectedTitle.addEventListener("mouseover", () => {
               titleTooltip.style.display = "block";
@@ -520,7 +521,7 @@ function readDB() {
               titleTooltip.style.display = "none";
             });
           }
-        })(i);
+
       }
     };
 
