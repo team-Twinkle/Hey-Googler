@@ -251,6 +251,7 @@ function displayURL(data) {
       modal.style.display = "flex";
     })
     const closeBtn = modal.querySelector(".closeBtn")
+    console.log("closeBtn "+closeBtn);
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none"
     })
@@ -260,7 +261,26 @@ function displayURL(data) {
         modal.style.display = "none"
       }
     })
+    const editBtn = clone.querySelector('.white-menu2');
+     const editmodal = document.getElementById("modal-t")
+    editBtn.addEventListener('click', () => {
+      editmodal.style.display = "flex";
+    })
+    const editcloseBtn = editmodal.querySelector(".closeBtn")
+    console.log("editcloseBtn "+editcloseBtn);
 
+    editcloseBtn.addEventListener("click", e => {
+      editmodal.style.display = "none"
+    })
+
+    editmodal.addEventListener("click", e => {
+      const editevTarget = e.target
+      if (editevTarget.classList.contains("modal-overlay")) {
+        editmodal.style.display = "none"
+      }
+    })
+
+    
     if(area){
       area.appendChild(clone);
     }
