@@ -22,7 +22,9 @@ request.onupgradeneeded = function (event) {
     autoIncrement: true,
   });
 
+
   urlStore.createIndex("url", ["dir_id", "url"], { unique: true });
+
   urlStore.createIndex("title", "title", { unique: false });
   urlStore.createIndex("memo", "memo", { unique: false });
   urlStore.createIndex("keyword", "keyword", { unique: false });
@@ -36,14 +38,15 @@ request.onupgradeneeded = function (event) {
   });
 
   keywordStore.createIndex("dir_id", "dir_id", { unique: false });
+
   keywordStore.createIndex("keyword", ["dir_id", "keyword"], { unique: true });
+
 
   //dir store
   var dirStore = db.createObjectStore("dirStore", {
     keyPath: "d_id",
     autoIncrement: true,
   });
-  dirStore.createIndex("dir_id", "dir_id", { unique: false });
   dirStore.createIndex("dir_name", "dir_name", { unique: false });
 
   request.onerror = function (event) {
@@ -129,7 +132,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //list.js 로부터 메시지를 받아서 사이드바에서 시작버튼이나 중지 버튼을 누르면 isExtensionOn 의 값과 액션 아이콘 뱃지의 텍스트가 변경되도록 하는 코드
 //<extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onMessage.addListener((msg) => {
-  //console.log(msg);
+  // console.log(msg);
   if (msg == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
     //console.log("is the extension ON? : " + isExtensionOn);
@@ -152,7 +155,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-    console.log(currentTab);
+
   })
   currentURL = new URL(currentTab);
   if (currentURL.hostname === "www.google.com") {
@@ -185,6 +188,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
       //console.log("===========================>>>>>"+referrer);
 
       if (referrer == 'https://www.google.com/') {//1차링크인 경우 추적 
+
         let url = response.url;
         let title = response.title;
         //검색창인 경우 제외
@@ -217,6 +221,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
           ];
           writeDB(datas, "urlStore");
         }
+
       }
       else console.log("이전 링크가 검색창이 아님!!!!");
     });
