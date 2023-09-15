@@ -127,7 +127,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //list.js 로부터 메시지를 받아서 사이드바에서 시작버튼이나 중지 버튼을 누르면 isExtensionOn 의 값과 액션 아이콘 뱃지의 텍스트가 변경되도록 하는 코드
 //<extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onMessage.addListener((msg) => {
-  //console.log(msg);
+  // console.log(msg);
   if (msg == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
     //console.log("is the extension ON? : " + isExtensionOn);

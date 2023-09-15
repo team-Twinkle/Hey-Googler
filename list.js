@@ -304,6 +304,7 @@ function writeDB(datas, store_name, callback) {
 }
 
 //edit 재사용성을 높이고 샆어
+//민지 함수랑 같이 확인
 function editDirNameDB(id, name) {
 
   var request = indexedDB.open("HeyGoogler", 1);
