@@ -22,7 +22,7 @@ request.onupgradeneeded = function (event) {
     autoIncrement: true,
   });
 
-  urlStore.createIndex("url", ["dir_id","url"], { unique: true });
+  urlStore.createIndex("url", "url", { unique: false });
   urlStore.createIndex("title", "title", { unique: false });
   urlStore.createIndex("memo", "memo", { unique: false });
   urlStore.createIndex("keyword", "keyword", { unique: false });
@@ -32,18 +32,17 @@ request.onupgradeneeded = function (event) {
   //keyword store
   var keywordStore = db.createObjectStore("keywordStore", {
     keyPath: "id",
-    autoIncrement:true
+    autoIncrement: true
   });
 
-  keywordStore.createIndex("dir_id","dir_id",{unique:false});
-  keywordStore.createIndex("keyword",["dir_id","keyword"],{unique:true});
+  keywordStore.createIndex("dir_id", "dir_id", { unique: false });
+  keywordStore.createIndex("keyword", "keyword", { unique: false });
 
   //dir store
   var dirStore = db.createObjectStore("dirStore", {
     keyPath: "d_id",
     autoIncrement: true,
   });
-  dirStore.createIndex("dir_id", "dir_id", { unique: false });
   dirStore.createIndex("dir_name", "dir_name", { unique: false });
 
   request.onerror = function (event) {
@@ -129,7 +128,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //list.js 로부터 메시지를 받아서 사이드바에서 시작버튼이나 중지 버튼을 누르면 isExtensionOn 의 값과 액션 아이콘 뱃지의 텍스트가 변경되도록 하는 코드
 //<extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onMessage.addListener((msg) => {
-  //console.log(msg);
+  // console.log(msg);
   if (msg == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
     //console.log("is the extension ON? : " + isExtensionOn);
@@ -152,7 +151,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-    console.log(currentTab);
+
   })
   currentURL = new URL(currentTab);
   if (currentURL.hostname === "www.google.com") {
@@ -188,6 +187,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         chrome.history.onVisited.addListener((historyItem) => {
           const url = historyItem.url;
           //검색창인 경우 제외
+
           var str1 = url.substr(0, 22);
           var str2 = url.substr(0, 19);
           if (str1 == "https://www.google.com") {
@@ -204,6 +204,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
             const url_ = new URL(searchTab);
             //console.log(url_);
             keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
+
             if (keyword1 != null) {
               const keyData = [{ dir_id: "1", keyword: keyword1 }];
               writeDB(keyData, "keywordStore");
@@ -220,7 +221,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
               ];
               writeDB(datas, "urlStore");
             }
+
           });
+
 
         });
       }
