@@ -479,7 +479,31 @@ function displayURL(data) {
       }
     })
 
-    if (area) {
+
+    const editBtn = clone.querySelector('.white-menu2');
+    const editmodal = document.getElementById("modal-t")
+    editBtn.addEventListener('click', () => {
+     editmodal.style.display = "flex";
+    })
+    const editcloseBtn = editmodal.querySelector(".closeBtn")
+    editcloseBtn.addEventListener("click", e => {
+    editmodal.style.display = "none"
+    })
+    const editSaveBtn = editmodal.querySelector(".saveBtn")
+    editSaveBtn.addEventListener("click", e=> {
+     
+      editDB(urlStore, 1, inputValue); 
+      editmodal.style.display = "none"
+    })
+
+    editmodal.addEventListener("click", e => {
+      const editevTarget = e.target
+      if (editevTarget.classList.contains("modal-overlay")) {
+        editmodal.style.display = "none"
+      }
+    })
+    if(area){
+
       area.appendChild(clone);
     }
   }
@@ -653,21 +677,25 @@ function readDB() {
 
     requestKey = objectStoreKey.getAll();
 
-    requestKey.onsuccess = function (event) {
-      var keyData = event.target.result;
+
+    requestKey.onsuccess = function(event) {
+      let keyData = event.target.result;
+
       // keyStore의 데이터를 keyData 변수에 저장
 
       // keyData 배열의 각 요소에 대해 반복
       for (var i = 0; i < keyData.length; i++) {
-        var dirId = keyData[i].dir_id;
-        var keyword = keyData[i].keyword;
-        var id = keyData[i].id;
+        let dirId = keyData[i].dir_id;
+        let keyword = keyData[i].keyword;
+        let id = keyData[i].id;
 
         // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
-        var requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
+        let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
 
-        requestUrlSearch.onsuccess = function (event) {
-          var matchingUrlData = event.target.result;
+
+        requestUrlSearch.onsuccess = function(event) {
+          let matchingUrlData = event.target.result;
+
           if (!matchingUrlData) {
             deleteDB(keyStore, id);
             console.log("GreenBox deleted");
@@ -727,23 +755,26 @@ function readDB() {
           })
         }
         //displayTooltip
-        const textElement = document.getElementsByClassName("title")[i];
-        const textContent = textElement.textContent;
-        const textLength = textContent.length;
 
-        if (textLength > 22) {
-          var selectedTitle = document.getElementsByClassName("title");
-          selectedTitle = selectedTitle[i];
-          var titleTooltip = document.getElementsByClassName("tooltip");
-          titleTooltip = titleTooltip[i + 1];
+          const textElement = document.getElementsByClassName("title")[i];
+          const textContent = textElement.textContent;
+          const textLength = textContent.length;
+          
+          if(textLength > 22){
+            //주의: var 아닌 let으로 선언해줘야함.
+            let selectedTitle = document.getElementsByClassName("title");
+            selectedTitle = selectedTitle[i];
+            let titleTooltip = document.getElementsByClassName("tooltipTitle");
+            titleTooltip = titleTooltip[i];
+        
+            selectedTitle.addEventListener("mouseover", () => {
+              titleTooltip.style.display = "block";
+            });
+            selectedTitle.addEventListener("mouseout", () => {
+              titleTooltip.style.display = "none";
+            });
+          }
 
-          selectedTitle.addEventListener("mouseover", () => {
-            titleTooltip.style.display = "block";
-          });
-          selectedTitle.addEventListener("mouseout", () => {
-            titleTooltip.style.display = "none";
-          });
-        }
       }
 
     };
@@ -872,6 +903,7 @@ function deleteDB(obs, key) {
 }
 
 
+
 /* 나중에 open_Obs 변수에 원하는 저장소 불러올 수 있다면 위의 deleteDB()와 
 통일해서 사용 가능. deleteDB2()는 키워드 삭제용 임시 함수 */
 function deleteDB2(key) {
@@ -895,9 +927,37 @@ function deleteDB2(key) {
     }
   }
 }
-// readDB() 함수 호출
-readDB();
-addEvent();
+
+function editDB(obs, key, value) {
+  //value는 변경하려는 값
+  //1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);
+  request.onerror = (e) => console.log(e.target.errorCode);
+  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess = (e) => {
+    const db = request.result;
+    const transaction = db.transaction([obs], 'readwrite');
+    transaction.onerror = (e) => console.log('fail');
+    transaction.oncomplete = (e) =>console.log('success');
+    const objStore = transaction.objectStore([obs]);
+    //3. key 값을 가진 데이터 불러오기
+    const objStoreRequest = objStore.get(key);
+    objStoreRequest.onsuccess = function (event) {
+      var data = event.target.result;
+      // 현재는 title의 값 수정하도록 되어있음
+      data.title = value;
+      var updateRequest = objStore.put(data);
+      updateRequest.onerror = (e) => console.log('update error');
+      updateRequest.onsuccess = (e) => console.log('update success');
+    }
+    location.reload();
+  }
+}
+
+
+  // readDB() 함수 호출
+  readDB();
+  addEvent();
 
 
 
