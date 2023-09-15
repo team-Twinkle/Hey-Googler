@@ -479,13 +479,14 @@ function displayURL(data) {
       }
     })
 
-    if(area){
+    if (area) {
       area.appendChild(clone);
     }
+  }
+}
 
-
-    // displayMenu();
-    // displayTooltip();
+// displayMenu();
+// displayTooltip();
 
 
 
@@ -652,10 +653,10 @@ function readDB() {
 
     requestKey = objectStoreKey.getAll();
 
-    requestKey.onsuccess = function(event) {
+    requestKey.onsuccess = function (event) {
       var keyData = event.target.result;
       // keyStore의 데이터를 keyData 변수에 저장
-      
+
       // keyData 배열의 각 요소에 대해 반복
       for (var i = 0; i < keyData.length; i++) {
         var dirId = keyData[i].dir_id;
@@ -665,7 +666,7 @@ function readDB() {
         // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
         var requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
 
-        requestUrlSearch.onsuccess = function(event) {
+        requestUrlSearch.onsuccess = function (event) {
           var matchingUrlData = event.target.result;
           if (!matchingUrlData) {
             deleteDB(keyStore, id);
@@ -904,5 +905,4 @@ addEvent();
 function handleClick(event) {
   var keyValue = event.target.getAttribute("key");
   deleteDB(parseInt(keyValue)); //keyValue 값이 string.. 주의
-
 }
