@@ -260,6 +260,7 @@ function displayURL(data) {
         modal.style.display = "none"
       }
     })
+
     const editBtn = clone.querySelector('.white-menu2');
     const editmodal = document.getElementById("modal-t")
     editBtn.addEventListener('click', () => {
@@ -269,6 +270,13 @@ function displayURL(data) {
     editcloseBtn.addEventListener("click", e => {
     editmodal.style.display = "none"
     })
+    const editSaveBtn = editmodal.querySelector(".saveBtn")
+    editSaveBtn.addEventListener("click", e=> {
+     
+      editDB(urlStore, 1, inputValue); 
+      editmodal.style.display = "none"
+    })
+
     editmodal.addEventListener("click", e => {
       const editevTarget = e.target
       if (editevTarget.classList.contains("modal-overlay")) {
@@ -603,6 +611,7 @@ function editDB(obs, key, value) {
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
       var data = event.target.result;
+      // 현재는 title의 값 수정하도록 되어있음
       data.title = value;
       var updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
