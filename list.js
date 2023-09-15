@@ -261,6 +261,28 @@ function displayURL(data) {
       }
     })
 
+    const editBtn = clone.querySelector('.white-menu2');
+    const editmodal = document.getElementById("modal-t")
+    editBtn.addEventListener('click', () => {
+     editmodal.style.display = "flex";
+    })
+    const editcloseBtn = editmodal.querySelector(".closeBtn")
+    editcloseBtn.addEventListener("click", e => {
+    editmodal.style.display = "none"
+    })
+    const editSaveBtn = editmodal.querySelector(".saveBtn")
+    editSaveBtn.addEventListener("click", e=> {
+     
+      editDB(urlStore, 1, inputValue); 
+      editmodal.style.display = "none"
+    })
+
+    editmodal.addEventListener("click", e => {
+      const editevTarget = e.target
+      if (editevTarget.classList.contains("modal-overlay")) {
+        editmodal.style.display = "none"
+      }
+    })
     if(area){
       area.appendChild(clone);
     }
@@ -282,6 +304,7 @@ function displayKeyword(data) {
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
     const k = data[i].keyword;
+    const gk = data[i].id;
 
     const template = document.getElementById("keyword_template");
     const clone = template.content.cloneNode(true);
@@ -294,6 +317,9 @@ function displayKeyword(data) {
       const url = "https://www.google.com/search?q=" + k;
       chrome.tabs.create({ url: url });
     })
+
+    var greenBox = clone.getElementById("green-" + k);
+    greenBox.setAttribute('Key', gk);
 
     container.appendChild(clone);
 
@@ -403,6 +429,45 @@ function readDB() {
       db.close();
     };
 
+    /* url 없을 경우 초록 박스 자동 삭제 */
+    transaction = db.transaction([keyStore, urlStore], 'readwrite');
+    objectStoreKey = transaction.objectStore(keyStore);
+    objectStoreUrl = transaction.objectStore(urlStore);
+
+    requestKey = objectStoreKey.getAll();
+
+    requestKey.onsuccess = function(event) {
+      let keyData = event.target.result;
+      // keyStore의 데이터를 keyData 변수에 저장
+      
+      // keyData 배열의 각 요소에 대해 반복
+      for (var i = 0; i < keyData.length; i++) {
+        let dirId = keyData[i].dir_id;
+        let keyword = keyData[i].keyword;
+        let id = keyData[i].id;
+
+        // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
+        let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
+
+        requestUrlSearch.onsuccess = function(event) {
+          let matchingUrlData = event.target.result;
+          if (!matchingUrlData) {
+            deleteDB(keyStore, id);
+            console.log("GreenBox deleted");
+          }
+        };
+      }
+    };
+
+    transaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    transaction.oncomplete = function (event) {
+      db.close();
+    };
+
+
     /* 하얀 박스에 이벤트 추가 (menu , tooltip) */
 
     transaction = db.transaction([urlStore], 'readonly');
@@ -445,23 +510,26 @@ function readDB() {
           })
         }
         //displayTooltip
-        const textElement = document.getElementsByClassName("title")[i];
-        const textContent = textElement.textContent;
-        const textLength = textContent.length;
 
-        if (textLength > 22) {
-          var selectedTitle = document.getElementsByClassName("title");
-          selectedTitle = selectedTitle[i];
-          var titleTooltip = document.getElementsByClassName("tooltip");
-          titleTooltip = titleTooltip[i + 1];
+          const textElement = document.getElementsByClassName("title")[i];
+          const textContent = textElement.textContent;
+          const textLength = textContent.length;
+          
+          if(textLength > 22){
+            //주의: var 아닌 let으로 선언해줘야함.
+            let selectedTitle = document.getElementsByClassName("title");
+            selectedTitle = selectedTitle[i];
+            let titleTooltip = document.getElementsByClassName("tooltipTitle");
+            titleTooltip = titleTooltip[i];
+        
+            selectedTitle.addEventListener("mouseover", () => {
+              titleTooltip.style.display = "block";
+            });
+            selectedTitle.addEventListener("mouseout", () => {
+              titleTooltip.style.display = "none";
+            });
+          }
 
-          selectedTitle.addEventListener("mouseover", () => {
-            titleTooltip.style.display = "block";
-          });
-          selectedTitle.addEventListener("mouseout", () => {
-            titleTooltip.style.display = "none";
-          });
-        }
       }
     };
 
@@ -489,10 +557,9 @@ function addEvent() {
     let transaction = db.transaction([keyStore], 'readonly');
     let objectStore = transaction.objectStore(keyStore);
     let request = objectStore.getAll();
-    //2. getAll() 함수 성공 시, 화면에 출력
+    //2. getAll() 함수 성공 시, 각각의 키워드에 토글 이벤트 추가
     request.onsuccess = function (event) {
       var data = event.target.result;
-      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
       Toggle(data);
     };
 
@@ -528,6 +595,41 @@ function deleteDB(obs, key) {
   }
 }
 
-// readDB() 함수 호출
-readDB();
-addEvent();
+function editDB(obs, key, value) {
+  //value는 변경하려는 값
+  //1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);
+  request.onerror = (e) => console.log(e.target.errorCode);
+  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess = (e) => {
+    const db = request.result;
+    const transaction = db.transaction([obs], 'readwrite');
+    transaction.onerror = (e) => console.log('fail');
+    transaction.oncomplete = (e) =>console.log('success');
+    const objStore = transaction.objectStore([obs]);
+    //3. key 값을 가진 데이터 불러오기
+    const objStoreRequest = objStore.get(key);
+    objStoreRequest.onsuccess = function (event) {
+      var data = event.target.result;
+      // 현재는 title의 값 수정하도록 되어있음
+      data.title = value;
+      var updateRequest = objStore.put(data);
+      updateRequest.onerror = (e) => console.log('update error');
+      updateRequest.onsuccess = (e) => console.log('update success');
+    }
+    location.reload();
+  }
+}
+
+
+  // readDB() 함수 호출
+  readDB();
+  addEvent();
+
+
+// 삭제 버튼을 클릭할 때 실행되는 함수를 정의
+function handleClick(event) {
+  var keyValue = event.target.getAttribute("key");
+  deleteDB(parseInt(keyValue)); //keyValue 값이 string.. 주의
+}
+

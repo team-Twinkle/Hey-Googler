@@ -257,7 +257,7 @@ body {
 
 .wrap .path-box .menubar li a {
   color: black;
-  font-size: x-small;
+  font-size: small;
 }
 
 .menubar li:hover {
@@ -480,6 +480,20 @@ footer {
   z-index: 50;
 }
 
+.tooltipTitle {
+  display: none;
+  position: absolute;
+  background-color: black;
+  border-radius: 7px;
+  color: white;
+  text-align: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  z-index: 50;
+}
+
 #tooltip-folder {
   left: 20px;
   width: 50px;
@@ -588,6 +602,92 @@ footer {
 }
 
 #modal .content input {
+  width: 100%;
+  height: 3em;
+  border: 0;
+  border-radius: 5px;
+  outline: none;
+  padding: 0 1em;
+  background-color: #dedede;
+}
+
+#modal-t.modal-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(1.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: none;
+  z-index: 5000;
+}
+
+#modal-t .modal-window {
+  background: #4285F4;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(13.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 200px;
+  height: auto;
+  position: relative;
+  padding: 10px;
+}
+
+#modal-t .modal-title {
+  padding-top: 0.5em;
+  display: block;
+  text-shadow: 1px 1px 2px gray;
+  color: white;
+  text-align: center;
+  font-size: xx-small;
+  line-height: 2em;
+}
+
+#modal-t .modal-title b {
+  font-size: 13px;
+}
+
+#modal-t .btn-area {
+  display: flex;
+  padding-top: 1em;
+  justify-content: center;
+}
+
+#modal-t .modalBtn {
+  display: inline;
+  cursor: pointer;
+  text-shadow: 1px 1px 2px gray;
+  color: white;
+  padding: 0 1em;
+  margin: 0 0.5em;
+  background-color: #b1b2b1;
+  border-radius: 4px;
+  border: none;
+}
+
+#modal-t .modalBtn:hover {
+  background-color: #999a99;
+  font-weight: bold;
+}
+
+#modal-t .content {
+  display: flex;
+  margin-top: 1em;
+  padding: 0px 10px;
+  text-shadow: 1px 1px 2px gray;
+  color: white;
+}
+
+#modal-t .content input {
   width: 100%;
   height: 3em;
   border: 0;
