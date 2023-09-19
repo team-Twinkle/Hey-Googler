@@ -155,13 +155,13 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-
+    currentURL = new URL(currentTab);
+    if (currentURL.hostname === "www.google.com") {
+      searchTab = currentTab;
+      console.log("    SearchTab case1 :        "+searchTab);
+    }
   })
-  currentURL = new URL(currentTab);
-  if (currentURL.hostname === "www.google.com") {
-    searchTab = currentTab;
-    //console.log("    S       "+searchTab);
-  }
+
   chrome.tabs.onUpdated.addListener((currentTabId, changingInfo, tabs) => {
     if (changingInfo.status === 'complete') {
       //console.log(currentTabId);
@@ -171,7 +171,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
         //console.log(currentURL);
         if (currentURL.hostname === "www.google.com") {
           searchTab = currentTab;
-          //console.log("    S       "+searchTab);
+          console.log("    SearchTab case2 :       " + searchTab);
         }
       })
 
