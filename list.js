@@ -928,7 +928,7 @@ function deleteDB2(key) {
   }
 }
 
-function editDB(obs, key, value) {
+function editDB(obs, field, key, value) {
   //value는 변경하려는 값
   //1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
@@ -943,10 +943,31 @@ function editDB(obs, key, value) {
     //3. key 값을 가진 데이터 불러오기
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
-      var data = event.target.result;
+      let data = event.target.result;
       // 현재는 title의 값 수정하도록 되어있음
-      data.title = value;
-      var updateRequest = objStore.put(data);
+      if(field == "url"){
+        data.url = value;
+      }
+      else if(field == "title"){
+        data.title = value;
+      }
+      else if(field == "memo"){
+        data.memo = value;
+      }
+      else if(field == "keyword"){
+        data.keyword = value;
+      }
+      else if(field == "dir_id"){
+        data.dir_id = value;
+      }
+      else if(field == "dir_name"){
+        data.dir_name = value;
+      }
+      else {
+        console.log("필드 추가가 필요함");
+      }
+
+      let updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => console.log('update success');
     }
