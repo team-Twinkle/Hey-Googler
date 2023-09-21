@@ -468,7 +468,7 @@ function displayURL(data) {
     memoBtn.setAttribute('key', key);
     const modal = document.getElementById("modal")
     var memoFlag;
-    memoBtn.addEventListener('click', () => {
+    memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
       memoFlag = e.target.parentElement.getAttribute("key");
     })
@@ -480,7 +480,8 @@ function displayURL(data) {
     memoSaveBtn.addEventListener("click", e=> {
       let inputMemo = document.getElementById("memoInput");
       let userInputMemo = inputMemo.value;
-      editDB("urlStore", "memo", parseInt(editFlag), userInputMemo);
+      console.log(userInputMemo);
+      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
       modal.style.display = "none"
     })
     modal.addEventListener("click", e => {
