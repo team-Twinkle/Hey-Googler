@@ -125,7 +125,12 @@ body {
 
   background: #34a853;
   border-radius: 15px;
+  cursor:pointer;
   /* 키워드 박스만 border-radius: 15px; 인 이유가 있겠지??*/
+}
+
+.keyword-box:hover{
+  background:#2F954A;
 }
 
 .keyword {

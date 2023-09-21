@@ -483,16 +483,16 @@ function displayURL(data) {
     const editBtn = clone.querySelector('.white-menu2');
     const editmodal = document.getElementById("modal-t")
     editBtn.addEventListener('click', () => {
-     editmodal.style.display = "flex";
+      editmodal.style.display = "flex";
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
-    editmodal.style.display = "none"
+      editmodal.style.display = "none"
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
-    editSaveBtn.addEventListener("click", e=> {
-     
-      editDB(urlStore, 1, inputValue); 
+    editSaveBtn.addEventListener("click", e => {
+
+      editDB(urlStore, 1, inputValue);
       editmodal.style.display = "none"
     })
 
@@ -502,7 +502,7 @@ function displayURL(data) {
         editmodal.style.display = "none"
       }
     })
-    if(area){
+    if (area) {
 
       area.appendChild(clone);
     }
@@ -515,24 +515,27 @@ function displayURL(data) {
 
 
 
-function displayTooltip() {
-  const textElement = document.getElementsByClassName("title")[i];
-  const textContent = textElement.textContent;
-  const textLength = textContent.length;
+function displayTooltip(dataCount) {
+  for (let i = 0; i < dataCount; i++) {
+    const textElement = document.getElementsByClassName("title")[i];
+    const textContent = textElement.textContent;
+    const textLength = textContent.length;
 
-  if (textLength > 22) {
-    var selectedTitle = document.getElementsByClassName("title");
-    selectedTitle = selectedTitle[i];
-    var titleTooltip = document.getElementsByClassName("tooltip");
-    titleTooltip = titleTooltip[i + 1];
+    if (textLength > 22) {
+      let selectedTitle = document.getElementsByClassName("title");
+      selectedTitle = selectedTitle[i];
+      let titleTooltip = document.getElementsByClassName("tooltipTitle");
+      titleTooltip = titleTooltip[i];
 
-    selectedTitle.addEventListener("mouseover", () => {
-      titleTooltip.style.display = "block";
-    });
-    selectedTitle.addEventListener("mouseout", () => {
-      titleTooltip.style.display = "none";
-    });
+      selectedTitle.addEventListener("mouseover", () => {
+        titleTooltip.style.display = "block";
+      });
+      selectedTitle.addEventListener("mouseout", () => {
+        titleTooltip.style.display = "none";
+      });
+    }
   }
+
 }
 
 
@@ -558,7 +561,7 @@ function displayKeyword(data) {
       chrome.tabs.create({ url: url });
     })
 
-    var greenBox = clone.getElementById("green-" + k);
+    let greenBox = clone.getElementById("green-" + k);
     greenBox.setAttribute('Key', gk);
 
     container.appendChild(clone);
@@ -567,228 +570,199 @@ function displayKeyword(data) {
   }
 }
 
-function displayMenu() {
-  let isSelected = false;
-  let selectedMenu = document.getElementsByClassName("menu_white");
-  selectedMenu = selectedMenu[i];
-  let menubar = document.getElementsByClassName('menubar');
-  menubar = menubar[i];
-  if (selectedMenu) {
-    selectedMenu.addEventListener("click", function () {
-      isSelected = !isSelected;
-      if (isSelected) {
-        menubar.classList.remove('inactive');
-        title.classList.remove('inactive');
-        menubar.classList.add('active');
-        title.classList.add('active');
-        setTimeout(() => {
-          isSelected = !isSelected;
+function displayMenu(dataCount) {
+  for (let i = 0; i < dataCount; i++) {
+    let isSelected = false;
+    let selectedMenu = document.getElementsByClassName("menu_white");
+    selectedMenu = selectedMenu[i];
+    let menubar = document.getElementsByClassName('menubar');
+    menubar = menubar[i];
+    let title = document.getElementsByClassName("title");
+    title = title[i];
+    if (selectedMenu) {
+      selectedMenu.addEventListener("click", function () {
+        isSelected = !isSelected;
+        if (isSelected) {
+          menubar.classList.remove('inactive');
+          title.classList.remove('inactive');
+          menubar.classList.add('active');
+          title.classList.add('active');
+          setTimeout(() => {
+            isSelected = !isSelected;
+            menubar.classList.remove('active');
+            title.classList.remove('active');
+            menubar.classList.add('inactive');
+            title.classList.add('inactive');
+          }, 5000);
+        } else {
           menubar.classList.remove('active');
           title.classList.remove('active');
           menubar.classList.add('inactive');
           title.classList.add('inactive');
-        }, 5000);
-      } else {
-        menubar.classList.remove('active');
-        title.classList.remove('active');
-        menubar.classList.add('inactive');
-        title.classList.add('inactive');
-      }
-    })
+        }
+      })
+    }
   }
 }
-
-function displayTooltip() {
-  const textElement = document.getElementsByClassName("title")[i];
-  const textContent = textElement.textContent;
-  const textLength = textContent.length;
-
-  if (textLength > 22) {
-    var selectedTitle = document.getElementsByClassName("title");
-    selectedTitle = selectedTitle[i];
-    var titleTooltip = document.getElementsByClassName("tooltip");
-    titleTooltip = titleTooltip[i + 1];
-
-    selectedTitle.addEventListener("mouseover", () => {
-      titleTooltip.style.display = "block";
-    });
-    selectedTitle.addEventListener("mouseout", () => {
-      titleTooltip.style.display = "none";
-    });
-  }
-}
-
 
 
 //혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
+//readDB() 에는 데이터 불러와서 초록박스,흰색박스 display 하는 것만 포함
 function readDB() {
-  var request = indexedDB.open("HeyGoogler", 1);
 
-  request.onerror = function (event) {
-    console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
-  };
+  return new Promise((resolve, reject) => {
+    var request = indexedDB.open("HeyGoogler", 1);
 
-  //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
-  request.onsuccess = function (event) {
-    const db = event.target.result;
+    request.onerror = function (event) {
+      console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+    };
 
-    /* 키워드 출력 (초록 박스) */
-    let transaction = db.transaction([keyStore], 'readonly');
-    let objectStore = transaction.objectStore(keyStore);
-    let request = objectStore.getAll();
+    //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+
+      /* 키워드 출력 (초록 박스) */
+      let transaction = db.transaction([keyStore], 'readonly');
+      let objectStore = transaction.objectStore(keyStore);
+      let request = objectStore.getAll();
+
+      request.onsuccess = function (event) {
+        var data = event.target.result;
+        displayKeyword(data);
+      };
+
+      transaction.onerror = function (event) {
+        console.log("트랜잭션 오류:", event.target.error);
+      };
+
+      transaction.oncomplete = function (event) {
+        db.close();
+      };
+
+      /* url 출력 (하얀 박스) */
+      transaction = db.transaction([urlStore], 'readonly');
+      objectStore = transaction.objectStore('urlStore');
+      request = objectStore.getAll();
+      //2. getAll() 함수 성공 시, 화면에 출력
+      request.onsuccess = function (event) {
+
+        var data = event.target.result;
+        //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
+        displayURL(data);
+      };
+
+      transaction.onerror = function (event) {
+        console.log("트랜잭션 오류:", event.target.error);
+      };
+
+      transaction.oncomplete = function (event) {
+        db.close();
+      };
+
+      resolve();
+    }
+  })
+}
+
+//초록박스나 흰색박스가 생성된 이후에 추가해야되는 이벤트는 addEvent() 함수 안쪽으로 다 빼냈어 !!
+//promise 객체 이용해가지고 readDB() 함수가 끝까지 실행되어야만 addEvent() 코드가 실행되도록 구현했습니당 ..
+function addEvent() {
+  readDB().then(() => {
+
+    var request = indexedDB.open("HeyGoogler", 1);
+
+    request.onerror = function (event) {
+      console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+    };
 
     request.onsuccess = function (event) {
-      var data = event.target.result;
-      displayKeyword(data);
-    };
+      const db = event.target.result;
 
-    transaction.onerror = function (event) {
-      console.log("트랜잭션 오류:", event.target.error);
-    };
+      /* url 없을 경우 초록 박스 자동 삭제 */
+      let transaction = db.transaction([keyStore, urlStore], 'readwrite');
+      let objectStoreKey = transaction.objectStore(keyStore);
+      let objectStoreUrl = transaction.objectStore(urlStore);
 
-    transaction.oncomplete = function (event) {
-      db.close();
-    };
-
-    /* url 출력 (하얀 박스) */
-    transaction = db.transaction([urlStore], 'readonly');
-    objectStore = transaction.objectStore('urlStore');
-    request = objectStore.getAll();
-    //2. getAll() 함수 성공 시, 화면에 출력
-    request.onsuccess = function (event) {
-
-      var data = event.target.result;
-      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
-      displayURL(data);
-    };
-
-    transaction.onerror = function (event) {
-      console.log("트랜잭션 오류:", event.target.error);
-    };
-
-    transaction.oncomplete = function (event) {
-      db.close();
-    };
-
-    /* url 없을 경우 초록 박스 자동 삭제 */
-    transaction = db.transaction([keyStore, urlStore], 'readwrite');
-    objectStoreKey = transaction.objectStore(keyStore);
-    objectStoreUrl = transaction.objectStore(urlStore);
-
-    requestKey = objectStoreKey.getAll();
+      requestKey = objectStoreKey.getAll();
 
 
-    requestKey.onsuccess = function(event) {
-      let keyData = event.target.result;
+      requestKey.onsuccess = function (event) {
+        let keyData = event.target.result;
 
-      // keyStore의 데이터를 keyData 변수에 저장
+        // keyStore의 데이터를 keyData 변수에 저장
 
-      // keyData 배열의 각 요소에 대해 반복
-      for (var i = 0; i < keyData.length; i++) {
-        let dirId = keyData[i].dir_id;
-        let keyword = keyData[i].keyword;
-        let id = keyData[i].id;
+        // keyData 배열의 각 요소에 대해 반복
+        for (var i = 0; i < keyData.length; i++) {
+          let dirId = keyData[i].dir_id;
+          let keyword = keyData[i].keyword;
+          let id = keyData[i].id;
 
-        // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
-        let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
-
-
-        requestUrlSearch.onsuccess = function(event) {
-          let matchingUrlData = event.target.result;
-
-          if (!matchingUrlData) {
-            deleteDB(keyStore, id);
-            console.log("GreenBox deleted");
-          }
-        };
-      }
-    };
-
-    transaction.onerror = function (event) {
-      console.log("트랜잭션 오류:", event.target.error);
-    };
-
-    transaction.oncomplete = function (event) {
-      db.close();
-    };
+          // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
+          let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
 
 
-    /* 하얀 박스에 이벤트 추가 (menu , tooltip) */
+          requestUrlSearch.onsuccess = function (event) {
+            let matchingUrlData = event.target.result;
 
-    transaction = db.transaction([urlStore], 'readonly');
-    objectStore = transaction.objectStore('urlStore');
-    request = objectStore.getAll();
-    //2. getAll() 함수 성공 시, 화면에 출력
-    request.onsuccess = function (event) {
-      var data = event.target.result;
-      //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
-      for (var i = 0; i < data.length; i++) {
-        //displayMenu
-        let isSelected = false;
-        let selectedMenu = document.getElementsByClassName("menu_white");
-        selectedMenu = selectedMenu[i];
-        let menubar = document.getElementsByClassName('menubar');
-        menubar = menubar[i];
-        let title = document.getElementsByClassName("title");
-        title = title[i];
-        if (selectedMenu) {
-          selectedMenu.addEventListener("click", function () {
-            isSelected = !isSelected;
-            if (isSelected) {
-              menubar.classList.remove('inactive');
-              title.classList.remove('inactive');
-              menubar.classList.add('active');
-              title.classList.add('active');
-              setTimeout(() => {
-                isSelected = !isSelected;
-                menubar.classList.remove('active');
-                title.classList.remove('active');
-                menubar.classList.add('inactive');
-                title.classList.add('inactive');
-              }, 5000);
-            } else {
-              menubar.classList.remove('active');
-              title.classList.remove('active');
-              menubar.classList.add('inactive');
-              title.classList.add('inactive');
+            if (!matchingUrlData) {
+              deleteDB(keyStore, id);
+              console.log("GreenBox deleted");
             }
-          })
+          };
         }
-        //displayTooltip
+      };
 
-          const textElement = document.getElementsByClassName("title")[i];
-          const textContent = textElement.textContent;
-          const textLength = textContent.length;
-          
-          if(textLength > 22){
-            //주의: var 아닌 let으로 선언해줘야함.
-            let selectedTitle = document.getElementsByClassName("title");
-            selectedTitle = selectedTitle[i];
-            let titleTooltip = document.getElementsByClassName("tooltipTitle");
-            titleTooltip = titleTooltip[i];
-        
-            selectedTitle.addEventListener("mouseover", () => {
-              titleTooltip.style.display = "block";
-            });
-            selectedTitle.addEventListener("mouseout", () => {
-              titleTooltip.style.display = "none";
-            });
-          }
+      transaction.onerror = function (event) {
+        console.log("트랜잭션 오류:", event.target.error);
+      };
 
-      }
-
-    };
-
-    transaction.onerror = function (event) {
-      console.log("트랜잭션 오류:", event.target.error);
-    };
-
-    transaction.oncomplete = function (event) {
-      db.close();
-    };
+      transaction.oncomplete = function (event) {
+        db.close();
+      };
 
 
-  };
+      /* 하얀 박스에 이벤트 추가 (menu , tooltip) */
+
+      transaction = db.transaction([urlStore], 'readonly');
+      objectStore = transaction.objectStore('urlStore');
+      request = objectStore.getAll();
+      //2. getAll() 함수 성공 시, 화면에 출력
+      request.onsuccess = function (event) {
+        var data = event.target.result;
+        displayMenu(data.length);
+        displayTooltip(data.length);
+      };
+
+      transaction.onerror = function (event) {
+        console.log("트랜잭션 오류:", event.target.error);
+      };
+
+      transaction.oncomplete = function (event) {
+        db.close();
+      };
+
+      /* 초록 박스에 토글 이벤트 추가 */
+
+      transaction = db.transaction([keyStore], 'readonly');
+      objectStore = transaction.objectStore(keyStore);
+      request = objectStore.getAll();
+      //2. getAll() 함수 성공 시, 화면에 출력
+      request.onsuccess = function (event) {
+        var data = event.target.result;
+        Toggle(data);
+      };
+
+      transaction.onerror = function (event) {
+        console.log("트랜잭션 오류:", event.target.error);
+      };
+
+      transaction.oncomplete = function (event) {
+        db.close();
+      };
+
+
+    }
+  })
 }
 
 
@@ -849,34 +823,6 @@ function displayData(data) {
   });
 }
 
-function addEvent() {
-  var request = indexedDB.open("HeyGoogler", 1);
-
-  request.onerror = function (event) {
-    console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
-  };
-
-  //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
-  request.onsuccess = function (event) {
-    const db = event.target.result;
-    let transaction = db.transaction([keyStore], 'readonly');
-    let objectStore = transaction.objectStore(keyStore);
-    let request = objectStore.getAll();
-    //2. getAll() 함수 성공 시, 각각의 키워드에 토글 이벤트 추가
-    request.onsuccess = function (event) {
-      var data = event.target.result;
-      Toggle(data);
-    };
-
-    transaction.onerror = function (event) {
-      console.log("트랜잭션 오류:", event.target.error);
-    };
-
-    transaction.oncomplete = function (event) {
-      db.close();
-    };
-  }
-}
 
 function deleteDB(obs, key) {
   // 1. db 열기
@@ -938,7 +884,7 @@ function editDB(obs, key, value) {
     const db = request.result;
     const transaction = db.transaction([obs], 'readwrite');
     transaction.onerror = (e) => console.log('fail');
-    transaction.oncomplete = (e) =>console.log('success');
+    transaction.oncomplete = (e) => console.log('success');
     const objStore = transaction.objectStore([obs]);
     //3. key 값을 가진 데이터 불러오기
     const objStoreRequest = objStore.get(key);
@@ -955,9 +901,8 @@ function editDB(obs, key, value) {
 }
 
 
-  // readDB() 함수 호출
-  readDB();
-  addEvent();
+// readDB() 함수 호출
+addEvent();
 
 
 
