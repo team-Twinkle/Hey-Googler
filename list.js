@@ -462,13 +462,25 @@ function displayURL(data) {
     deleteBtn.addEventListener('click', () => {
       deleteDB(urlStore, key);
     });
+
+
     const memoBtn = clone.querySelector('.white-menu3');
+    memoBtn.setAttribute('key', key);
     const modal = document.getElementById("modal")
+    var memoFlag;
     memoBtn.addEventListener('click', () => {
       modal.style.display = "flex";
+      memoFlag = e.target.parentElement.getAttribute("key");
     })
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
+      modal.style.display = "none"
+    })
+    const memoSaveBtn = modal.querySelector(".saveBtn")
+    memoSaveBtn.addEventListener("click", e=> {
+      let inputMemo = document.getElementById("memoInput");
+      let userInputMemo = inputMemo.value;
+      editDB("urlStore", "memo", parseInt(editFlag), userInputMemo);
       modal.style.display = "none"
     })
     modal.addEventListener("click", e => {
@@ -481,9 +493,13 @@ function displayURL(data) {
 
 
     const editBtn = clone.querySelector('.white-menu2');
+    editBtn.setAttribute('key', key);
     const editmodal = document.getElementById("modal-t")
-    editBtn.addEventListener('click', () => {
+    var editFlag;
+    editBtn.addEventListener('click', (e) => {
      editmodal.style.display = "flex";
+     //몇 번째 요소 선택했는지 인덱스저장
+     editFlag = e.target.parentElement.getAttribute("key");
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -491,8 +507,9 @@ function displayURL(data) {
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e=> {
-     
-      editDB(urlStore, 1, inputValue); 
+      let inputTitle = document.getElementById("titleInput");
+      let userInputTitle = inputTitle.value;
+      editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
       editmodal.style.display = "none"
     })
 
