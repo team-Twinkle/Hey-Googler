@@ -463,43 +463,43 @@ function displayURL(data) {
       deleteDB(urlStore, key);
     });
     const memoBtn = clone.querySelector('.white-menu3');
-    const modal = document.getElementById("modal")
+    const modal = document.getElementById("modal");
     memoBtn.addEventListener('click', () => {
       modal.style.display = "flex";
     })
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
-      modal.style.display = "none"
+      modal.style.display = "none";
     })
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
-        modal.style.display = "none"
+        modal.style.display = "none";
 
       }
     })
 
 
     const editBtn = clone.querySelector('.white-menu2');
-    const editmodal = document.getElementById("modal-t")
+    const editmodal = document.getElementById("modal-t");
     editBtn.addEventListener('click', () => {
       editmodal.style.display = "flex";
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
-      editmodal.style.display = "none"
+      editmodal.style.display = "none";
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
 
       editDB(urlStore, 1, inputValue);
-      editmodal.style.display = "none"
+      editmodal.style.display = "none";
     })
 
     editmodal.addEventListener("click", e => {
       const editevTarget = e.target
       if (editevTarget.classList.contains("modal-overlay")) {
-        editmodal.style.display = "none"
+        editmodal.style.display = "none";
       }
     })
     if (area) {
@@ -602,6 +602,67 @@ function displayMenu(dataCount) {
         }
       })
     }
+  }
+}
+
+function greenBoxRightClick(data) {
+  for (var i = 0; i < data.length; i++) {
+    const k = data[i].keyword;
+    const kwBox = document.getElementById("green-" + k);
+    const contextMenu = document.getElementById("contextmenu");
+    const deleteBtn = document.getElementById("deleteGreen");
+    const modal = document.getElementById("confirmModal");
+
+    kwBox.oncontextmenu = function (e) {
+
+      let winWidth = 350;    //document.body 의 width
+      let posX = e.pageX;
+      let posY = e.pageY;
+      let menuWidth = 100;   //contextMenu 의 width
+
+      //Security margin:
+      let secMargin = 10;
+
+      //Prevent page overflow:
+      if (posX + menuWidth + secMargin >= winWidth) {
+        //Case 2: right overflow:
+        posLeft = posX - menuWidth - secMargin + "px";
+        posTop = posY + secMargin + "px";
+      }
+      else {
+        //Case 3: default values:
+        posLeft = posX + secMargin + "px";
+        posTop = posY + secMargin + "px";
+      };
+
+      //Display contextmenu:
+      contextMenu.style.display='block';
+      contextMenu.style.left=posLeft;
+      contextMenu.style.top=posTop;
+
+      return false;
+    };
+    // Hide contextmenu:
+    document.body.addEventListener("click", ()=> {
+      contextMenu.style.display='none';
+    });
+
+    deleteBtn.addEventListener("click",()=>{
+      modal.style.display = "flex";
+    })
+
+    const closeBtn = modal.querySelector(".closeBtn")
+    closeBtn.addEventListener("click", e => {
+      modal.style.display = "none";
+    })
+    modal.addEventListener("click", e => {
+      const evTarget = e.target
+      if (evTarget.classList.contains("modal-overlay")) {
+        modal.style.display = "none";
+
+      }
+
+    })
   }
 }
 
@@ -742,6 +803,7 @@ function addEvent() {
       };
 
       /* 초록 박스에 토글 이벤트 추가 */
+      /* 초록 박스에 우클릭 이벤트 추가 */
 
       transaction = db.transaction([keyStore], 'readonly');
       objectStore = transaction.objectStore(keyStore);
@@ -750,6 +812,7 @@ function addEvent() {
       request.onsuccess = function (event) {
         var data = event.target.result;
         Toggle(data);
+        greenBoxRightClick(data);
       };
 
       transaction.onerror = function (event) {

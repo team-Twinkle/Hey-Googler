@@ -125,7 +125,6 @@ body {
 
   background: #34a853;
   border-radius: 15px;
-  cursor:pointer;
   /* 키워드 박스만 border-radius: 15px; 인 이유가 있겠지??*/
 }
 
@@ -529,8 +528,12 @@ footer {
   transition: width 0.5s ease;
 }
 
+#link:hover{
+  color:mediumblue;
+}
 
-#modal.modal-overlay {
+
+.modal-overlay {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -549,7 +552,7 @@ footer {
   z-index: 5000;
 }
 
-#modal .modal-window {
+.modal-overlay .modal-window {
   background: #4285F4;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(13.5px);
@@ -561,7 +564,11 @@ footer {
   padding: 10px;
 }
 
-#modal .title {
+#confirmModal .modal-window{
+  width: 220px;
+}
+
+.modal-overlay .title {
   padding-top: 0.5em;
   display: block;
   text-shadow: 1px 1px 2px gray;
@@ -571,18 +578,27 @@ footer {
   line-height: 2em;
 }
 
-#modal .title b {
+#confirmModal .title{
+  padding-top:1em;
+}
+
+.modal-overlay .title b {
   font-size: 13px;
 }
 
-#modal .btn-area {
+.modal-overlay .btn-area {
   display: flex;
   padding-top: 1em;
   justify-content: center;
 }
 
-#modal .modalBtn {
+#confirmModal .btn-area{
+  padding-top:2em;
+}
+
+.modal-overlay .modalBtn {
   display: inline;
+  height:1.5em;
   cursor: pointer;
   text-shadow: 1px 1px 2px gray;
   color: white;
@@ -593,12 +609,12 @@ footer {
   border: none;
 }
 
-#modal .modalBtn:hover {
+.modal-overlay .modalBtn:hover {
   background-color: #999a99;
   font-weight: bold;
 }
 
-#modal .content {
+.modal-overlay .content {
   display: flex;
   margin-top: 1em;
   padding: 0px 10px;
@@ -606,7 +622,7 @@ footer {
   color: white;
 }
 
-#modal .content input {
+.modal-overlay .content input {
   width: 100%;
   height: 3em;
   border: 0;
@@ -616,88 +632,39 @@ footer {
   background-color: #dedede;
 }
 
-#modal-t.modal-overlay {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(1.5px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+.contextmenu {
   display: none;
-  z-index: 5000;
-}
-
-#modal-t .modal-window {
-  background: #4285F4;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(13.5px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  width: 200px;
-  height: auto;
-  position: relative;
-  padding: 10px;
-}
-
-#modal-t .modal-title {
-  padding-top: 0.5em;
-  display: block;
-  text-shadow: 1px 1px 2px gray;
-  color: white;
-  text-align: center;
-  font-size: xx-small;
-  line-height: 2em;
-}
-
-#modal-t .modal-title b {
-  font-size: 13px;
-}
-
-#modal-t .btn-area {
-  display: flex;
-  padding-top: 1em;
-  justify-content: center;
-}
-
-#modal-t .modalBtn {
-  display: inline;
-  cursor: pointer;
-  text-shadow: 1px 1px 2px gray;
-  color: white;
-  padding: 0 1em;
-  margin: 0 0.5em;
-  background-color: #b1b2b1;
-  border-radius: 4px;
-  border: none;
-}
-
-#modal-t .modalBtn:hover {
-  background-color: #999a99;
-  font-weight: bold;
-}
-
-#modal-t .content {
-  display: flex;
-  margin-top: 1em;
-  padding: 0px 10px;
-  text-shadow: 1px 1px 2px gray;
-  color: white;
-}
-
-#modal-t .content input {
-  width: 100%;
-  height: 3em;
-  border: 0;
+  position: absolute;
+  width: 100px;
+  margin: 0;
+  padding: 0;
+  background: #FFFFFF;
   border-radius: 5px;
-  outline: none;
-  padding: 0 1em;
-  background-color: #dedede;
+  list-style: none;
+  box-shadow:
+    0 15px 35px rgba(50,50,90,0.1),
+    0 5px 15px rgba(0,0,0,0.07);
+  overflow: hidden;
+  z-index: 999999;
+}
+
+.contextmenu li {
+  transition: ease .2s;
+}
+
+.contextmenu li a {
+  display: block;
+  height:auto;
+  padding: 10px;
+  color: gray;
+  text-align: center;
+  transition: ease .2s;
+}
+
+.contextmenu li:hover {
+  background: #e8faf6;
+}
+
+.contextmenu li:hover a {
+  color: #606060;
 }
