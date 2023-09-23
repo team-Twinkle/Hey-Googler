@@ -566,7 +566,6 @@ function displayKeyword(data) {
 
     container.appendChild(clone);
 
-
   }
 }
 
@@ -610,10 +609,12 @@ function greenBoxRightClick(data) {
     const k = data[i].keyword;
     const kwBox = document.getElementById("green-" + k);
     const contextMenu = document.getElementById("contextmenu");
-    const deleteBtn = document.getElementById("deleteGreen");
+    const deleteMenu = document.getElementById("deleteGreen");
     const modal = document.getElementById("confirmModal");
 
     kwBox.oncontextmenu = function (e) {
+
+      console.log(e);
 
       let winWidth = 350;    //document.body 의 width
       let posX = e.pageX;
@@ -636,35 +637,68 @@ function greenBoxRightClick(data) {
       };
 
       //Display contextmenu:
-      contextMenu.style.display='block';
-      contextMenu.style.left=posLeft;
-      contextMenu.style.top=posTop;
+      contextMenu.style.display = 'block';
+      contextMenu.style.left = posLeft;
+      contextMenu.style.top = posTop;
 
-      return false;
-    };
-    // Hide contextmenu:
-    document.body.addEventListener("click", ()=> {
-      contextMenu.style.display='none';
-    });
+      // Hide contextmenu:
+    document.body.addEventListener("click", () => {
+      contextMenu.style.display = 'none';
+    })
 
-    deleteBtn.addEventListener("click",()=>{
+    deleteMenu.addEventListener("click", () => {
       modal.style.display = "flex";
     })
 
-    const closeBtn = modal.querySelector(".closeBtn")
+    const closeBtn = modal.querySelector(".closeBtn");
+    const deleteBtn = modal.querySelector(".deleteBtn");
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
     })
+    deleteBtn.addEventListener("click", () => {
+      var request = indexedDB.open("HeyGoogler", 1);
+
+      request.onerror = function (event) {
+        console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+      };
+
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+
+        let transaction = db.transaction([urlStore], 'readwrite');
+        let objectStore = transaction.objectStore(urlStore);
+        let urlSearch = objectStore.index("keyword").getAll(k);
+
+        urlSearch.onsuccess = (e) => {
+          urls = e.target.result;
+
+          for (let i = 0; i < urls.length; i++) {
+            deleteDB(urlStore, urls[i].id);
+          }
+        }
+
+        transaction.onerror = function (event) {
+          console.log("트랜잭션 오류:", event.target.error);
+        };
+
+        transaction.oncomplete = function (event) {
+          db.close();
+        };
+      }
+      modal.style.display = "none";
+    })
+
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
         modal.style.display = "none";
-
       }
-
     })
+      return false;
+    }
   }
 }
+
 
 
 //혜교가 쓴 코드 참고해서 DB 읽는 함수 다시..
