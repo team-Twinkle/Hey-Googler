@@ -249,7 +249,7 @@ stopButton.addEventListener("mouseout", () => {
 startButton.addEventListener("click", () => {
   startButton.src = "images/icon_start_true.svg";
   // onDirId = currenDirId; 
-  chrome.runtime.sendMessage("Start the extension from list.js");
+  chrome.runtime.sendMessage({ onDirId: nowDirId, txt: "Start the extension from list.js" });
 });
 
 stopButton.addEventListener("click", () => {
@@ -487,13 +487,17 @@ function displayURL(data) {
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
+
       editmodal.style.display = "none";
+
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
 
       editDB(urlStore, 1, inputValue);
+
       editmodal.style.display = "none";
+
     })
 
     editmodal.addEventListener("click", e => {
@@ -759,6 +763,7 @@ function readDB() {
   })
 }
 
+
 //초록박스나 흰색박스가 생성된 이후에 추가해야되는 이벤트는 addEvent() 함수 안쪽으로 다 빼냈어 !!
 //promise 객체 이용해가지고 readDB() 함수가 끝까지 실행되어야만 addEvent() 코드가 실행되도록 구현했습니당 ..
 function addEvent() {
@@ -778,8 +783,8 @@ function addEvent() {
       let objectStoreKey = transaction.objectStore(keyStore);
       let objectStoreUrl = transaction.objectStore(urlStore);
 
-      requestKey = objectStoreKey.getAll();
 
+      requestKey = objectStoreKey.getAll();
 
       requestKey.onsuccess = function (event) {
         let keyData = event.target.result;
@@ -805,7 +810,9 @@ function addEvent() {
             }
           };
         }
+
       };
+
 
       transaction.onerror = function (event) {
         console.log("트랜잭션 오류:", event.target.error);
@@ -874,7 +881,7 @@ function readDBAndDisplay() {
 
   request.onsuccess = function (event) {
     const db = request.result;
-    const transaction = db.transaction("dirStore", "readonly");
+    const transaction = db.transaction(['dirStore'], "readonly");
     const objectStore = transaction.objectStore("dirStore");
 
     const requestGetAll = objectStore.getAll();
@@ -999,6 +1006,8 @@ function editDB(obs, key, value) {
 
 
 // readDB() 함수 호출
+
+
 addEvent();
 
 
