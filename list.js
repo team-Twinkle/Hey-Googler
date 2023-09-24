@@ -249,7 +249,7 @@ stopButton.addEventListener("mouseout", () => {
 startButton.addEventListener("click", () => {
   startButton.src = "images/icon_start_true.svg";
   // onDirId = currenDirId; 
-  chrome.runtime.sendMessage("Start the extension from list.js");
+  chrome.runtime.sendMessage({ onDirId: nowDirId, txt: "Start the extension from list.js" });
 });
 
 stopButton.addEventListener("click", () => {
@@ -483,16 +483,16 @@ function displayURL(data) {
     const editBtn = clone.querySelector('.white-menu2');
     const editmodal = document.getElementById("modal-t")
     editBtn.addEventListener('click', () => {
-     editmodal.style.display = "flex";
+      editmodal.style.display = "flex";
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
-    editmodal.style.display = "none"
+      editmodal.style.display = "none"
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
-    editSaveBtn.addEventListener("click", e=> {
-     
-      editDB(urlStore, 1, inputValue); 
+    editSaveBtn.addEventListener("click", e => {
+
+      editDB(urlStore, 1, inputValue);
       editmodal.style.display = "none"
     })
 
@@ -502,7 +502,7 @@ function displayURL(data) {
         editmodal.style.display = "none"
       }
     })
-    if(area){
+    if (area) {
 
       area.appendChild(clone);
     }
@@ -678,7 +678,7 @@ function readDB() {
     requestKey = objectStoreKey.getAll();
 
 
-    requestKey.onsuccess = function(event) {
+    requestKey.onsuccess = function (event) {
       let keyData = event.target.result;
 
       // keyStore의 데이터를 keyData 변수에 저장
@@ -693,7 +693,7 @@ function readDB() {
         let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
 
 
-        requestUrlSearch.onsuccess = function(event) {
+        requestUrlSearch.onsuccess = function (event) {
           let matchingUrlData = event.target.result;
 
           if (!matchingUrlData) {
@@ -756,24 +756,24 @@ function readDB() {
         }
         //displayTooltip
 
-          const textElement = document.getElementsByClassName("title")[i];
-          const textContent = textElement.textContent;
-          const textLength = textContent.length;
-          
-          if(textLength > 22){
-            //주의: var 아닌 let으로 선언해줘야함.
-            let selectedTitle = document.getElementsByClassName("title");
-            selectedTitle = selectedTitle[i];
-            let titleTooltip = document.getElementsByClassName("tooltipTitle");
-            titleTooltip = titleTooltip[i];
-        
-            selectedTitle.addEventListener("mouseover", () => {
-              titleTooltip.style.display = "block";
-            });
-            selectedTitle.addEventListener("mouseout", () => {
-              titleTooltip.style.display = "none";
-            });
-          }
+        const textElement = document.getElementsByClassName("title")[i];
+        const textContent = textElement.textContent;
+        const textLength = textContent.length;
+
+        if (textLength > 22) {
+          //주의: var 아닌 let으로 선언해줘야함.
+          let selectedTitle = document.getElementsByClassName("title");
+          selectedTitle = selectedTitle[i];
+          let titleTooltip = document.getElementsByClassName("tooltipTitle");
+          titleTooltip = titleTooltip[i];
+
+          selectedTitle.addEventListener("mouseover", () => {
+            titleTooltip.style.display = "block";
+          });
+          selectedTitle.addEventListener("mouseout", () => {
+            titleTooltip.style.display = "none";
+          });
+        }
 
       }
 
@@ -803,7 +803,7 @@ function readDBAndDisplay() {
 
   request.onsuccess = function (event) {
     const db = request.result;
-    const transaction = db.transaction("dirStore", "readonly");
+    const transaction = db.transaction(['dirStore'], "readonly");
     const objectStore = transaction.objectStore("dirStore");
 
     const requestGetAll = objectStore.getAll();
@@ -938,7 +938,7 @@ function editDB(obs, key, value) {
     const db = request.result;
     const transaction = db.transaction([obs], 'readwrite');
     transaction.onerror = (e) => console.log('fail');
-    transaction.oncomplete = (e) =>console.log('success');
+    transaction.oncomplete = (e) => console.log('success');
     const objStore = transaction.objectStore([obs]);
     //3. key 값을 가진 데이터 불러오기
     const objStoreRequest = objStore.get(key);
@@ -955,9 +955,9 @@ function editDB(obs, key, value) {
 }
 
 
-  // readDB() 함수 호출
-  readDB();
-  addEvent();
+// readDB() 함수 호출
+readDB();
+addEvent();
 
 
 
