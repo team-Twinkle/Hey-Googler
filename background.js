@@ -158,13 +158,13 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-
+    currentURL = new URL(currentTab);
+    if (currentURL.hostname === "www.google.com") {
+      searchTab = currentTab;
+      console.log("    SearchTab case1 :        "+searchTab);
+    }
   })
-  currentURL = new URL(currentTab);
-  if (currentURL.hostname === "www.google.com") {
-    searchTab = currentTab;
-    //console.log("    S       "+searchTab);
-  }
+
   chrome.tabs.onUpdated.addListener((currentTabId, changingInfo, tabs) => {
     if (changingInfo.status === 'complete') {
       //console.log(currentTabId);
@@ -174,7 +174,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
         //console.log(currentURL);
         if (currentURL.hostname === "www.google.com") {
           searchTab = currentTab;
-          //console.log("    S       "+searchTab);
+          console.log("    SearchTab case2 :       " + searchTab);
         }
       })
 
@@ -207,7 +207,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
 
         const url_ = new URL(searchTab);
         //console.log(url_);
-        keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
+        let keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
         if (keyword1 != null) {
           const keyData = [{ dir_id: dirId, keyword: keyword1 }];
           writeDB(keyData, "keywordStore");
