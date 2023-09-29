@@ -166,8 +166,8 @@ function initListPage() {
   // currentDirLink = url;
   nowDirId = dirId;
 
-  console.log("initListPage");
-  console.log(dirName, dirId);
+  //console.log("initListPage");
+  //console.log(dirName, dirId);
   // console.log(currentDirLink, currenDirId);
 
   //NULL체크는 필수! -> 왜냐하면 dirlist.html에서는 dirName이 null이기 때문에
@@ -510,6 +510,7 @@ function displayURL(data) {
     editSaveBtn.addEventListener("click", e=> {
       let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
+      console.log(editFlag);
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
       editmodal.style.display = "none"
     })
