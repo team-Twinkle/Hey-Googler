@@ -484,14 +484,6 @@ function displayURL(data) {
       editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
       modal.style.display = "none"
     })
-    const memoSaveBtn = modal.querySelector(".saveBtn")
-    memoSaveBtn.addEventListener("click", e=> {
-      let inputMemo = document.getElementById("memoInput");
-      let userInputMemo = inputMemo.value;
-      console.log(userInputMemo);
-      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
-      modal.style.display = "none"
-    })
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
