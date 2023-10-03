@@ -1,5 +1,5 @@
 var isExtensionOn = false; //extension 의 현재 상태 저장
-var dirId; //현재 선택된 디렉토리의 id 저장
+var dirId = 1; //현재 선택된 디렉토리의 id 저장
 
 /****************************************************indexedDB 코드*************************************************************/
 let db;
@@ -48,7 +48,18 @@ request.onupgradeneeded = function (event) {
     keyPath: "d_id",
     autoIncrement: true,
   });
+
   dirStore.createIndex("dir_name", "dir_name", { unique: false });
+
+  //user history store
+  var dirStore = db.createObjectStore("userHistoryStore", {
+    keyPath: "id",
+    autoIncrement: true,
+  });
+
+  dirStore.createIndex("recentlyVisitedDir", "recentlyVisitedDir", { unique: false });
+  dirStore.createIndex("recentlyExecutedDir", "recentlyExecutedDir", { unique: false });
+  dirStore.createIndex("nowExecutedDir", "nowExecutedDir", { unique: false });
 
   request.onerror = function (event) {
     console.log("failed");
@@ -88,16 +99,61 @@ function writeDB(datas, store_name) {
 }
 
 // db에서 데이터를 읽는 함수
-function readDB(store_name, callback) {
-  const transaction = db.transaction([store_name], "readonly");
-  const objectStore = transaction.objectStore(store_name);
-  const request = objectStore.getAll();
+function readDB(store_name) {
+  return new Promise((resolve, reject) => {
+    var request = indexedDB.open("HeyGoogler", 1);
 
-  request.onsuccess = function (event) {
-    callback(event.target.result);
-  };
+    request.onerror = function (event) {
+      reject(new Error("DB error: " + event.target.errorCode));
+    };
+
+    request.onsuccess = function (event) {
+      const db = request.result;
+      const transaction = db.transaction([store_name], "readonly");
+      const objectStore = transaction.objectStore(store_name);
+
+      const requestGetAll = objectStore.getAll();
+
+      requestGetAll.onsuccess = function (event) {
+        const data = event.target.result;
+        console.log('readDB 테스트 실행 데이터 값 : ');
+        console.log(data);
+        resolve(data); // 비동기 작업이 완료되면 데이터를 반환
+      };
+
+      requestGetAll.onerror = function (event) {
+        reject(new Error("데이터 읽기 실패"));
+      };
+    };
+  });
 }
 
+// db 초기값 설정
+async function initUserHistoryData() {
+  try {
+    var userHistoryData = await readDB('userHistoryStore');
+    if (userHistoryData.length < 1) {
+      const datas = [
+        {
+          recentlyVisitedDir: 1,
+          recentlyExecutedDir: 1,
+          nowExecutedDir: 'none',
+        },
+      ];
+      writeDB(datas, "userHistoryStore");
+      const dirDatas = [{
+        dir_name: '초기 New Dir',
+      }];
+      writeDB(dirDatas, "dirStore");
+    }
+
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+initUserHistoryData();
 
 /*********************************************************************************************************************/
 
@@ -161,7 +217,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
     currentURL = new URL(currentTab);
     if (currentURL.hostname === "www.google.com") {
       searchTab = currentTab;
-      console.log("    SearchTab case1 :        "+searchTab);
+      console.log("    SearchTab case1 :        " + searchTab);
     }
   })
 
