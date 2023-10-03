@@ -186,18 +186,13 @@ async function initListPage() {
     }
 
   }
-  //NULL체크는 필수! -> 왜냐하면 dirlist.html에서는 dirName이 null이기 때문에
+
   if (dirName != null) {
     dirNameElement.textContent = dirName;
-
-  }
-
-  //null 체크 필수 
-  if (dirId != null) {
   }
 
   nowDirId = dirId;
-  // editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
+  editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
 
 }
 
@@ -572,7 +567,7 @@ function displayURL(data) {
 
     })
     const memoSaveBtn = modal.querySelector(".saveBtn")
-    memoSaveBtn.addEventListener("click", e=> {
+    memoSaveBtn.addEventListener("click", e => {
       let inputMemo = document.getElementById("memoInput");
       let userInputMemo = inputMemo.value;
       console.log(userInputMemo);
@@ -595,9 +590,9 @@ function displayURL(data) {
     const editmodal = document.getElementById("modal-t")
     var editFlag;
     editBtn.addEventListener('click', (e) => {
-     editmodal.style.display = "flex";
-     //몇 번째 요소 선택했는지 인덱스저장
-     editFlag = e.target.parentElement.getAttribute("key");
+      editmodal.style.display = "flex";
+      //몇 번째 요소 선택했는지 인덱스저장
+      editFlag = e.target.parentElement.getAttribute("key");
 
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
@@ -607,7 +602,7 @@ function displayURL(data) {
 
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
-    editSaveBtn.addEventListener("click", e=> {
+    editSaveBtn.addEventListener("click", e => {
       let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
@@ -1117,22 +1112,22 @@ function editDB(obs, field, key, value) {
     objStoreRequest.onsuccess = function (event) {
       let data = event.target.result;
       // 현재는 title의 값 수정하도록 되어있음
-      if(field == "url"){
+      if (field == "url") {
         data.url = value;
       }
-      else if(field == "title"){
+      else if (field == "title") {
         data.title = value;
       }
-      else if(field == "memo"){
+      else if (field == "memo") {
         data.memo = value;
       }
-      else if(field == "keyword"){
+      else if (field == "keyword") {
         data.keyword = value;
       }
-      else if(field == "dir_id"){
+      else if (field == "dir_id") {
         data.dir_id = value;
       }
-      else if(field == "dir_name"){
+      else if (field == "dir_name") {
         data.dir_name = value;
       }
       else {
@@ -1144,7 +1139,7 @@ function editDB(obs, field, key, value) {
       updateRequest.onsuccess = (e) => {
         console.log('update success');
         location.reload();
-        }
+      }
     }
 
   }
@@ -1215,13 +1210,11 @@ function editUserHistoryRecentlyVisitedDB(obs, key, value) {
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
       var data = event.target.result;
-      // 현재는 title의 값 수정하도록 되어있음
       data.recentlyVisitedDir = value;
       var updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => console.log('update success');
     }
-    location.reload();
   }
 }
 
