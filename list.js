@@ -465,6 +465,7 @@ function displayURL(data) {
 
 
     const memoBtn = clone.querySelector('.white-menu3');
+
     memoBtn.setAttribute('key', key);
     const modal = document.getElementById("modal")
     var memoFlag;
@@ -475,6 +476,7 @@ function displayURL(data) {
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
+
     })
     const memoSaveBtn = modal.querySelector(".saveBtn")
     memoSaveBtn.addEventListener("click", e=> {
@@ -483,16 +485,19 @@ function displayURL(data) {
       console.log(userInputMemo);
       editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
       modal.style.display = "none"
+
     })
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
         modal.style.display = "none"
+
       }
     })
 
 
     const editBtn = clone.querySelector('.white-menu2');
+
     editBtn.setAttribute('key', key);
     const editmodal = document.getElementById("modal-t")
     var editFlag;
@@ -500,6 +505,7 @@ function displayURL(data) {
      editmodal.style.display = "flex";
      //몇 번째 요소 선택했는지 인덱스저장
      editFlag = e.target.parentElement.getAttribute("key");
+
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -518,6 +524,7 @@ function displayURL(data) {
       // console.log(userInputTitle);
 
       editmodal.style.display = "none"
+
     })
 
     editmodal.addEventListener("click", e => {
@@ -639,6 +646,7 @@ function greenBoxRightClick(data) {
     kwBox.oncontextmenu = function (e) {
 
       console.log(e);
+
 
       let winWidth = 350;    //document.body 의 width
       let posX = e.pageX;
