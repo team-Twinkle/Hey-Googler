@@ -43,6 +43,7 @@ function dirAddButtonClick() {
   // 오 템플릿이기 때문에, 이벤트 리스너도 템플릿 생성할 때 추가하도록 해야함
   const editButton = copy.querySelector(".button-edit");
   const deleteButton = copy.querySelector(".button-del");
+  const buttonBox = copy.querySelector(".dir-buttonBox");
   const dirLink = copy.querySelector(".dir-link");
   const dirText = copy.querySelector(".dir-text");
 
@@ -123,14 +124,16 @@ function setupDirEditEvent(button) {
 
         newAElement.appendChild(newDirTextElement);
 
-        const buttonEdit = dirElement.querySelector(".button-edit");
-        const buttonDel = dirElement.querySelector(".button-del");
+        const buttonBox = dirElement.querySelector(".dir-buttonBox");
+        //const buttonEdit = dirElement.querySelector(".button-edit");
+        //const buttonDel = dirElement.querySelector(".button-del");
 
         const newLiElement = document.createElement("li");
         newLiElement.classList.add("dir-list", "dir");
         newLiElement.appendChild(newAElement);
-        newLiElement.appendChild(buttonEdit);
-        newLiElement.appendChild(buttonDel);
+        newLiElement.appendChild(buttonBox);
+        //newLiElement.appendChild(buttonEdit);
+        //newLiElement.appendChild(buttonDel);
 
         dirElement.parentNode.replaceChild(newLiElement, dirElement);
 

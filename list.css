@@ -59,6 +59,7 @@ body {
 
 /* dir 이름 길어졌을 때 어떻게 처리할지 얘기 안 함 */
 .dir-text {
+  width:250px;
   height: 60px;
 
   margin: 0px;
@@ -417,12 +418,13 @@ a>p {
 
 /* style.css */
 .input-dir {
-  width: 100%;
+  width: 95%;
   border: none;
   border-bottom: 2px solid #333;
   font-size: 1rem;
   font-family: inherit;
   font-weight: inherit;
+  margin-top:1rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   outline: none;
@@ -667,4 +669,9 @@ footer {
 
 .contextmenu li:hover a {
   color: #606060;
+}
+
+.dir-buttonBox{
+  display:flex;
+  align-items: center;
 }
