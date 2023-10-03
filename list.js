@@ -488,7 +488,6 @@ function displayURL(data) {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
         modal.style.display = "none"
-
       }
     })
 
@@ -510,8 +509,12 @@ function displayURL(data) {
     editSaveBtn.addEventListener("click", e=> {
       let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
-      console.log(editFlag);
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+      // console.log("editDB 실행");
+      // console.log(parseInt(editFlag));
+      // console.log(typeof(parseInt(editFlag)));
+      // console.log(userInputTitle);
+
       editmodal.style.display = "none"
     })
 
@@ -988,9 +991,12 @@ function editDB(obs, field, key, value) {
 
       let updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
-      updateRequest.onsuccess = (e) => console.log('update success');
+      updateRequest.onsuccess = (e) => {
+        console.log('update success');
+        location.reload();
+        }
     }
-    location.reload();
+
   }
 }
 
