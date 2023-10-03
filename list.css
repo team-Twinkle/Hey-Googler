@@ -128,8 +128,8 @@ body {
   /* 키워드 박스만 border-radius: 15px; 인 이유가 있겠지??*/
 }
 
-.keyword-box:hover{
-  background:#2F954A;
+.keyword-box:hover {
+  background: #2F954A;
 }
 
 .keyword {
@@ -495,6 +495,8 @@ footer {
   padding-bottom: 2px;
   padding-left: 5px;
   padding-right: 5px;
+  /* 좌우 대칭을 위한 margin추가, 상위 box의 좌우 padding 차이로 인한 문제  */
+  margin-right: 16px;
   z-index: 50;
 }
 
@@ -528,8 +530,8 @@ footer {
   transition: width 0.5s ease;
 }
 
-#link:hover{
-  color:mediumblue;
+#link:hover {
+  color: mediumblue;
 }
 
 
@@ -564,7 +566,7 @@ footer {
   padding: 10px;
 }
 
-#confirmModal .modal-window{
+#confirmModal .modal-window {
   width: 220px;
 }
 
@@ -578,8 +580,8 @@ footer {
   line-height: 2em;
 }
 
-#confirmModal .title{
-  padding-top:1em;
+#confirmModal .title {
+  padding-top: 1em;
 }
 
 .modal-overlay .title b {
@@ -592,13 +594,13 @@ footer {
   justify-content: center;
 }
 
-#confirmModal .btn-area{
-  padding-top:2em;
+#confirmModal .btn-area {
+  padding-top: 2em;
 }
 
 .modal-overlay .modalBtn {
   display: inline;
-  height:1.5em;
+  height: 1.5em;
   cursor: pointer;
   text-shadow: 1px 1px 2px gray;
   color: white;
@@ -642,8 +644,8 @@ footer {
   border-radius: 5px;
   list-style: none;
   box-shadow:
-    0 15px 35px rgba(50,50,90,0.1),
-    0 5px 15px rgba(0,0,0,0.07);
+    0 15px 35px rgba(50, 50, 90, 0.1),
+    0 5px 15px rgba(0, 0, 0, 0.07);
   overflow: hidden;
   z-index: 999999;
 }
@@ -654,7 +656,7 @@ footer {
 
 .contextmenu li a {
   display: block;
-  height:auto;
+  height: auto;
   padding: 10px;
   color: gray;
   text-align: center;
