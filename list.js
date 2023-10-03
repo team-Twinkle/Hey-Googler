@@ -44,6 +44,7 @@ function dirAddButtonClick() {
   // 오 템플릿이기 때문에, 이벤트 리스너도 템플릿 생성할 때 추가하도록 해야함
   const editButton = copy.querySelector(".button-edit");
   const deleteButton = copy.querySelector(".button-del");
+  const buttonBox = copy.querySelector(".dir-buttonBox");
   const dirLink = copy.querySelector(".dir-link");
   const dirText = copy.querySelector(".dir-text");
 
@@ -124,14 +125,17 @@ function setupDirEditEvent(button) {
 
         newAElement.appendChild(newDirTextElement);
 
-        const buttonEdit = dirElement.querySelector(".button-edit");
-        const buttonDel = dirElement.querySelector(".button-del");
+        const buttonBox = dirElement.querySelector(".dir-buttonBox");
+        //const buttonEdit = dirElement.querySelector(".button-edit");
+        //const buttonDel = dirElement.querySelector(".button-del");
 
         const newLiElement = document.createElement("li");
+        newAElement.classList.add("dir-link");
         newLiElement.classList.add("dir-list", "dir");
         newLiElement.appendChild(newAElement);
-        newLiElement.appendChild(buttonEdit);
-        newLiElement.appendChild(buttonDel);
+        newLiElement.appendChild(buttonBox);
+        //newLiElement.appendChild(buttonEdit);
+        //newLiElement.appendChild(buttonDel);
 
         dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
@@ -163,8 +167,7 @@ async function initListPage() {
   var dirId = urlParams.get("dir_id");
   const dirNameElement = document.querySelector("#dir-name");
 
-  console.log("initListPage");
-  console.log(dirName, dirId);
+
 
   if (dirId == null) {
     //초기 진입할 때,
@@ -552,28 +555,50 @@ function displayURL(data) {
     deleteBtn.addEventListener('click', () => {
       deleteDB(urlStore, key);
     });
+
+
     const memoBtn = clone.querySelector('.white-menu3');
-    const modal = document.getElementById("modal");
-    memoBtn.addEventListener('click', () => {
+
+    memoBtn.setAttribute('key', key);
+    const modal = document.getElementById("modal")
+    var memoFlag;
+    memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
+      memoFlag = e.target.parentElement.getAttribute("key");
     })
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
+
+    })
+    const memoSaveBtn = modal.querySelector(".saveBtn")
+    memoSaveBtn.addEventListener("click", e=> {
+      let inputMemo = document.getElementById("memoInput");
+      let userInputMemo = inputMemo.value;
+      console.log(userInputMemo);
+      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+      modal.style.display = "none"
+
     })
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
-        modal.style.display = "none";
+        modal.style.display = "none"
 
       }
     })
 
 
     const editBtn = clone.querySelector('.white-menu2');
-    const editmodal = document.getElementById("modal-t");
-    editBtn.addEventListener('click', () => {
-      editmodal.style.display = "flex";
+
+    editBtn.setAttribute('key', key);
+    const editmodal = document.getElementById("modal-t")
+    var editFlag;
+    editBtn.addEventListener('click', (e) => {
+     editmodal.style.display = "flex";
+     //몇 번째 요소 선택했는지 인덱스저장
+     editFlag = e.target.parentElement.getAttribute("key");
+
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -582,11 +607,16 @@ function displayURL(data) {
 
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
-    editSaveBtn.addEventListener("click", e => {
+    editSaveBtn.addEventListener("click", e=> {
+      let inputTitle = document.getElementById("titleInput");
+      let userInputTitle = inputTitle.value;
+      editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+      // console.log("editDB 실행");
+      // console.log(parseInt(editFlag));
+      // console.log(typeof(parseInt(editFlag)));
+      // console.log(userInputTitle);
 
-      editDB(urlStore, 1, inputValue);
-
-      editmodal.style.display = "none";
+      editmodal.style.display = "none"
 
     })
 
@@ -709,6 +739,7 @@ function greenBoxRightClick(data) {
     kwBox.oncontextmenu = function (e) {
 
       console.log(e);
+
 
       let winWidth = 350;    //document.body 의 width
       let posX = e.pageX;
@@ -1068,8 +1099,9 @@ function deleteDB2(key) {
   }
 }
 
-function editDB(obs, key, value) {
-  // return new Promise((resolve, reject) => { });
+
+function editDB(obs, field, key, value) {
+  //value는 변경하려는 값
   //1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
   request.onerror = (e) => console.log(e.target.errorCode);
@@ -1083,14 +1115,38 @@ function editDB(obs, key, value) {
     //3. key 값을 가진 데이터 불러오기
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
-      var data = event.target.result;
+      let data = event.target.result;
       // 현재는 title의 값 수정하도록 되어있음
-      data.title = value;
-      var updateRequest = objStore.put(data);
+      if(field == "url"){
+        data.url = value;
+      }
+      else if(field == "title"){
+        data.title = value;
+      }
+      else if(field == "memo"){
+        data.memo = value;
+      }
+      else if(field == "keyword"){
+        data.keyword = value;
+      }
+      else if(field == "dir_id"){
+        data.dir_id = value;
+      }
+      else if(field == "dir_name"){
+        data.dir_name = value;
+      }
+      else {
+        console.log("필드 추가가 필요함");
+      }
+
+      let updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
-      updateRequest.onsuccess = (e) => console.log('update success');
+      updateRequest.onsuccess = (e) => {
+        console.log('update success');
+        location.reload();
+        }
     }
-    location.reload();
+
   }
 }
 
