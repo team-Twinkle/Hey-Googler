@@ -1,4 +1,5 @@
 var isExtensionOn = false; //extension 의 현재 상태 저장
+var dirId; //현재 선택된 디렉토리의 id 저장
 
 /****************************************************indexedDB 코드*************************************************************/
 let db;
@@ -132,13 +133,15 @@ chrome.runtime.onInstalled.addListener(() => {
 //list.js 로부터 메시지를 받아서 사이드바에서 시작버튼이나 중지 버튼을 누르면 isExtensionOn 의 값과 액션 아이콘 뱃지의 텍스트가 변경되도록 하는 코드
 //<extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onMessage.addListener((msg) => {
-  // console.log(msg);
-  if (msg == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
+  console.log(msg);
+  if (msg.txt == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
+    dirId = msg.onDirId;
     //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
     isExtensionOn = false;
+    dirId = null;
     //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "OFF" });
   }
@@ -206,7 +209,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         //console.log(url_);
         let keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
         if (keyword1 != null) {
-          const keyData = [{ dir_id: "1", keyword: keyword1 }];
+          const keyData = [{ dir_id: dirId, keyword: keyword1 }];
           writeDB(keyData, "keywordStore");
           console.log("Visited Site:", url, title, keyword1);
           //db에 data 입력
@@ -216,7 +219,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
               title: title,
               memo: " ",
               keyword: keyword1,
-              dir_id: "1"
+              dir_id: dirId,
             },
           ];
           writeDB(datas, "urlStore");

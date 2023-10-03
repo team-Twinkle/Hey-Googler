@@ -49,14 +49,55 @@ function toggle() {
     if (iframe.style.width == "0px") {
         iframe.style.width = "367px";
         bg.style.display = 'block';
+        iframe.animate(
+            {
+                transform: [
+                    'translateX(-367px)',
+                    'translateX(0px)'
+                ]
+            },
+            {
+                duration: 300,
+                fill: 'forwards',
+                easing: 'ease'
+            }
+        );
     }
     else {
-        iframe.style.width = "0px";
+        iframe.animate(
+            {
+                transform: [
+                    'translateX(0px)',
+                    'translateX(-367px)'
+                ]
+            },
+            {
+                duration: 200,
+                fill: 'none',
+                easing: 'ease'
+            }
+        ).onfinish=()=>{
+            iframe.style.width='0px';
+        };
         bg.style.display = 'none';
     }
 }
 
 bg.addEventListener('click', () => {
-    iframe.style.width = "0px";
+    iframe.animate(
+        {
+            transform: [
+                'translateX(0px)',
+                'translateX(-367px)'
+            ]
+        },
+        {
+            duration: 200,
+            fill: 'none',
+            easing: 'ease'
+        }
+    ).onfinish=()=>{
+        iframe.style.width='0px';
+    };
     bg.style.display = 'none';
 })
