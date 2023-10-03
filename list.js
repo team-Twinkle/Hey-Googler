@@ -1068,6 +1068,32 @@ function deleteDB2(key) {
   }
 }
 
+function editDB(obs, key, value) {
+  // return new Promise((resolve, reject) => { });
+  //1. db 열기
+  var request = indexedDB.open("HeyGoogler", 1);
+  request.onerror = (e) => console.log(e.target.errorCode);
+  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
+  request.onsuccess = (e) => {
+    const db = request.result;
+    const transaction = db.transaction([obs], 'readwrite');
+    transaction.onerror = (e) => console.log('fail');
+    transaction.oncomplete = (e) => console.log('success');
+    const objStore = transaction.objectStore([obs]);
+    //3. key 값을 가진 데이터 불러오기
+    const objStoreRequest = objStore.get(key);
+    objStoreRequest.onsuccess = function (event) {
+      var data = event.target.result;
+      // 현재는 title의 값 수정하도록 되어있음
+      data.title = value;
+      var updateRequest = objStore.put(data);
+      updateRequest.onerror = (e) => console.log('update error');
+      updateRequest.onsuccess = (e) => console.log('update success');
+    }
+    location.reload();
+  }
+}
+
 function editUserHistoryNowDirDB(obs, key, value) {
   // return new Promise((resolve, reject) => { });
   //1. db 열기
