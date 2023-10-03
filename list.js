@@ -129,6 +129,7 @@ function setupDirEditEvent(button) {
         //const buttonDel = dirElement.querySelector(".button-del");
 
         const newLiElement = document.createElement("li");
+        newAElement.classList.add("dir-link");
         newLiElement.classList.add("dir-list", "dir");
         newLiElement.appendChild(newAElement);
         newLiElement.appendChild(buttonBox);

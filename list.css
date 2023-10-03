@@ -59,7 +59,6 @@ body {
 
 /* dir 이름 길어졌을 때 어떻게 처리할지 얘기 안 함 */
 .dir-text {
-  width:250px;
   height: 60px;
 
   margin: 0px;
@@ -674,4 +673,8 @@ footer {
 .dir-buttonBox{
   display:flex;
   align-items: center;
+}
+
+.dir-link{
+  width: 250px;
 }
