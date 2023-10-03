@@ -145,8 +145,8 @@ async function initUserHistoryData() {
         dir_name: '초기 New Dir',
       }];
       writeDB(dirDatas, "dirStore");
-    }
 
+    }
 
   } catch (error) {
     console.error(error);

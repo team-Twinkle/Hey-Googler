@@ -170,6 +170,7 @@ async function initListPage() {
     //초기 진입할 때,
     try {
       var userHistoryData = await readDBbyStoreName('userHistoryStore');
+
       dirId = userHistoryData[0]['recentlyExecutedDir'];
       console.log(dirId);
       var initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
@@ -338,10 +339,8 @@ startButton.addEventListener("click", () => {
   startButton.src = "images/icon_start_true.svg";
   chrome.runtime.sendMessage({ onDirId: nowDirId, txt: "Start the extension from list.js" });
   editUserHistoryNowDirDB('userHistoryStore', 1, nowDirId);
-
-  //FIXME stop때 바꾸고 싶었지만, now id 찾아야하는데 이 함수가 아직 구현 안되어서
   editUserHistoryRecentlyExecutedDirDB('userHistoryStore', 1, nowDirId);
-
+  //거의 10퍼센트 확률로 두번째거 안 먹히는데,, 계속 지속되면 처음 실행되고 다음 되록 수정
 });
 
 stopButton.addEventListener("click", () => {
@@ -1070,6 +1069,7 @@ function deleteDB2(key) {
 }
 
 function editUserHistoryNowDirDB(obs, key, value) {
+  // return new Promise((resolve, reject) => { });
   //1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
   request.onerror = (e) => console.log(e.target.errorCode);
@@ -1090,7 +1090,6 @@ function editUserHistoryNowDirDB(obs, key, value) {
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => console.log('update success');
     }
-    location.reload();
   }
 }
 
@@ -1115,7 +1114,7 @@ function editUserHistoryRecentlyExecutedDirDB(obs, key, value) {
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => console.log('update success');
     }
-    location.reload();
+    // location.reload();
   }
 }
 
