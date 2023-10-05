@@ -141,6 +141,8 @@ async function initUserHistoryData() {
         },
       ];
       writeDB(datas, "userHistoryStore");
+      //아 얘도 필요하기는 함, list.js와 코드 중복 아님
+      //익스텐션 실행시(dirlist 로드 하지 않더라도 기본 세팅) 확인하는거고, list.js 는 페이지 로드시 확인
       const dirDatas = [{
         dir_name: '초기 New Dir',
       }];

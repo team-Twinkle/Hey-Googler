@@ -166,15 +166,30 @@ async function initListPage() {
   var dirId = urlParams.get("dir_id");
   const dirNameElement = document.querySelector("#dir-name");
 
+  console.log('initListpage');
+  console.log(dirId);
+
 
   if (dirId == null) {
     //초기 진입할 때,
     try {
       var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
+
       dirId = userHistoryData[0]['recentlyExecutedDir'];
       console.log(dirId);
       var initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
+      console.log(initDirName);
+
+      if (initDirName == undefined) { //recentlyExecutedDir가 삭제 됨 -> 아무 디렉토리
+        var tempDir = await readDBbyStoreName('dirStore');
+        dirId = tempDir[0]['d_id'];
+        console.log('체크');
+        console.log(dirId);
+        initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
+        //오 코드 완전 별로
+        //위에랑 if-else 로 처리하는 방법으로 나중에 수정
+      }
       dirName = initDirName['dir_name']
       dirNameElement.textContent = dirName;
 
