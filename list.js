@@ -10,12 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.location.pathname === "/list.html") {
     initListPage();
 
-
-
   } else if (window.location.pathname === "/dirList.html") {
     readDBAndDisplay();
     document.getElementById("dirAddButton").addEventListener("click", () => { dirAddButtonClick(); });
-
+    defaultDirSet();
     //경우에 따라 다르게 부여
     //TODO
     // if (onDirId != 0) {
@@ -157,6 +155,7 @@ function setupDirDeleteEvent(button) {
   // 디렉토리 데이터베이스에서도 삭제
   const d_id = dirElement.id;
   deleteDirDB(d_id);
+  location.reload();
 }
 
 
@@ -166,7 +165,6 @@ async function initListPage() {
   var dirName = urlParams.get("dirname");
   var dirId = urlParams.get("dir_id");
   const dirNameElement = document.querySelector("#dir-name");
-
 
 
   if (dirId == null) {
@@ -631,6 +629,23 @@ function displayURL(data) {
 // displayMenu();
 // displayTooltip();
 
+
+async function defaultDirSet() {
+  console.log('디폴트 디비 함수 실행됨');
+  try {
+    var dirData = await readDBbyStoreName('dirStore');
+    if (dirData.length < 1) {
+
+      dirAddButtonClick();
+      //위 함수도 따로 더 범용성 있게 하면 좋을 듯,, 클릭이 아니라 그냥 add자체로
+
+    }
+
+
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 
 
