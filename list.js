@@ -497,12 +497,16 @@ function Toggle(data) {
 
         pathArea.style.maxHeight = '100vh'
         pathArea.style.opacity = '1';
+        pathArea.style.overflowY = 'visible';
+
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
         toggleButton.classList.add("toggleHidden");
         toggleButton.classList.remove("toggleShown");
 
         pathArea.style.maxHeight = '0';
+        pathArea.style.overflowY = 'hidden';
+
       }
       isToggled = !isToggled;
     })

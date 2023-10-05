@@ -423,7 +423,7 @@ a>p {
   font-size: 1rem;
   font-family: inherit;
   font-weight: inherit;
-  margin-top:1rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   outline: none;
@@ -520,7 +520,8 @@ footer {
   max-height: 100vh;
   opacity: 1;
   transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
-  overflow: hidden;
+  /* hidden이면 안되고 clip 이어야만함 */
+  overflow-x: clip;
 }
 
 .hyperLink {
@@ -672,11 +673,11 @@ footer {
   color: #606060;
 }
 
-.dir-buttonBox{
-  display:flex;
+.dir-buttonBox {
+  display: flex;
   align-items: center;
 }
 
-.dir-link{
+.dir-link {
   width: 250px;
 }
