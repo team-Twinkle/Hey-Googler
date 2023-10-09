@@ -434,7 +434,7 @@ function displayURL(data) {
     const t = data[i].title;
     const p = data[i].url;
     const key = data[i].id;
-    //console.log(key);
+    console.log("displayURL: "+key);
 
     const area = document.getElementById("white-" + k);
 
@@ -519,7 +519,7 @@ function displayURL(data) {
       let userInputTitle = inputTitle.value;
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
       // console.log("editDB 실행");
-      // console.log(parseInt(editFlag));
+       console.log(parseInt(editFlag));
       // console.log(typeof(parseInt(editFlag)));
       // console.log(userInputTitle);
 
