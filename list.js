@@ -44,7 +44,6 @@ function dirAddButtonClick() {
   // 오 템플릿이기 때문에, 이벤트 리스너도 템플릿 생성할 때 추가하도록 해야함
   const editButton = copy.querySelector(".button-edit");
   const deleteButton = copy.querySelector(".button-del");
-  const buttonBox = copy.querySelector(".dir-buttonBox");
   const dirLink = copy.querySelector(".dir-link");
   const dirText = copy.querySelector(".dir-text");
 
@@ -125,17 +124,14 @@ function setupDirEditEvent(button) {
 
         newAElement.appendChild(newDirTextElement);
 
-        const buttonBox = dirElement.querySelector(".dir-buttonBox");
-        //const buttonEdit = dirElement.querySelector(".button-edit");
-        //const buttonDel = dirElement.querySelector(".button-del");
+        const buttonEdit = dirElement.querySelector(".button-edit");
+        const buttonDel = dirElement.querySelector(".button-del");
 
         const newLiElement = document.createElement("li");
-        newAElement.classList.add("dir-link");
         newLiElement.classList.add("dir-list", "dir");
         newLiElement.appendChild(newAElement);
-        newLiElement.appendChild(buttonBox);
-        //newLiElement.appendChild(buttonEdit);
-        //newLiElement.appendChild(buttonDel);
+        newLiElement.appendChild(buttonEdit);
+        newLiElement.appendChild(buttonDel);
 
         dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
@@ -161,39 +157,32 @@ function setupDirDeleteEvent(button) {
 
 
 // 리스트 페이지 초기화 함수
-async function initListPage() {
+function initListPage() {
   const urlParams = new URLSearchParams(window.location.search);
-  var dirName = urlParams.get("dirname");
-  var dirId = urlParams.get("dir_id");
-  const dirNameElement = document.querySelector("#dir-name");
+  const dirName = urlParams.get("dirname");
+  const dirId = urlParams.get("dir_id");
 
+  // var url = chrome.runtime.getURL(`list.html?dir_id=${dirId}&dirname=${encodeURIComponent(dirName)}`);
 
+  // currentDirLink = url;
+  nowDirId = dirId;
 
-  if (dirId == null) {
-    //초기 진입할 때,
-    try {
-      var userHistoryData = await readDBbyStoreName('userHistoryStore');
+  //console.log("initListPage");
+  //console.log(dirName, dirId);
+  // console.log(currentDirLink, currenDirId);
 
-      dirId = userHistoryData[0]['recentlyExecutedDir'];
-      console.log(dirId);
-      var initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
-      dirName = initDirName['dir_name']
-      dirNameElement.textContent = dirName;
-
-
-    } catch (error) {
-
-    }
-
-  }
-
+  //NULL체크는 필수! -> 왜냐하면 dirlist.html에서는 dirName이 null이기 때문에
   if (dirName != null) {
+    const dirNameElement = document.querySelector("#dir-name");
     dirNameElement.textContent = dirName;
   }
 
-  nowDirId = dirId;
-  editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
+  //TODOdirId에 맞게 키워드와 url 필터링해서 디스플레이 하는 작업 진행
+  //null 체크 필수 
+  if (dirId != null) {
+    addEvent();
 
+  }
 }
 
 
@@ -202,79 +191,6 @@ async function initListPage() {
 //list.html에서만 가능하니 주의해야함 
 // document.getElementById("dir-name").title =
 //   document.getElementById("dir-name").innerHTML;
-
-/******* */
-
-// db에서 데이터를 읽는 함수
-function readDBbyStoreName(store_name) {
-  return new Promise((resolve, reject) => {
-    var request = indexedDB.open("HeyGoogler", 1);
-
-    request.onerror = function (event) {
-      reject(new Error("DB error: " + event.target.errorCode));
-    };
-
-    request.onsuccess = function (event) {
-      const db = request.result;
-      const transaction = db.transaction([store_name], "readonly");
-      const objectStore = transaction.objectStore(store_name);
-
-      const requestGetAll = objectStore.getAll();
-
-      requestGetAll.onsuccess = function (event) {
-        const data = event.target.result;
-        console.log('readDB 테스트 실행 데이터 값 : ');
-        console.log(data);
-        resolve(data); // 비동기 작업이 완료되면 데이터를 반환
-      };
-
-      requestGetAll.onerror = function (event) {
-        reject(new Error("데이터 읽기 실패"));
-      };
-    };
-  });
-}
-
-// db에서 데이터를 읽는 함수
-function readDBbyStoreNameAndId(store_name, id) {
-  return new Promise((resolve, reject) => {
-    var request = indexedDB.open("HeyGoogler", 1);
-
-    request.onerror = function (event) {
-      reject(new Error("DB error: " + event.target.errorCode));
-    };
-
-    request.onsuccess = function (event) {
-      const db = request.result;
-      const transaction = db.transaction([store_name], "readonly");
-      const objectStore = transaction.objectStore(store_name);
-
-      const requestGet = objectStore.get(parseInt(id));
-
-      requestGet.onsuccess = function (event) {
-        const data = event.target.result;
-        console.log('readDB dirname by id 테스트 실행 데이터 값 : ');
-        console.log(data);
-        resolve(data); // 비동기 작업이 완료되면 데이터를 반환
-      };
-
-      requestGet.onerror = function (event) {
-        reject(new Error("데이터 읽기 실패"));
-      };
-    };
-  });
-}
-
-// async function getNowDirId() {
-//   try {
-//     var userHistoryData = await readDBbyStoreName('userHistoryStore');
-//     console.log(userHistoryData[0]['nowExecutedDir']);
-//     data = userHistoryData[0]['nowExecutedDir'];
-//     return data;
-//   } catch (error) {
-
-//   }
-// }
 
 /********************************************************************************************************* */
 
@@ -335,16 +251,15 @@ stopButton.addEventListener("mouseout", () => {
 //send message to background.js when the start/stop button clicked
 startButton.addEventListener("click", () => {
   startButton.src = "images/icon_start_true.svg";
+  // onDirId = currenDirId; 
   chrome.runtime.sendMessage({ onDirId: nowDirId, txt: "Start the extension from list.js" });
-  editUserHistoryNowDirDB('userHistoryStore', 1, nowDirId);
-  editUserHistoryRecentlyExecutedDirDB('userHistoryStore', 1, nowDirId);
-  //거의 10퍼센트 확률로 두번째거 안 먹히는데,, 계속 지속되면 처음 실행되고 다음 되록 수정
 });
 
 stopButton.addEventListener("click", () => {
   startButton.src = "images/icon_start.svg";
+  // onDirLink = '';
+  // onDirId = 0;
   chrome.runtime.sendMessage("Stop the extension from list.js");
-  editUserHistoryNowDirDB('userHistoryStore', 1, 'none');
 });
 
 chrome.action.onClicked.addListener(() => {
@@ -518,11 +433,11 @@ function displayURL(data) {
 
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
-    const k = data[i].keyword;
-    const t = data[i].title;
-    const p = data[i].url;
-    const key = data[i].id;
-    console.log("displayURL: "+key);
+    const key = data[i][0];
+    const k = data[i][1];
+    const t = data[i][2];
+    const p = data[i][3];
+    //console.log("displayURL: "+key);
 
     const area = document.getElementById("white-" + k);
 
@@ -567,7 +482,7 @@ function displayURL(data) {
 
     })
     const memoSaveBtn = modal.querySelector(".saveBtn")
-    memoSaveBtn.addEventListener("click", e => {
+    memoSaveBtn.addEventListener("click", e=> {
       let inputMemo = document.getElementById("memoInput");
       let userInputMemo = inputMemo.value;
       console.log(userInputMemo);
@@ -590,9 +505,9 @@ function displayURL(data) {
     const editmodal = document.getElementById("modal-t")
     var editFlag;
     editBtn.addEventListener('click', (e) => {
-      editmodal.style.display = "flex";
-      //몇 번째 요소 선택했는지 인덱스저장
-      editFlag = e.target.parentElement.getAttribute("key");
+     editmodal.style.display = "flex";
+     //몇 번째 요소 선택했는지 인덱스저장
+     editFlag = e.target.parentElement.getAttribute("key");
 
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
@@ -602,7 +517,7 @@ function displayURL(data) {
 
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
-    editSaveBtn.addEventListener("click", e => {
+    editSaveBtn.addEventListener("click", e=> {
       let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
@@ -662,11 +577,11 @@ function displayKeyword(data) {
 
   //컨텐츠 들어갈 위치
   const container = document.getElementById('dataContainer');
-
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
-    const k = data[i].keyword;
-    const gk = data[i].id;
+    const k = data[i][1];
+    const gk = data[i][0];
+
 
     const template = document.getElementById("keyword_template");
     const clone = template.content.cloneNode(true);
@@ -762,58 +677,58 @@ function greenBoxRightClick(data) {
       contextMenu.style.top = posTop;
 
       // Hide contextmenu:
-      document.body.addEventListener("click", () => {
-        contextMenu.style.display = 'none';
-      })
+    document.body.addEventListener("click", () => {
+      contextMenu.style.display = 'none';
+    })
 
-      deleteMenu.addEventListener("click", () => {
-        modal.style.display = "flex";
-      })
+    deleteMenu.addEventListener("click", () => {
+      modal.style.display = "flex";
+    })
 
-      const closeBtn = modal.querySelector(".closeBtn");
-      const deleteBtn = modal.querySelector(".deleteBtn");
-      closeBtn.addEventListener("click", e => {
-        modal.style.display = "none";
-      })
-      deleteBtn.addEventListener("click", () => {
-        var request = indexedDB.open("HeyGoogler", 1);
+    const closeBtn = modal.querySelector(".closeBtn");
+    const deleteBtn = modal.querySelector(".deleteBtn");
+    closeBtn.addEventListener("click", e => {
+      modal.style.display = "none";
+    })
+    deleteBtn.addEventListener("click", () => {
+      var request = indexedDB.open("HeyGoogler", 1);
 
-        request.onerror = function (event) {
-          console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+      request.onerror = function (event) {
+        console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+      };
+
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+
+        let transaction = db.transaction([urlStore], 'readwrite');
+        let objectStore = transaction.objectStore(urlStore);
+        let urlSearch = objectStore.index("keyword").getAll(k);
+
+        urlSearch.onsuccess = (e) => {
+          urls = e.target.result;
+
+          for (let i = 0; i < urls.length; i++) {
+            deleteDB(urlStore, urls[i].id);
+          }
+        }
+
+        transaction.onerror = function (event) {
+          console.log("트랜잭션 오류:", event.target.error);
         };
 
-        request.onsuccess = function (event) {
-          const db = event.target.result;
+        transaction.oncomplete = function (event) {
+          db.close();
+        };
+      }
+      modal.style.display = "none";
+    })
 
-          let transaction = db.transaction([urlStore], 'readwrite');
-          let objectStore = transaction.objectStore(urlStore);
-          let urlSearch = objectStore.index("keyword").getAll(k);
-
-          urlSearch.onsuccess = (e) => {
-            urls = e.target.result;
-
-            for (let i = 0; i < urls.length; i++) {
-              deleteDB(urlStore, urls[i].id);
-            }
-          }
-
-          transaction.onerror = function (event) {
-            console.log("트랜잭션 오류:", event.target.error);
-          };
-
-          transaction.oncomplete = function (event) {
-            db.close();
-          };
-        }
+    modal.addEventListener("click", e => {
+      const evTarget = e.target
+      if (evTarget.classList.contains("modal-overlay")) {
         modal.style.display = "none";
-      })
-
-      modal.addEventListener("click", e => {
-        const evTarget = e.target
-        if (evTarget.classList.contains("modal-overlay")) {
-          modal.style.display = "none";
-        }
-      })
+      }
+    })
       return false;
     }
   }
@@ -826,6 +741,7 @@ function greenBoxRightClick(data) {
 function readDB() {
 
   return new Promise((resolve, reject) => {
+    //console.log("readDB 실행 시점과 dirId "+ nowDirId);
     var request = indexedDB.open("HeyGoogler", 1);
 
     request.onerror = function (event) {
@@ -839,13 +755,23 @@ function readDB() {
       /* 키워드 출력 (초록 박스) */
       let transaction = db.transaction([keyStore], 'readonly');
       let objectStore = transaction.objectStore(keyStore);
-      let request = objectStore.getAll();
+      let dirId = parseInt(nowDirId);
+      //console.log(typeof(dirId)); 
+      let dirFilterKeyword = [];
+      let greenIndex = objectStore.index("dir_id");
+      let greenKeyRange = IDBKeyRange.only(dirId);
 
-      request.onsuccess = function (event) {
-        var data = event.target.result;
-        displayKeyword(data);
-      };
-
+      greenIndex.openCursor(greenKeyRange).onsuccess = function(event){
+        let cursor = event.target.result;
+        if (cursor){
+          //console.log(cursor.value.keyword);
+          dirFilterKeyword.push([cursor.value.id ,cursor.value.keyword]);
+          cursor.continue();
+        } else {
+          console.log(dirFilterKeyword);
+          displayKeyword(dirFilterKeyword);
+        }
+      }
       transaction.onerror = function (event) {
         console.log("트랜잭션 오류:", event.target.error);
       };
@@ -857,14 +783,20 @@ function readDB() {
       /* url 출력 (하얀 박스) */
       transaction = db.transaction([urlStore], 'readonly');
       objectStore = transaction.objectStore('urlStore');
-      request = objectStore.getAll();
-      //2. getAll() 함수 성공 시, 화면에 출력
-      request.onsuccess = function (event) {
 
-        var data = event.target.result;
-        //data에는 urlStore 객체 저장소의 모든 데이터가 배열 형태로 저장
-        displayURL(data);
-      };
+      let dirFilterUrl = [];
+      let whiteIndex = objectStore.index("dir_id");
+      let whiteKeyRange = IDBKeyRange.only(dirId);
+
+      whiteIndex.openCursor(whiteKeyRange).onsuccess = function(event){
+        let cursor = event.target.result;
+        if (cursor){
+          dirFilterUrl.push([cursor.value.id ,cursor.value.keyword,cursor.value.title, cursor.value.url]);
+          cursor.continue();
+        } else {
+          displayURL(dirFilterUrl);
+        }
+      }
 
       transaction.onerror = function (event) {
         console.log("트랜잭션 오류:", event.target.error);
@@ -883,6 +815,7 @@ function readDB() {
 //초록박스나 흰색박스가 생성된 이후에 추가해야되는 이벤트는 addEvent() 함수 안쪽으로 다 빼냈어 !!
 //promise 객체 이용해가지고 readDB() 함수가 끝까지 실행되어야만 addEvent() 코드가 실행되도록 구현했습니당 ..
 function addEvent() {
+  //console.log("addEvent 전달 "+nowDirId );
   readDB().then(() => {
 
     var request = indexedDB.open("HeyGoogler", 1);
@@ -1093,8 +1026,6 @@ function deleteDB2(key) {
     }
   }
 }
-
-
 function editDB(obs, field, key, value) {
   //value는 변경하려는 값
   //1. db 열기
@@ -1108,26 +1039,27 @@ function editDB(obs, field, key, value) {
     transaction.oncomplete = (e) => console.log('success');
     const objStore = transaction.objectStore([obs]);
     //3. key 값을 가진 데이터 불러오기
+    console.log(key);
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
       let data = event.target.result;
       // 현재는 title의 값 수정하도록 되어있음
-      if (field == "url") {
+      if(field == "url"){
         data.url = value;
       }
-      else if (field == "title") {
+      else if(field == "title"){
         data.title = value;
       }
-      else if (field == "memo") {
+      else if(field == "memo"){
         data.memo = value;
       }
-      else if (field == "keyword") {
+      else if(field == "keyword"){
         data.keyword = value;
       }
-      else if (field == "dir_id") {
+      else if(field == "dir_id"){
         data.dir_id = value;
       }
-      else if (field == "dir_name") {
+      else if(field == "dir_name"){
         data.dir_name = value;
       }
       else {
@@ -1139,92 +1071,24 @@ function editDB(obs, field, key, value) {
       updateRequest.onsuccess = (e) => {
         console.log('update success');
         location.reload();
-      }
+        }
     }
 
   }
 }
-
-function editUserHistoryNowDirDB(obs, key, value) {
-  // return new Promise((resolve, reject) => { });
-  //1. db 열기
-  var request = indexedDB.open("HeyGoogler", 1);
-  request.onerror = (e) => console.log(e.target.errorCode);
-  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
-  request.onsuccess = (e) => {
-    const db = request.result;
-    const transaction = db.transaction([obs], 'readwrite');
-    transaction.onerror = (e) => console.log('fail');
-    transaction.oncomplete = (e) => console.log('success');
-    const objStore = transaction.objectStore([obs]);
-    //3. key 값을 가진 데이터 불러오기
-    const objStoreRequest = objStore.get(key);
-    objStoreRequest.onsuccess = function (event) {
-      var data = event.target.result;
-      // 현재는 title의 값 수정하도록 되어있음
-      data.nowExecutedDir = value;
-      var updateRequest = objStore.put(data);
-      updateRequest.onerror = (e) => console.log('update error');
-      updateRequest.onsuccess = (e) => console.log('update success');
-    }
-  }
-}
-
-function editUserHistoryRecentlyExecutedDirDB(obs, key, value) {
-  //1. db 열기
-  var request = indexedDB.open("HeyGoogler", 1);
-  request.onerror = (e) => console.log(e.target.errorCode);
-  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
-  request.onsuccess = (e) => {
-    const db = request.result;
-    const transaction = db.transaction([obs], 'readwrite');
-    transaction.onerror = (e) => console.log('fail');
-    transaction.oncomplete = (e) => console.log('success');
-    const objStore = transaction.objectStore([obs]);
-    //3. key 값을 가진 데이터 불러오기
-    const objStoreRequest = objStore.get(key);
-    objStoreRequest.onsuccess = function (event) {
-      var data = event.target.result;
-      // 현재는 title의 값 수정하도록 되어있음
-      data.recentlyExecutedDir = value;
-      var updateRequest = objStore.put(data);
-      updateRequest.onerror = (e) => console.log('update error');
-      updateRequest.onsuccess = (e) => console.log('update success');
-    }
-    // location.reload();
-  }
-}
-
-function editUserHistoryRecentlyVisitedDB(obs, key, value) {
-  //1. db 열기
-  var request = indexedDB.open("HeyGoogler", 1);
-  request.onerror = (e) => console.log(e.target.errorCode);
-  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
-  request.onsuccess = (e) => {
-    const db = request.result;
-    const transaction = db.transaction([obs], 'readwrite');
-    transaction.onerror = (e) => console.log('fail');
-    transaction.oncomplete = (e) => console.log('success');
-    const objStore = transaction.objectStore([obs]);
-    //3. key 값을 가진 데이터 불러오기
-    const objStoreRequest = objStore.get(key);
-    objStoreRequest.onsuccess = function (event) {
-      var data = event.target.result;
-      data.recentlyVisitedDir = value;
-      var updateRequest = objStore.put(data);
-      updateRequest.onerror = (e) => console.log('update error');
-      updateRequest.onsuccess = (e) => console.log('update success');
-    }
-  }
-}
-
 
 
 // readDB() 함수 호출
 
 
-addEvent();
-
+//addEvent();
+// editDB('keywordStore', "dir_id", 3, 3 );
+// editDB('keywordStore', "dir_id", 4, 4 );
+// editDB('urlStore', "dir_id", 2, 2 );
+// editDB('urlStore', "dir_id", 3, 3 );
+// editDB('urlStore', "dir_id", 4, 4 );
+// editDB('urlStore', "dir_id", 5, 4 );
+// editDB('urlStore', "dir_id", 6, 4 );
 
 
 // 삭제 버튼을 클릭할 때 실행되는 함수를 정의
