@@ -110,7 +110,7 @@ function setupDirEditEvent(button) {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-      editDirNameDB(dir_id, newDirName);
+        editDB("dirStore","dir_name",parseInt(dir_id),newDirName);
       }
       else{
         alert("빈칸 놉");
@@ -151,8 +151,8 @@ function setupDirEditEvent(button) {
         // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
-        editDirNameDB(dir_id, newDirName);
-        //그냥 editDirNameDB 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
+        editDB("dirStore","dir_name",parseInt(dir_id),newDirName);
+        //그냥 editDirNameDB (editDB) 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
       } else {
@@ -329,47 +329,47 @@ function writeDB(datas, store_name, callback) {
 
 //edit 재사용성을 높이고 샆어
 //민지 함수랑 같이 확인
-function editDirNameDB(id, name) {
+// function editDirNameDB(id, name) {
 
-  var request = indexedDB.open("HeyGoogler", 1);
+//   var request = indexedDB.open("HeyGoogler", 1);
 
-  request.onerror = function (event) {
-    console.log("DB error", event.target.errorCode);
-  };
+//   request.onerror = function (event) {
+//     console.log("DB error", event.target.errorCode);
+//   };
 
-  request.onsuccess = function (event) {
-    const db = request.result;
-    const transaction = db.transaction('dirStore', "readwrite");
+//   request.onsuccess = function (event) {
+//     const db = request.result;
+//     const transaction = db.transaction('dirStore', "readwrite");
 
-    transaction.oncomplete = function (event) {
-      console.log("성공");
-    };
-    transaction.onerror = function (event) {
-      console.log("실패");
-    };
+//     transaction.oncomplete = function (event) {
+//       console.log("성공");
+//     };
+//     transaction.onerror = function (event) {
+//       console.log("실패");
+//     };
 
-    const objectStore = transaction.objectStore('dirStore');
+//     const objectStore = transaction.objectStore('dirStore');
 
-    //아 변수명 잘 못 지음
-    // console.log(`수정 get 전의 ${id} , ${id.type}`);
-    var requestId = objectStore.get(parseInt(id)); //주의~~!!
-    // console.log(`requestId ${requestId}`);
-    // console.log(requestId);
+//     //아 변수명 잘 못 지음
+//     // console.log(`수정 get 전의 ${id} , ${id.type}`);
+//     var requestId = objectStore.get(parseInt(id)); //주의~~!!
+//     // console.log(`requestId ${requestId}`);
+//     // console.log(requestId);
 
-    requestId.onerror = function (event) { console.log("requestId error"); }
+//     requestId.onerror = function (event) { console.log("requestId error"); }
 
-    requestId.onsuccess = function (event) {
-      var data = event.target.result;
-      // console.log(`수정 될 ${data}`);
-      data.dir_name = name;
+//     requestId.onsuccess = function (event) {
+//       var data = event.target.result;
+//       // console.log(`수정 될 ${data}`);
+//       data.dir_name = name;
 
-      var requestUpdate = objectStore.put(data);
-      requestUpdate.onerror = function (event) { console.log("requestUpdate error"); }
-      requestUpdate.onsuccess = function (event) { location.reload(); }
-    }
+//       var requestUpdate = objectStore.put(data);
+//       requestUpdate.onerror = function (event) { console.log("requestUpdate error"); }
+//       requestUpdate.onsuccess = function (event) { location.reload(); }
+//     }
 
-  };
-}
+//   };
+// }
 
 //재사용성 높이도록 리팩토링
 function deleteDirDB(id) {
