@@ -1063,29 +1063,7 @@ function editDB(obs, field, key, value) {
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
       let data = event.target.result;
-      // 현재는 title의 값 수정하도록 되어있음
-      if (field == "url") {
-        data.url = value;
-      }
-       else if (field == "title") {
-         data.title = value;
-       }
-      else if (field == "memo") {
-        data.memo = value;
-      }
-      else if (field == "keyword") {
-        data.keyword = value;
-      }
-      else if (field == "dir_id") {
-        data.dir_id = value;
-      }
-      else if (field == "dir_name") {
-        data.dir_name = value;
-      }
-      else {
-        
-      }
-
+      data[field] = value;
       let updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => {
