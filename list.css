@@ -244,11 +244,11 @@ body {
   animation: ul_fadeOut 0.5s;
 }
 
-hyperLink~:has(.wrap .path-box .menubar.active) {
+.wrap .path-box .menubar.active~ .hyperLink p {
   width: 165px;
 }
 
-hyperLink~:has(.wrap .path-box .menubar.inactive) {
+.wrap .path-box .menubar.inactive~ .hyperLink p {
   width: 288;
 }
 
