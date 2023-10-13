@@ -98,7 +98,7 @@ function setupDirEditEvent(button) {
   inputElement.classList.add("input-dir");
 
   const aElement = dirElement.querySelector("a");
-  aElement.replaceChild(inputElement, dirTextElement);
+  dirElement.replaceChild(inputElement, aElement);
 
   inputElement.focus();
   inputElement.select();
