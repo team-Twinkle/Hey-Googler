@@ -244,11 +244,11 @@ body {
   animation: ul_fadeOut 0.5s;
 }
 
-.wrap .path-box .menubar.active~.hyperLink p {
+.wrap .path-box .menubar.active~ .hyperLink p {
   width: 165px;
 }
 
-.wrap .path-box .menubar.inactive~.hyperLink p {
+.wrap .path-box .menubar.inactive~ .hyperLink p {
   width: 288;
 }
 
@@ -257,18 +257,12 @@ body {
   padding-top: 2px;
   padding-bottom: 2px;
   text-align: center;
-}
-
-.wrap .path-box .menubar li a {
   color: black;
   font-size: small;
 }
 
 .menubar li:hover {
   background-color: #dedede;
-}
-
-.menubar li:hover a {
   font-weight: bold;
 }
 
@@ -423,7 +417,7 @@ a>p {
   font-size: 1rem;
   font-family: inherit;
   font-weight: inherit;
-  margin-top:1rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   outline: none;
@@ -672,11 +666,11 @@ footer {
   color: #606060;
 }
 
-.dir-buttonBox{
-  display:flex;
+.dir-buttonBox {
+  display: flex;
   align-items: center;
 }
 
-.dir-link{
+.dir-link {
   width: 250px;
 }
