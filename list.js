@@ -528,8 +528,7 @@ function displayURL(data) {
     editBtn.addEventListener('click', (e) => {
       editmodal.style.display = "flex";
       //몇 번째 요소 선택했는지 인덱스저장
-      editFlag = e.target.parentElement.getAttribute("key");
-
+      editFlag = e.target.getAttribute("key");
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -542,11 +541,6 @@ function displayURL(data) {
       let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
-      // console.log("editDB 실행");
-      console.log(parseInt(editFlag));
-      // console.log(typeof(parseInt(editFlag)));
-      // console.log(userInputTitle);
-
       editmodal.style.display = "none"
 
     })
@@ -1073,9 +1067,9 @@ function editDB(obs, field, key, value) {
       if (field == "url") {
         data.url = value;
       }
-      else if (field == "title") {
-        data.title = value;
-      }
+       else if (field == "title") {
+         data.title = value;
+       }
       else if (field == "memo") {
         data.memo = value;
       }
@@ -1089,7 +1083,7 @@ function editDB(obs, field, key, value) {
         data.dir_name = value;
       }
       else {
-        console.log("필드 추가가 필요함");
+        
       }
 
       let updateRequest = objStore.put(data);
