@@ -90,18 +90,28 @@ function setupDirEditEvent(button) {
   const dirElement = button.closest("li");
   const dirTextElement = dirElement.querySelector(".dir-text");
   const currentTextValue = dirTextElement.textContent;
-
+  const dir_id = dirElement.id;
   // input 생성
   const inputElement = document.createElement("input");
   inputElement.type = "text";
   inputElement.value = currentTextValue;
-  inputElement.classList.add("input-dir");
+  inputElement.classList.add("input-dir","editing");
 
   const aElement = dirElement.querySelector("a");
   dirElement.replaceChild(inputElement, aElement);
 
   inputElement.focus();
   inputElement.select();
+
+  dirElement.classList.add("editing");
+  button.classList.add("editing");
+
+  document.addEventListener("click", e => {
+    if (!(e.target.classList.contains("editing"))) {
+      const newDirName = inputElement.value.trim();
+      editDirNameDB(dir_id, newDirName);
+    }
+  })
 
   // 엔터가 눌렸을 때 수정이 완료되도록
   inputElement.addEventListener("keydown", function (event) {
@@ -115,7 +125,7 @@ function setupDirEditEvent(button) {
         // const newAElement = document.createElement("a");
 
         // // 새로운 URL 파라미터로 dir_id와 dirname을 사용하여 페이지를 업데이트
-         const dir_id = dirElement.id;
+
         // // newAElement.href = `./list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(newDirName)}`;
         // const extensionURL = chrome.runtime.getURL(`list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(newDirName)}`);
         // newAElement.href = extensionURL;
@@ -350,7 +360,7 @@ function editDirNameDB(id, name) {
 
       var requestUpdate = objectStore.put(data);
       requestUpdate.onerror = function (event) { console.log("requestUpdate error"); }
-      requestUpdate.onsuccess = function (event) {location.reload(); }
+      requestUpdate.onsuccess = function (event) { location.reload(); }
     }
 
   };
