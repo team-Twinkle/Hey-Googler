@@ -450,7 +450,7 @@ function displayURL(data) {
     title.innerHTML = t;
     path.innerHTML = p;
 
-    clone.querySelector(".path-box").querySelector("#tooltip-title").innerHTML = t;
+    clone.querySelector("#tooltip-title").innerHTML = t;
 
     clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click", () => {
       chrome.tabs.create({ url: p });
@@ -554,15 +554,20 @@ function displayTooltip(dataCount) {
     const textElement = document.getElementsByClassName("title")[i];
     const textContent = textElement.textContent;
     const textLength = textContent.length;
-
+    const posX = textElement.getBoundingClientRect().left;
+    const posY = textElement.getBoundingClientRect().top;
+    const h = textElement.offsetHeight;
     if (textLength > 22) {
       let selectedTitle = document.getElementsByClassName("title");
       selectedTitle = selectedTitle[i];
       let titleTooltip = document.getElementsByClassName("tooltipTitle");
       titleTooltip = titleTooltip[i];
 
-      selectedTitle.addEventListener("mouseover", () => {
+      selectedTitle.addEventListener("mouseover", (e) => {
         titleTooltip.style.display = "block";
+        titleTooltip.style.left = posX - 5 + "px"
+        titleTooltip.style.right = posX - 10 + "px"
+        titleTooltip.style.top = posY + h + 3 + "px";
       });
       selectedTitle.addEventListener("mouseout", () => {
         titleTooltip.style.display = "none";
