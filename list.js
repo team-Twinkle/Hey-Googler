@@ -474,7 +474,9 @@ function displayURL(data) {
     var memoFlag;
     memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
-      memoFlag = e.target.parentElement.getAttribute("key");
+      memoFlag = e.target.getAttribute("key");
+      //console.log(e);
+      //console.log("memo버튼 클릭했을 때 memoFlag : " + memoFlag);
     })
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
@@ -482,10 +484,12 @@ function displayURL(data) {
 
     })
     const memoSaveBtn = modal.querySelector(".saveBtn")
-    memoSaveBtn.addEventListener("click", e=> {
+    memoSaveBtn.addEventListener("click", e => {
       let inputMemo = document.getElementById("memoInput");
       let userInputMemo = inputMemo.value;
-      console.log(userInputMemo);
+      //console.log(userInputMemo);
+      //console.log("모달에서 저장 눌렀을 때 memoFlag : " + memoFlag);
+      //console.log("를 int로 parsing한 memoFlag : " + parseInt(memoFlag));
       editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
       modal.style.display = "none"
 
@@ -505,9 +509,9 @@ function displayURL(data) {
     const editmodal = document.getElementById("modal-t")
     var editFlag;
     editBtn.addEventListener('click', (e) => {
-     editmodal.style.display = "flex";
-     //몇 번째 요소 선택했는지 인덱스저장
-     editFlag = e.target.parentElement.getAttribute("key");
+      editmodal.style.display = "flex";
+      //몇 번째 요소 선택했는지 인덱스저장
+      editFlag = e.target.parentElement.getAttribute("key");
 
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
@@ -517,12 +521,12 @@ function displayURL(data) {
 
     })
     const editSaveBtn = editmodal.querySelector(".saveBtn")
-    editSaveBtn.addEventListener("click", e=> {
+    editSaveBtn.addEventListener("click", e => {
       let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
       editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
       // console.log("editDB 실행");
-       console.log(parseInt(editFlag));
+      console.log(parseInt(editFlag));
       // console.log(typeof(parseInt(editFlag)));
       // console.log(userInputTitle);
 
@@ -682,58 +686,58 @@ function greenBoxRightClick(data) {
       contextMenu.style.top = posTop;
 
       // Hide contextmenu:
-    document.body.addEventListener("click", () => {
-      contextMenu.style.display = 'none';
-    })
+      document.body.addEventListener("click", () => {
+        contextMenu.style.display = 'none';
+      })
 
-    deleteMenu.addEventListener("click", () => {
-      modal.style.display = "flex";
-    })
+      deleteMenu.addEventListener("click", () => {
+        modal.style.display = "flex";
+      })
 
-    const closeBtn = modal.querySelector(".closeBtn");
-    const deleteBtn = modal.querySelector(".deleteBtn");
-    closeBtn.addEventListener("click", e => {
-      modal.style.display = "none";
-    })
-    deleteBtn.addEventListener("click", () => {
-      var request = indexedDB.open("HeyGoogler", 1);
-
-      request.onerror = function (event) {
-        console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
-      };
-
-      request.onsuccess = function (event) {
-        const db = event.target.result;
-
-        let transaction = db.transaction([urlStore], 'readwrite');
-        let objectStore = transaction.objectStore(urlStore);
-        let urlSearch = objectStore.index("keyword").getAll(k);
-
-        urlSearch.onsuccess = (e) => {
-          urls = e.target.result;
-
-          for (let i = 0; i < urls.length; i++) {
-            deleteDB(urlStore, urls[i].id);
-          }
-        }
-
-        transaction.onerror = function (event) {
-          console.log("트랜잭션 오류:", event.target.error);
-        };
-
-        transaction.oncomplete = function (event) {
-          db.close();
-        };
-      }
-      modal.style.display = "none";
-    })
-
-    modal.addEventListener("click", e => {
-      const evTarget = e.target
-      if (evTarget.classList.contains("modal-overlay")) {
+      const closeBtn = modal.querySelector(".closeBtn");
+      const deleteBtn = modal.querySelector(".deleteBtn");
+      closeBtn.addEventListener("click", e => {
         modal.style.display = "none";
-      }
-    })
+      })
+      deleteBtn.addEventListener("click", () => {
+        var request = indexedDB.open("HeyGoogler", 1);
+
+        request.onerror = function (event) {
+          console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+        };
+
+        request.onsuccess = function (event) {
+          const db = event.target.result;
+
+          let transaction = db.transaction([urlStore], 'readwrite');
+          let objectStore = transaction.objectStore(urlStore);
+          let urlSearch = objectStore.index("keyword").getAll(k);
+
+          urlSearch.onsuccess = (e) => {
+            urls = e.target.result;
+
+            for (let i = 0; i < urls.length; i++) {
+              deleteDB(urlStore, urls[i].id);
+            }
+          }
+
+          transaction.onerror = function (event) {
+            console.log("트랜잭션 오류:", event.target.error);
+          };
+
+          transaction.oncomplete = function (event) {
+            db.close();
+          };
+        }
+        modal.style.display = "none";
+      })
+
+      modal.addEventListener("click", e => {
+        const evTarget = e.target
+        if (evTarget.classList.contains("modal-overlay")) {
+          modal.style.display = "none";
+        }
+      })
       return false;
     }
   }
@@ -766,14 +770,14 @@ function readDB() {
       let greenIndex = objectStore.index("dir_id");
       let greenKeyRange = IDBKeyRange.only(dirId);
 
-      greenIndex.openCursor(greenKeyRange).onsuccess = function(event){
+      greenIndex.openCursor(greenKeyRange).onsuccess = function (event) {
         let cursor = event.target.result;
-        if (cursor){
+        if (cursor) {
           //console.log(cursor.value.keyword);
-          dirFilterKeyword.push([cursor.value.id ,cursor.value.keyword]);
+          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword]);
           cursor.continue();
         } else {
-          console.log(dirFilterKeyword);
+          //console.log(dirFilterKeyword);
           displayKeyword(dirFilterKeyword);
         }
       }
@@ -793,10 +797,10 @@ function readDB() {
       let whiteIndex = objectStore.index("dir_id");
       let whiteKeyRange = IDBKeyRange.only(dirId);
 
-      whiteIndex.openCursor(whiteKeyRange).onsuccess = function(event){
+      whiteIndex.openCursor(whiteKeyRange).onsuccess = function (event) {
         let cursor = event.target.result;
-        if (cursor){
-          dirFilterUrl.push([cursor.value.id ,cursor.value.keyword,cursor.value.title, cursor.value.url]);
+        if (cursor) {
+          dirFilterUrl.push([cursor.value.id, cursor.value.keyword, cursor.value.title, cursor.value.url]);
           cursor.continue();
         } else {
           displayURL(dirFilterUrl);
@@ -1044,27 +1048,27 @@ function editDB(obs, field, key, value) {
     transaction.oncomplete = (e) => console.log('success');
     const objStore = transaction.objectStore([obs]);
     //3. key 값을 가진 데이터 불러오기
-    console.log(key);
+    //console.log("editDB 함수 안의 key : "+key);
     const objStoreRequest = objStore.get(key);
     objStoreRequest.onsuccess = function (event) {
       let data = event.target.result;
       // 현재는 title의 값 수정하도록 되어있음
-      if(field == "url"){
+      if (field == "url") {
         data.url = value;
       }
-      else if(field == "title"){
+      else if (field == "title") {
         data.title = value;
       }
-      else if(field == "memo"){
+      else if (field == "memo") {
         data.memo = value;
       }
-      else if(field == "keyword"){
+      else if (field == "keyword") {
         data.keyword = value;
       }
-      else if(field == "dir_id"){
+      else if (field == "dir_id") {
         data.dir_id = value;
       }
-      else if(field == "dir_name"){
+      else if (field == "dir_name") {
         data.dir_name = value;
       }
       else {
@@ -1076,7 +1080,7 @@ function editDB(obs, field, key, value) {
       updateRequest.onsuccess = (e) => {
         console.log('update success');
         location.reload();
-        }
+      }
     }
 
   }
@@ -1094,7 +1098,6 @@ function editDB(obs, field, key, value) {
 // editDB('urlStore', "dir_id", 4, 4 );
 // editDB('urlStore', "dir_id", 5, 4 );
 // editDB('urlStore', "dir_id", 6, 4 );
-
 
 // 삭제 버튼을 클릭할 때 실행되는 함수를 정의
 function handleClick(event) {
