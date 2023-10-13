@@ -109,7 +109,12 @@ function setupDirEditEvent(button) {
   document.addEventListener("click", e => {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
+      if (newDirName !== "") {
       editDirNameDB(dir_id, newDirName);
+      }
+      else{
+        alert("빈칸 놉");
+      }
     }
   })
 
