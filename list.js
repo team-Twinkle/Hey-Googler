@@ -569,9 +569,6 @@ function displayTooltip(dataCount) {
     const textElement = document.getElementsByClassName("title")[i];
     const textContent = textElement.textContent;
     const textLength = textContent.length;
-    const posX = textElement.getBoundingClientRect().left;
-    const posY = textElement.getBoundingClientRect().top;
-    const h = textElement.offsetHeight;
     if (textLength > 22) {
       let selectedTitle = document.getElementsByClassName("title");
       selectedTitle = selectedTitle[i];
@@ -579,6 +576,9 @@ function displayTooltip(dataCount) {
       titleTooltip = titleTooltip[i];
 
       selectedTitle.addEventListener("mouseover", (e) => {
+        let posX = textElement.getBoundingClientRect().left;
+        let posY = textElement.getBoundingClientRect().top + window.scrollY;
+        let h = textElement.offsetHeight;
         titleTooltip.style.display = "block";
         titleTooltip.style.left = posX - 5 + "px"
         titleTooltip.style.right = posX - 10 + "px"
