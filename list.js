@@ -108,35 +108,37 @@ function setupDirEditEvent(button) {
     if (event.key === "Enter") {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-        const newDirTextElement = document.createElement("h1");
-        newDirTextElement.classList.add("dir-text");
-        newDirTextElement.textContent = newDirName;
+        // const newDirTextElement = document.createElement("h1");
+        // newDirTextElement.classList.add("dir-text");
+        // newDirTextElement.textContent = newDirName;
 
-        const newAElement = document.createElement("a");
+        // const newAElement = document.createElement("a");
 
-        // 새로운 URL 파라미터로 dir_id와 dirname을 사용하여 페이지를 업데이트
-        const dir_id = dirElement.id;
-        // newAElement.href = `./list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(newDirName)}`;
-        const extensionURL = chrome.runtime.getURL(`list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(newDirName)}`);
-        newAElement.href = extensionURL;
-        console.log('edit href');
-        console.log(newAElement.href);
+        // // 새로운 URL 파라미터로 dir_id와 dirname을 사용하여 페이지를 업데이트
+         const dir_id = dirElement.id;
+        // // newAElement.href = `./list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(newDirName)}`;
+        // const extensionURL = chrome.runtime.getURL(`list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(newDirName)}`);
+        // newAElement.href = extensionURL;
+        // console.log('edit href');
+        // console.log(newAElement.href);
 
-        newAElement.appendChild(newDirTextElement);
+        // newAElement.appendChild(newDirTextElement);
 
-        const buttonEdit = dirElement.querySelector(".button-edit");
-        const buttonDel = dirElement.querySelector(".button-del");
+        // const buttonEdit = dirElement.querySelector(".button-edit");
+        // const buttonDel = dirElement.querySelector(".button-del");
 
-        const newLiElement = document.createElement("li");
-        newLiElement.classList.add("dir-list", "dir");
-        newLiElement.appendChild(newAElement);
-        newLiElement.appendChild(buttonEdit);
-        newLiElement.appendChild(buttonDel);
+        // const newLiElement = document.createElement("li");
+        // newLiElement.classList.add("dir-list", "dir");
+        // newLiElement.appendChild(newAElement);
+        // newLiElement.appendChild(buttonEdit);
+        // newLiElement.appendChild(buttonDel);
 
-        dirElement.parentNode.replaceChild(newLiElement, dirElement);
+        // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
         editDirNameDB(dir_id, newDirName);
+        //그냥 editDirNameDB 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
+        //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
       } else {
         alert("빈칸 놉");
@@ -348,7 +350,7 @@ function editDirNameDB(id, name) {
 
       var requestUpdate = objectStore.put(data);
       requestUpdate.onerror = function (event) { console.log("requestUpdate error"); }
-      requestUpdate.onsuccess = function (event) { console.log("requestUpdate success"); }
+      requestUpdate.onsuccess = function (event) {location.reload(); }
     }
 
   };

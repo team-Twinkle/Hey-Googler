@@ -403,10 +403,12 @@ a>p {
 
 .button-edit {
   cursor: pointer;
+  height:24px;
 }
 
 .button-del {
   cursor: pointer;
+  height:24px;
 }
 
 /* style.css */
