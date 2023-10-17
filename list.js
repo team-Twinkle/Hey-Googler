@@ -474,13 +474,15 @@ function displayURL(data) {
       memoIcon.style.display = 'block';
     }
 
-    memoIcon.addEventListener("mouseover",()=>{
+    memoIcon.addEventListener("mouseover", () => {
       path.innerHTML = m;
+      path.style.display = "flex";
       path.style.fontSize = "12px";
       path.style.textDecoration = "none";
     })
-    memoIcon.addEventListener("mouseout",()=>{
+    memoIcon.addEventListener("mouseout", () => {
       path.innerHTML = p;
+      path.style.display = "block";
       path.style.fontSize = "14px";
       path.style.textDecoration = "underline";
     })

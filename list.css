@@ -543,7 +543,7 @@ footer {
 }
 
 .path {
-  display: flex;
+  display: block;
   width: inherit;
   height: 23px;
   transition: width 0.7s ease;
