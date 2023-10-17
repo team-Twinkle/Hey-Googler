@@ -631,27 +631,35 @@ function displayMenu(dataCount) {
     let menubar = document.getElementsByClassName('menubar');
     menubar = menubar[i];
     let title = document.getElementsByClassName("title");
+    let path = document.getElementsByClassName("path");
     title = title[i];
+    path = path[i];
     if (selectedMenu) {
       selectedMenu.addEventListener("click", function () {
         isSelected = !isSelected;
         if (isSelected) {
           menubar.classList.remove('inactive');
           title.classList.remove('inactive');
+          path.classList.remove('inactive');
           menubar.classList.add('active');
           title.classList.add('active');
+          path.classList.add('active');
           setTimeout(() => {
             isSelected = !isSelected;
             menubar.classList.remove('active');
             title.classList.remove('active');
+            path.classList.remove('active');
             menubar.classList.add('inactive');
             title.classList.add('inactive');
+            path.classList.add('inactive');
           }, 5000);
         } else {
           menubar.classList.remove('active');
           title.classList.remove('active');
+          path.classList.remove('active');
           menubar.classList.add('inactive');
           title.classList.add('inactive');
+          path.classList.add('inactive');
         }
       })
     }
