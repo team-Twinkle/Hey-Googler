@@ -95,7 +95,7 @@ function setupDirEditEvent(button) {
   const inputElement = document.createElement("input");
   inputElement.type = "text";
   inputElement.value = currentTextValue;
-  inputElement.classList.add("input-dir","editing");
+  inputElement.classList.add("input-dir", "editing");
 
   const aElement = dirElement.querySelector("a");
   dirElement.replaceChild(inputElement, aElement);
@@ -110,9 +110,9 @@ function setupDirEditEvent(button) {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-        editDB("dirStore","dir_name",parseInt(dir_id),newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
       }
-      else{
+      else {
         alert("빈칸 놉");
       }
     }
@@ -151,7 +151,7 @@ function setupDirEditEvent(button) {
         // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
-        editDB("dirStore","dir_name",parseInt(dir_id),newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
         //그냥 editDirNameDB (editDB) 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
@@ -454,6 +454,7 @@ function displayURL(data) {
     const k = data[i][1];
     const t = data[i][2];
     const p = data[i][3];
+    const m = data[i][4];
     //console.log("displayURL: "+key);
 
     const area = document.getElementById("white-" + k);
@@ -462,10 +463,16 @@ function displayURL(data) {
     const clone = template.content.cloneNode(true);
 
     const title = clone.querySelector(".path-box").querySelector(".title");
-    const path = clone.querySelector(".path-box").querySelector(".path")
+    const path = clone.querySelector(".path-box").querySelector(".path");
+    const memoIcon = clone.querySelector(".path-box").querySelector(".memoIcon");
 
     title.innerHTML = t;
     path.innerHTML = p;
+    memoIcon.id = m;
+
+    if (!!memoIcon.id.trim()) {
+      memoIcon.style.display = 'block';
+    }
 
     clone.querySelector("#tooltip-title").innerHTML = t;
 
@@ -819,7 +826,7 @@ function readDB() {
       whiteIndex.openCursor(whiteKeyRange).onsuccess = function (event) {
         let cursor = event.target.result;
         if (cursor) {
-          dirFilterUrl.push([cursor.value.id, cursor.value.keyword, cursor.value.title, cursor.value.url]);
+          dirFilterUrl.push([cursor.value.id, cursor.value.keyword, cursor.value.title, cursor.value.url, cursor.value.memo]);
           cursor.continue();
         } else {
           displayURL(dirFilterUrl);
