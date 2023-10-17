@@ -518,11 +518,12 @@ function displayURL(data) {
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
-
     })
+
+    let inputMemo = document.getElementById("memoInput");
+
     const memoSaveBtn = modal.querySelector(".saveBtn")
     memoSaveBtn.addEventListener("click", e => {
-      let inputMemo = document.getElementById("memoInput");
       let userInputMemo = inputMemo.value;
       //console.log(userInputMemo);
       //console.log("모달에서 저장 눌렀을 때 memoFlag : " + memoFlag);
@@ -531,6 +532,15 @@ function displayURL(data) {
       modal.style.display = "none"
 
     })
+
+    inputMemo.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        let userInputMemo = inputMemo.value;
+        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+        modal.style.display = "none"
+      }
+    })
+
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
@@ -554,15 +564,28 @@ function displayURL(data) {
     editcloseBtn.addEventListener("click", e => {
 
       editmodal.style.display = "none";
-
     })
+
+    let inputTitle = document.getElementById("titleInput");
+
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
-      let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
-      editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
-      editmodal.style.display = "none"
+      if (!!userInputTitle.trim()) {
+        editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+        editmodal.style.display = "none"
+      }
 
+    })
+
+    inputTitle.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        let userInputTitle = inputTitle.value;
+        if (!!userInputTitle.trim()) {
+          editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+          editmodal.style.display = "none"
+        }
+      }
     })
 
     editmodal.addEventListener("click", e => {
