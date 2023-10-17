@@ -474,6 +474,17 @@ function displayURL(data) {
       memoIcon.style.display = 'block';
     }
 
+    memoIcon.addEventListener("mouseover",()=>{
+      path.innerHTML = m;
+      path.style.fontSize = "12px";
+      path.style.textDecoration = "none";
+    })
+    memoIcon.addEventListener("mouseout",()=>{
+      path.innerHTML = p;
+      path.style.fontSize = "14px";
+      path.style.textDecoration = "underline";
+    })
+
     clone.querySelector("#tooltip-title").innerHTML = t;
 
     clone.querySelector(".path-box").querySelector(".hyperLink").addEventListener("click", () => {
