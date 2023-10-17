@@ -168,12 +168,12 @@ body {
 @keyframes ul_fadeOut {
   0% {
     opacity: 1;
-    transform: translate3d(10%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
   }
 
   to {
     opacity: 0;
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -189,7 +189,7 @@ body {
 
 @keyframes menubar_fadeOut {
   0% {
-    transform: translate3d(20%, 0, 0);
+    transform: translate3d(-80px, 0, 0);
   }
 
   to {
@@ -228,7 +228,7 @@ body {
 
 .wrap .path-box .menubar.inactive img {
   position: relative;
-  left: 2px;
+  left: 0;
   animation: menubar_fadeOut 0.5s;
 }
 
@@ -240,7 +240,7 @@ body {
 
 .wrap .path-box .menubar.inactive>ul {
   display: block;
-  left: 200%;
+  left: 100%;
   animation: ul_fadeOut 0.5s;
 }
 
@@ -260,7 +260,7 @@ body {
 
 .wrap .path-box .menubar.inactive ~ img{
   position:relative;
-  left: 2px;
+  left: 0;
   animation: menubar_fadeOut 0.5s;
 }
 
