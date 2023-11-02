@@ -148,38 +148,42 @@ function setupDirEditEvent(button) {
 
 
 function setupDirDeleteEvent(button) {
-  //삭제 모달 이쪽에 작성
-  // let nowExecutedDir = parseInt(readValueDB('userHistoryStore', 'nowExecutedDir', 1));
-  // const dirElement = button.closest("li");
-  // /*if (nowExecutedDir == dirElement){
-  //   dirCannotDeleteModal 보여주기
-  //   모달확인버튼.addEventListener("click", () => {
-  //     모달 꺼짐
-  //   });
-  // }
-  // else{
-  //   dirDeleteModal 보여주기
-  //   모달확인버튼.addEventListener("click", () => {
-  //     //혜교가 짠 디렉토리-하위 요소 전체 삭제 코드 실행
-  //     dirElement.parentNode.removeChild(dirElement);
-  //     // 디렉토리 데이터베이스에서도 삭제
-  //     const d_id = dirElement.id;
-  //     deleteDirDB(d_id);
-  //   });
-  //   모달취소버튼.addEventListener("click", () => {
-  //     모달 꺼짐
-  //   });
-  // }
-  // */
-
-  let nowExecutedDir = readValueDB('userHistoryStore', 'nowExecutedDir', 1);
-  console.log(nowExecutedDir);
-
   const dirElement = button.closest("li");
-  dirElement.parentNode.removeChild(dirElement);
-  // 디렉토리 데이터베이스에서도 삭제
   const d_id = dirElement.id;
-  deleteDirDB(d_id);
+  
+  readValueDB('userHistoryStore', 'nowExecutedDir', 1)
+  .then(result => {
+    //현재 실행 중인 dir과 삭제하려는 dir이 동일하다면 
+    if (parseInt(result) == d_id){
+      console.log("dirCannotDeleteModal 보여주기");
+      const dirCannotDeleteModal = document.getElementById("dirCannotDeleteModal");
+      dirCannotDeleteModal.style.display = "flex";
+      const dirCannotDeletecloseBtn = dirCannotDeleteModal.querySelector(".closeBtn");
+      dirCannotDeletecloseBtn.addEventListener("click", e => {
+        dirCannotDeleteModal.style.display = "none";
+      })     
+    }
+    //현재 실행 중인 dir과 삭제하려는 dir이 동일하지 않다면
+    else{
+      const dirDeleteModal = document.getElementById("dirDeleteModal");
+      dirDeleteModal.style.display = "flex";
+      const dirDeleteModalcloseBtn = dirDeleteModal.querySelector(".closeBtn");
+      const dirDeleteModalDeleteBtn = dirDeleteModal.querySelector(".deleteBtn");
+      dirDeleteModalcloseBtn.addEventListener("click", e => {
+        dirDeleteModal.style.display = "none";
+      }) 
+      dirDeleteModalDeleteBtn.addEventListener("click", e => {
+        dirElement.parentNode.removeChild(dirElement);
+        deleteDirDB(d_id);
+        dirDeleteModal.style.display = "none";
+      }) 
+    }
+
+  })
+  .catch(error => {
+    console.error("에러: " + error);
+  });
+
 
 }
 
@@ -1113,40 +1117,35 @@ function editDB(obs, field, key, value) {
   }
 }
 
-function readValueDB(obs, field, key){
-  //nowExecutedDir 활용할 때 ('userHistoryStore', 'nowExecutedDir', 1) 고정하면 됨.
-  //객체저장소의 필드의 key번째 데이터를 리턴한다.
-  
-  //findValue는 찾는 값
-  //1. db 열기
+function readValueDB(obs, field, key) {
+  //비동기 콜백 함수 내에서는 return (x), promise (o)
+  return new Promise((resolve, reject) => {
+    var request = indexedDB.open("HeyGoogler", 1);
+    request.onerror = (e) => reject(e.target.errorCode);
+    request.onsuccess = (e) => {
+      const db = request.result;
+      const transaction = db.transaction([obs], 'readwrite');
+      const objStore = transaction.objectStore([obs]);
+      
+      const objStoreRequest = objStore.get(key);
+      objStoreRequest.onsuccess = function (event) {
+        let data = event.target.result;
+        let findValue;
 
-  let findValue;
-  var request = indexedDB.open("HeyGoogler", 1);
-  request.onerror = (e) => console.log(e.target.errorCode);
-  //2. db 오픈 성공 시, 현재 열려있는 객체 저장소 정보 받아옴
-  request.onsuccess = (e) => {
-    const db = request.result;
-    const transaction = db.transaction([obs], 'readwrite');
-    transaction.onerror = (e) => console.log('fail');
-    transaction.oncomplete = (e) => console.log('success');
-    const objStore = transaction.objectStore([obs]);
-    //3. key 값을 가진 데이터 불러오기
-    const objStoreRequest = objStore.get(key);
-    objStoreRequest.onsuccess = function (event) {
-      let data = event.target.result;
-    if(field == "url"){
-      findValue = data.url;
-    }
-    else if(field == "nowExecutedDir"){
-      findValue = data.nowExecutedDir;
-    }
-    else {
-      console.log("필드 추가가 필요함");
-    }
-    return findValue;
-    }
-  }
+        if (field == "url") {
+          findValue = data.url;
+        } else if (field == "nowExecutedDir") {
+          findValue = data.nowExecutedDir;
+        } else {
+          reject("필드 추가가 필요함");
+        }
+        
+        resolve(findValue);
+      };
+    };
+  });
 }
+
 
 
 // readDB() 함수 호출
