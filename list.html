@@ -44,17 +44,18 @@
       <div class="path-box">
         <a>
           <h3 class="title">페이지 제목</h3>
-          <div class="menubar">
-            <img class="menu_white" src="images/icon_menu.png" id="menuIcon" />
-            <ul>
-              <li class="white-menu1"><a class="white-delete" key="">삭제</a></li>
-              <li class="white-menu2" key=""><a>타이틀 수정</a></li>
-              <li class="white-menu3" key=""><a class="white-memo">메모</a></li>
-            </ul>
-          </div>
-          <a class="hyperLink">
-            <p class="path" id="link">링크</p>
-          </a>
+        </a>
+        <div class="menubar">
+          <img class="menu_white" src="images/icon_menu.png" id="menuIcon" />
+          <ul>
+            <li class="white-menu1">삭제</li>
+            <li class="white-menu2" key="">타이틀 수정</li>
+            <li class="white-menu3" key="">메모</li>
+          </ul>
+        </div>
+        <a class="hyperLink">
+          <p class="path" id="link">링크</p>
+
         </a>
       </div>
       <span id="tooltip-title" class="tooltipTitle" style="display: none;">툴팁용 페이지 제목</span>
@@ -79,7 +80,7 @@
           <b>타이틀을 작성해주세요 !</b> <br>(20글자 미만)
         </div>
         <div class="content">
-          <input type="text" id ="titleInput" maxlength='20'>
+          <input type="text" id="titleInput" maxlength='20'>
         </div>
         <div class="btn-area">
           <button class="modalBtn closeBtn">취소</button>
@@ -89,7 +90,7 @@
     </div>
 
     <ul class="contextmenu" id="contextmenu">
-      <li id="deleteGreen"><a href="#">모두 삭제</a></li>
+      <li id="deleteGreen"><a>모두 삭제</a></li>
     </ul>
 
     <div id="confirmModal" class="modal-overlay">
