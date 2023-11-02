@@ -36,6 +36,30 @@
     </template>
     <!-- </div> -->
   </div>
+
+  <div id="dirDeleteModal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="title">
+        <b>해당 폴더를 삭제할 경우<br>하위 검색기록들이 모두 삭제됩니다.<br><br>이 폴더를 삭제하시겠습니까?</b>
+      </div>
+      <div class="btn-area">
+        <button class="modalBtn closeBtn">취소</button>
+        <button class="modalBtn deleteBtn">삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dirCannotDeleteModal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="title">
+        <b>현재 실행 중인 디렉토리를 삭제할 수 없습니다</b>
+      </div>
+      <div class="btn-area">
+        <button class="modalBtn closeBtn">확인</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <a href="" id="current-dir-link">
       <img id="button-folder" class="footer-button" src="images/icon_folder_true.svg" alt="folder icon" />
