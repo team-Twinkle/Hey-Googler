@@ -153,7 +153,7 @@ function setupDirDeleteEvent(button) {
   
   readValueDB('userHistoryStore', 'nowExecutedDir', 1)
   .then(result => {
-    //현재 실행 중인 dir과 삭제하려는 dir이 동일하다면 
+    //현재 실행 중인 dir과 삭제하려는 dir이 동일하다면 "삭제할 수 없음"
     if (parseInt(result) == d_id){
       console.log("dirCannotDeleteModal 보여주기");
       const dirCannotDeleteModal = document.getElementById("dirCannotDeleteModal");
@@ -163,7 +163,7 @@ function setupDirDeleteEvent(button) {
         dirCannotDeleteModal.style.display = "none";
       })     
     }
-    //현재 실행 중인 dir과 삭제하려는 dir이 동일하지 않다면
+    //현재 실행 중인 dir과 삭제하려는 dir이 동일하지 않다면 "진짜 삭제하실?"
     else{
       const dirDeleteModal = document.getElementById("dirDeleteModal");
       dirDeleteModal.style.display = "flex";
