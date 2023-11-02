@@ -278,16 +278,17 @@ function readDBbyStoreNameAndId(store_name, id) {
   });
 }
 
-// async function getNowDirId() {
-//   try {
-//     var userHistoryData = await readDBbyStoreName('userHistoryStore');
-//     console.log(userHistoryData[0]['nowExecutedDir']);
-//     data = userHistoryData[0]['nowExecutedDir'];
-//     return data;
-//   } catch (error) {
-
-//   }
-// }
+async function getNowDirId() {
+  try {
+    var userHistoryData = await readDBbyStoreName('userHistoryStore');
+    console.log('현재 실ㅇ중인 ');
+    console.log(userHistoryData[0]['nowExecutedDir']);
+    data = userHistoryData[0]['nowExecutedDir'];
+    return data;
+  } catch (error) {
+    return 0;
+  }
+}
 
 /********************************************************************************************************* */
 
@@ -1044,8 +1045,12 @@ function readDBAndDisplay() {
 }
 
 // 데이터를 화면에 표시
-function displayData(data) {
+async function displayData(data) {
   const container = document.getElementById("dir_container");
+  var nowDIrId;
+  nowDIrId = await getNowDirId();
+  console.log('현재 실행 중 :');
+  console.log(nowDIrId);
 
   data.forEach(item => {
     const copy = document.getElementById("dir_template").content.cloneNode(true);
@@ -1055,7 +1060,13 @@ function displayData(data) {
     const dirLink = copy.querySelector(".dir-link");
 
     dirList.id = item.d_id;
-    dirList.querySelector(".dir-text").textContent = item.dir_name;
+    if (dirList.id == nowDIrId) {
+      // dirLink.querySelector(".dir-point").textContent = '❗';
+      dirList.querySelector(".dir-text").textContent = '❗' + item.dir_name;
+    } else {
+      dirList.querySelector(".dir-text").textContent = item.dir_name;
+
+    }
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);
