@@ -191,7 +191,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.txt == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
-    dirId = msg.onDirId;
+    dirId = parseInt(msg.onDirId);
     console.log('받은 dir' + dirId);
     //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
