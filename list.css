@@ -74,11 +74,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.dir-title {
-  /* overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis; */
-}
+
 
 .dir-list {
   margin-bottom: 9px;
@@ -423,7 +419,7 @@ a>p {
   font-size: 1rem;
   font-family: inherit;
   font-weight: inherit;
-  margin-top:1rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   outline: none;
@@ -672,11 +668,11 @@ footer {
   color: #606060;
 }
 
-.dir-buttonBox{
-  display:flex;
+.dir-buttonBox {
+  display: flex;
   align-items: center;
 }
 
-.dir-link{
+.dir-link {
   width: 250px;
 }
