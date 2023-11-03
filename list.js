@@ -42,7 +42,6 @@ function dirAddButtonClick() {
   // 오 템플릿이기 때문에, 이벤트 리스너도 템플릿 생성할 때 추가하도록 해야함
   const editButton = copy.querySelector(".button-edit");
   const deleteButton = copy.querySelector(".button-del");
-  const buttonBox = copy.querySelector(".dir-buttonBox");
   const dirLink = copy.querySelector(".dir-link");
   const dirText = copy.querySelector(".dir-text");
 
