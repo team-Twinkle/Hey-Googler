@@ -95,7 +95,7 @@ function setupDirEditEvent(button) {
   const inputElement = document.createElement("input");
   inputElement.type = "text";
   inputElement.value = currentTextValue;
-  inputElement.classList.add("input-dir","editing");
+  inputElement.classList.add("input-dir", "editing");
 
   const aElement = dirElement.querySelector("a");
   dirElement.replaceChild(inputElement, aElement);
@@ -110,9 +110,9 @@ function setupDirEditEvent(button) {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-        editDB("dirStore","dir_name",parseInt(dir_id),newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
       }
-      else{
+      else {
         alert("빈칸 놉");
       }
     }
@@ -151,7 +151,7 @@ function setupDirEditEvent(button) {
         // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
-        editDB("dirStore","dir_name",parseInt(dir_id),newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
         //그냥 editDirNameDB (editDB) 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
@@ -486,6 +486,7 @@ function displayURL(data) {
     const k = data[i][1];
     const t = data[i][2];
     const p = data[i][3];
+    const m = data[i][4];
     //console.log("displayURL: "+key);
 
     const area = document.getElementById("white-" + k);
@@ -494,10 +495,29 @@ function displayURL(data) {
     const clone = template.content.cloneNode(true);
 
     const title = clone.querySelector(".path-box").querySelector(".title");
-    const path = clone.querySelector(".path-box").querySelector(".path")
+    const path = clone.querySelector(".path-box").querySelector(".path");
+    const memoIcon = clone.querySelector(".path-box").querySelector(".memoIcon");
 
     title.innerHTML = t;
     path.innerHTML = p;
+    memoIcon.id = m;
+
+    if (!!memoIcon.id.trim()) {
+      memoIcon.style.display = 'block';
+    }
+
+    memoIcon.addEventListener("mouseover", () => {
+      path.innerHTML = m;
+      path.style.display = "flex";
+      path.style.fontSize = "12px";
+      path.style.textDecoration = "none";
+    })
+    memoIcon.addEventListener("mouseout", () => {
+      path.innerHTML = p;
+      path.style.display = "block";
+      path.style.fontSize = "14px";
+      path.style.textDecoration = "underline";
+    })
 
     clone.querySelector("#tooltip-title").innerHTML = t;
 
@@ -530,11 +550,12 @@ function displayURL(data) {
     const closeBtn = modal.querySelector(".closeBtn")
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
-
     })
+
+    let inputMemo = document.getElementById("memoInput");
+
     const memoSaveBtn = modal.querySelector(".saveBtn")
     memoSaveBtn.addEventListener("click", e => {
-      let inputMemo = document.getElementById("memoInput");
       let userInputMemo = inputMemo.value;
       //console.log(userInputMemo);
       //console.log("모달에서 저장 눌렀을 때 memoFlag : " + memoFlag);
@@ -543,6 +564,15 @@ function displayURL(data) {
       modal.style.display = "none"
 
     })
+
+    inputMemo.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        let userInputMemo = inputMemo.value;
+        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+        modal.style.display = "none"
+      }
+    })
+
     modal.addEventListener("click", e => {
       const evTarget = e.target
       if (evTarget.classList.contains("modal-overlay")) {
@@ -566,15 +596,28 @@ function displayURL(data) {
     editcloseBtn.addEventListener("click", e => {
 
       editmodal.style.display = "none";
-
     })
+
+    let inputTitle = document.getElementById("titleInput");
+
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
-      let inputTitle = document.getElementById("titleInput");
       let userInputTitle = inputTitle.value;
-      editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
-      editmodal.style.display = "none"
+      if (!!userInputTitle.trim()) {
+        editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+        editmodal.style.display = "none"
+      }
 
+    })
+
+    inputTitle.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        let userInputTitle = inputTitle.value;
+        if (!!userInputTitle.trim()) {
+          editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+          editmodal.style.display = "none"
+        }
+      }
     })
 
     editmodal.addEventListener("click", e => {
@@ -663,27 +706,35 @@ function displayMenu(dataCount) {
     let menubar = document.getElementsByClassName('menubar');
     menubar = menubar[i];
     let title = document.getElementsByClassName("title");
+    let path = document.getElementsByClassName("path");
     title = title[i];
+    path = path[i];
     if (selectedMenu) {
       selectedMenu.addEventListener("click", function () {
         isSelected = !isSelected;
         if (isSelected) {
           menubar.classList.remove('inactive');
           title.classList.remove('inactive');
+          path.classList.remove('inactive');
           menubar.classList.add('active');
           title.classList.add('active');
+          path.classList.add('active');
           setTimeout(() => {
             isSelected = !isSelected;
             menubar.classList.remove('active');
             title.classList.remove('active');
+            path.classList.remove('active');
             menubar.classList.add('inactive');
             title.classList.add('inactive');
+            path.classList.add('inactive');
           }, 5000);
         } else {
           menubar.classList.remove('active');
           title.classList.remove('active');
+          path.classList.remove('active');
           menubar.classList.add('inactive');
           title.classList.add('inactive');
+          path.classList.add('inactive');
         }
       })
     }
@@ -843,7 +894,7 @@ function readDB() {
       whiteIndex.openCursor(whiteKeyRange).onsuccess = function (event) {
         let cursor = event.target.result;
         if (cursor) {
-          dirFilterUrl.push([cursor.value.id, cursor.value.keyword, cursor.value.title, cursor.value.url]);
+          dirFilterUrl.push([cursor.value.id, cursor.value.keyword, cursor.value.title, cursor.value.url, cursor.value.memo]);
           cursor.continue();
         } else {
           displayURL(dirFilterUrl);

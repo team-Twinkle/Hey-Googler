@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         console.log("message received");
         toggle();
     }
-    else if (msg === 'referrer') {
+    if (msg === 'referrer') {
         const referrer = document.referrer;
         const title = document.title;
         const url = document.baseURI;
@@ -76,8 +76,8 @@ function toggle() {
                 fill: 'none',
                 easing: 'ease'
             }
-        ).onfinish=()=>{
-            iframe.style.width='0px';
+        ).onfinish = () => {
+            iframe.style.width = '0px';
         };
         bg.style.display = 'none';
     }
@@ -96,8 +96,8 @@ bg.addEventListener('click', () => {
             fill: 'none',
             easing: 'ease'
         }
-    ).onfinish=()=>{
-        iframe.style.width='0px';
+    ).onfinish = () => {
+        iframe.style.width = '0px';
     };
     bg.style.display = 'none';
 })
