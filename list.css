@@ -675,6 +675,7 @@ footer {
     0 5px 15px rgba(0, 0, 0, 0.07);
   overflow: hidden;
   z-index: 999999;
+  cursor:pointer;
 }
 
 .contextmenu li {
@@ -705,4 +706,28 @@ footer {
 
 .dir-link {
   width: 250px;
+}
+
+#dirDeleteModal .modal-window {
+  width: 220px;
+}
+
+#dirDeleteModal .title {
+  padding-top: 1em;
+}
+
+#dirDeleteModal .btn-area {
+  padding-top: 2em;
+}
+
+#dirCannotDeleteModal .modal-window {
+  width: 220px;
+}
+
+#dirCannotDeleteModal .title {
+  padding-top: 1em;
+}
+
+#dirCannotDeleteModal .btn-area {
+  padding-top: 2em;
 }
