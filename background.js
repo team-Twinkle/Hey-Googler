@@ -191,7 +191,8 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.txt == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
-    dirId = msg.onDirId;
+    dirId = parseInt(msg.onDirId);
+    console.log('받은 dir' + dirId);
     //console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
@@ -264,8 +265,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         //console.log(url_);
         let keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
         if (keyword1 != null) {
-          const keyData = [{ dir_id: 1, keyword: keyword1 }];
-            
+          console.log('키데이터' + dirId);
+          const keyData = [{ dir_id: dirId, keyword: keyword1 }];
+
           console.log("Visited Site:", url, title, keyword1);
           //db에 data 입력
           const datas = [
@@ -274,10 +276,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
               title: title,
               memo: " ",
               keyword: keyword1,
-              dir_id: 1,
+              dir_id: dirId
+
             },
           ];
-          if(isExtensionOn) {
+          if (isExtensionOn) {
             writeDB(keyData, "keywordStore");
             writeDB(datas, "urlStore");
           }
