@@ -545,7 +545,6 @@ var keyStore = 'keywordStore';
 function Toggle(data) {
   for (var i = 0; i < data.length; i++) {
     const k = data[i].keyword;
-
     const kwBox = document.getElementById("green-" + k);
     const pathArea = document.getElementById("white-" + k);
     const toggleButton = kwBox.querySelector(".toggle_keyword");
@@ -857,6 +856,7 @@ function displayMenu(dataCount) {
 
 function greenBoxRightClick(data) {
   for (var i = 0; i < data.length; i++) {
+    const id = data[i].id;
     const k = data[i].keyword;
     const kwBox = document.getElementById("green-" + k);
     const contextMenu = document.getElementById("contextmenu");
@@ -923,7 +923,9 @@ function greenBoxRightClick(data) {
 
           urlSearch.onsuccess = (e) => {
             urls = e.target.result;
-
+            console.log(urlSearch);
+            console.log(urls);
+    
             for (let i = 0; i < urls.length; i++) {
               deleteDB(urlStore, urls[i].id);
             }
@@ -934,6 +936,7 @@ function greenBoxRightClick(data) {
           };
 
           transaction.oncomplete = function (event) {
+            console.log("ㅅㄱ")
             db.close();
           };
         }
@@ -1036,6 +1039,7 @@ function addEvent() {
   readDB().then(() => {
 
     var request = indexedDB.open("HeyGoogler", 1);
+    let dirId = parseInt(nowDirId);
 
     request.onerror = function (event) {
       console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
@@ -1046,11 +1050,11 @@ function addEvent() {
 
       /* url 없을 경우 초록 박스 자동 삭제 */
       let transaction = db.transaction([keyStore, urlStore], 'readwrite');
-      let objectStoreKey = transaction.objectStore(keyStore);
-      let objectStoreUrl = transaction.objectStore(urlStore);
+      let kStore = transaction.objectStore(keyStore);
+      let uStore = transaction.objectStore(urlStore);
 
 
-      requestKey = objectStoreKey.getAll();
+      requestKey = kStore.getAll();
 
       requestKey.onsuccess = function (event) {
         let keyData = event.target.result;
@@ -1064,7 +1068,7 @@ function addEvent() {
           let id = keyData[i].id;
 
           // urlStore에서 dir_id와 keyword가 일치하는 데이터를 검색
-          let requestUrlSearch = objectStoreUrl.index('dir_id_keyword').get([dirId, keyword]);
+          let requestUrlSearch = uStore.index('dir_id_keyword').get([dirId, keyword]);
 
 
           requestUrlSearch.onsuccess = function (event) {
@@ -1089,17 +1093,17 @@ function addEvent() {
       };
 
 
-      /* 하얀 박스에 이벤트 추가 (menu , tooltip) */
+      /* 하얀 박스에 이벤트 추가 (menu , tooltip) - 수정완료 */
 
       transaction = db.transaction([urlStore], 'readonly');
       objectStore = transaction.objectStore('urlStore');
-      request = objectStore.getAll();
-      //2. getAll() 함수 성공 시, 화면에 출력
-      request.onsuccess = function (event) {
-        var data = event.target.result;
-        displayMenu(data.length);
-        displayTooltip(data.length);
-      };
+
+      dirSearch = objectStore.index("dir_id").getAll(dirId);
+      dirSearch.onsuccess = (e) => {
+        let filteredURL = e.target.result;
+        displayMenu(filteredURL.length);
+        displayTooltip(filteredURL.length);
+      }
 
       transaction.onerror = function (event) {
         console.log("트랜잭션 오류:", event.target.error);
@@ -1109,19 +1113,18 @@ function addEvent() {
         db.close();
       };
 
-      /* 초록 박스에 토글 이벤트 추가 */
-      /* 초록 박스에 우클릭 이벤트 추가 */
+      /* 초록 박스에 토글 이벤트 추가 - 수정완료 */
+      /* 초록 박스에 우클릭 이벤트 추가 - 수정완료*/
 
       transaction = db.transaction([keyStore], 'readonly');
       objectStore = transaction.objectStore(keyStore);
-      request = objectStore.getAll();
-      //2. getAll() 함수 성공 시, 화면에 출력
-      request.onsuccess = function (event) {
-        var data = event.target.result;
-        Toggle(data);
-        greenBoxRightClick(data);
-      };
+      dirSearch = objectStore.index("dir_id").getAll(dirId);
 
+      dirSearch.onsuccess = (e) => {
+        let filteredKeyword = e.target.result;
+        Toggle(filteredKeyword);
+        greenBoxRightClick(filteredKeyword);
+      }
       transaction.onerror = function (event) {
         console.log("트랜잭션 오류:", event.target.error);
       };
