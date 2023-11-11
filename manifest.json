@@ -6,7 +6,11 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_icon": "heyGoogler_icon.png"
+    "default_icon": {
+      "16": "heyGoogler_icon.png",
+      "48": "heyGoogler_icon.png",
+      "128": "heyGoogler_icon.png"
+    }
   },
   "permissions": ["tabs", "activeTab", "history", "webNavigation", "storage"],
   "content_scripts": [
