@@ -181,9 +181,12 @@ initUserHistoryData();
 
 //액션 아이콘에 extension 의 상태를 표시하기 위한 badge 초기화 시키는 코드 <extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.setBadgeText({
-    text: "OFF",
-  });
+  // chrome.action.setBadgeText({
+  //   text: "OFF",
+  // });
+  const offIconPath = "heyGoogler_icon_off.png";
+  chrome.action.setIcon({ path: { "16": offIconPath, "48": offIconPath, "128": offIconPath } });
+
 });
 
 //list.js 로부터 메시지를 받아서 사이드바에서 시작버튼이나 중지 버튼을 누르면 isExtensionOn 의 값과 액션 아이콘 뱃지의 텍스트가 변경되도록 하는 코드
@@ -194,12 +197,16 @@ chrome.runtime.onMessage.addListener((msg) => {
     dirId = parseInt(msg.onDirId);
     console.log('받은 dir' + dirId);
     //console.log("is the extension ON? : " + isExtensionOn);
-    chrome.action.setBadgeText({ text: "ON" });
+    //chrome.action.setBadgeText({ text: "ON" });
+    const iconPath ="heyGoogler_icon.png";
+    chrome.action.setIcon({ path: { "16": iconPath, "48": iconPath, "128": iconPath } });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
     isExtensionOn = false;
     dirId = null;
     //console.log("is the extension ON? : " + isExtensionOn);
-    chrome.action.setBadgeText({ text: "OFF" });
+    //chrome.action.setBadgeText({ text: "OFF" });
+    const offIconPath = "heyGoogler_icon_off.png";
+    chrome.action.setIcon({ path: { "16": offIconPath, "48": offIconPath, "128": offIconPath } });
   }
 });
 
