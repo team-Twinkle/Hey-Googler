@@ -115,7 +115,7 @@ function setupDirEditEvent(button) {
         editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
       }
       else {
-        alert("빈칸 놉");
+        alert("내용을 입력해주세요");
       }
     }
   })
@@ -925,7 +925,7 @@ function greenBoxRightClick(data) {
             urls = e.target.result;
             console.log(urlSearch);
             console.log(urls);
-    
+
             for (let i = 0; i < urls.length; i++) {
               deleteDB(urlStore, urls[i].id);
             }
