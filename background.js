@@ -132,6 +132,7 @@ function readDB(store_name) {
 async function initUserHistoryData() {
   try {
     var userHistoryData = await readDB('userHistoryStore');
+
     if (userHistoryData.length < 1) {
       const datas = [
         {
@@ -196,9 +197,11 @@ chrome.runtime.onMessage.addListener((msg) => {
     isExtensionOn = true;
     dirId = parseInt(msg.onDirId);
     console.log('받은 dir' + dirId);
+
     console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
     const iconPath ="heyGoogler_icon.png";
+
     chrome.action.setIcon({ path: { "16": iconPath, "48": iconPath, "128": iconPath } });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
     isExtensionOn = false;

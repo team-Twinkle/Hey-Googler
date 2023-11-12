@@ -115,7 +115,7 @@ function setupDirEditEvent(button) {
         editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
       }
       else {
-        alert("빈칸 놉");
+        alert("내용을 입력해주세요");
       }
     }
   })
@@ -925,7 +925,7 @@ function greenBoxRightClick(data) {
             urls = e.target.result;
             console.log(urlSearch);
             console.log(urls);
-    
+
             for (let i = 0; i < urls.length; i++) {
               deleteDB(urlStore, urls[i].id);
             }
@@ -1183,12 +1183,11 @@ async function displayData(data) {
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
-      // dirLink.querySelector(".dir-point").textContent = '❗';
-      dirList.querySelector(".dir-text").textContent = '❗' + item.dir_name;
+      dirList.style.backgroundColor = '#f1c965'
     } else {
-      dirList.querySelector(".dir-text").textContent = item.dir_name;
-
+      dirList.style.backgroundColor = 'white'
     }
+    dirList.querySelector(".dir-text").textContent = item.dir_name;
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);
