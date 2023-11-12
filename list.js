@@ -66,8 +66,6 @@ function dirAddButtonClick() {
     // dir_id를 사용하여 링크 생성
     const dir_id = d_id;
     const dirName = 'NEW DIR';
-    console.log('href생성 전');
-    console.log(dir_id, dirName);
 
     // dirLink.href = `./list.html?dir_id=${dir_id}&dirname=${encodeURIComponent(dirName)}`;
     //chrome-extension://ennclpjamlaabgaipfcmcffiemgkjdph/list.html?dir_id=53&dirname=NEW%20DIR
@@ -76,8 +74,6 @@ function dirAddButtonClick() {
 
     dirLink.href = extensionURL;
     dirText.textContent = dirName;
-
-    console.log(dirLink.href);
 
     document.getElementById("dir_container").appendChild(copy);
 
@@ -174,7 +170,6 @@ function setupDirDeleteEvent(button) {
     .then(result => {
       //현재 실행 중인 dir과 삭제하려는 dir이 동일하다면 "삭제할 수 없음"
       if (parseInt(result) == d_id) {
-        console.log("dirCannotDeleteModal 보여주기");
         const dirCannotDeleteModal = document.getElementById("dirCannotDeleteModal");
         dirCannotDeleteModal.style.display = "flex";
         const dirCannotDeletecloseBtn = dirCannotDeleteModal.querySelector(".closeBtn");
@@ -215,9 +210,6 @@ async function initListPage() {
   const dirNameElement = document.querySelector("#dir-name");
   const dirBox = document.querySelector(".dir");
 
-  console.log('initListpage');
-  console.log(dirId);
-
   var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
   if (dirId == null) {
@@ -226,15 +218,11 @@ async function initListPage() {
 
 
       dirId = userHistoryData[0]['recentlyExecutedDir'];
-      console.log(dirId);
       var initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
-      console.log(initDirName);
 
       if (initDirName == undefined) { //recentlyExecutedDir가 삭제 됨 -> 아무 디렉토리
         var tempDir = await readDBbyStoreName('dirStore');
         dirId = tempDir[0]['d_id'];
-        console.log('체크');
-        console.log(dirId);
         initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
         //오 코드 완전 별로
         //위에랑 if-else 로 처리하는 방법으로 나중에 수정
@@ -291,8 +279,6 @@ function readDBbyStoreName(store_name) {
 
       requestGetAll.onsuccess = function (event) {
         const data = event.target.result;
-        console.log('readDB 테스트 실행 데이터 값 : ');
-        console.log(data);
         resolve(data); // 비동기 작업이 완료되면 데이터를 반환
       };
 
@@ -321,8 +307,6 @@ function readDBbyStoreNameAndId(store_name, id) {
 
       requestGet.onsuccess = function (event) {
         const data = event.target.result;
-        console.log('readDB dirname by id 테스트 실행 데이터 값 : ');
-        console.log(data);
         resolve(data); // 비동기 작업이 완료되면 데이터를 반환
       };
 
@@ -336,8 +320,6 @@ function readDBbyStoreNameAndId(store_name, id) {
 async function getNowDirId() {
   try {
     var userHistoryData = await readDBbyStoreName('userHistoryStore');
-    console.log('현재 실ㅇ중인 ');
-    console.log(userHistoryData[0]['nowExecutedDir']);
     data = userHistoryData[0]['nowExecutedDir'];
     return data;
   } catch (error) {
@@ -372,7 +354,6 @@ stopButton.addEventListener("mouseup", () => {
 //reload
 reloadButton.addEventListener("click", () => {
   location.reload();
-  console.log("reloaded");
 });
 
 //tooltip
@@ -448,17 +429,16 @@ function writeDB(datas, store_name, callback) {
     const transaction = db.transaction([store_name], "readwrite");
 
     transaction.oncomplete = function (event) {
-      console.log("성공");
+      console.log("success");
     };
     transaction.onerror = function (event) {
-      console.log("실패");
+      console.log("fail");
     };
 
     const objectStore = transaction.objectStore(store_name);
     for (const data of datas) {
       const request = objectStore.add(data);
       request.onsuccess = function (event) {
-        console.log(`dirDB 입력 완료 : ${event.target.result}`);
         // return event.target.result;
         callback(event.target.result);
       };
@@ -466,8 +446,6 @@ function writeDB(datas, store_name, callback) {
   };
 }
 
-//edit 재사용성을 높이고 샆어
-//민지 함수랑 같이 확인
 function editDirNameDB(id, name) {
 
   var request = indexedDB.open("HeyGoogler", 1);
@@ -481,10 +459,10 @@ function editDirNameDB(id, name) {
     const transaction = db.transaction('dirStore', "readwrite");
 
     transaction.oncomplete = function (event) {
-      console.log("성공");
+      console.log("success");
     };
     transaction.onerror = function (event) {
-      console.log("실패");
+      console.log("fail");
     };
 
     const objectStore = transaction.objectStore('dirStore');
@@ -524,10 +502,10 @@ function deleteDirDB(id) {
     const transaction = db.transaction('dirStore', "readwrite");
 
     transaction.oncomplete = function (event) {
-      console.log("성공");
+      console.log("success");
     };
     transaction.onerror = function (event) {
-      console.log("실패");
+      console.log("fail");
     };
 
     const objectStore = transaction.objectStore('dirStore');
@@ -537,7 +515,7 @@ function deleteDirDB(id) {
     requestId.onerror = function (event) { console.log("requestId error"); }
 
     requestId.onsuccess = function (event) {
-      console.log("dir 삭제 성공");
+      console.log("success");
     }
   }
 }
@@ -744,7 +722,6 @@ function displayURL(data) {
 
 
 async function defaultDirSet() {
-  console.log('디폴트 디비 함수 실행됨');
   try {
     var dirData = await readDBbyStoreName('dirStore');
     if (dirData.length < 1) {
@@ -873,9 +850,6 @@ function greenBoxRightClick(data) {
 
     kwBox.oncontextmenu = function (e) {
 
-      console.log(e);
-
-
       let winWidth = 350;    //document.body 의 width
       let posX = e.pageX;
       let posY = e.pageY;
@@ -919,7 +893,7 @@ function greenBoxRightClick(data) {
         var request = indexedDB.open("HeyGoogler", 1);
 
         request.onerror = function (event) {
-          console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+          //console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
         };
 
         request.onsuccess = function (event) {
@@ -931,8 +905,6 @@ function greenBoxRightClick(data) {
 
           urlSearch.onsuccess = (e) => {
             urls = e.target.result;
-            console.log(urlSearch);
-            console.log(urls);
 
             for (let i = 0; i < urls.length; i++) {
               deleteDB(urlStore, urls[i].id);
@@ -940,11 +912,10 @@ function greenBoxRightClick(data) {
           }
 
           transaction.onerror = function (event) {
-            console.log("트랜잭션 오류:", event.target.error);
+            ///console.log("트랜잭션 오류:", event.target.error);
           };
 
           transaction.oncomplete = function (event) {
-            console.log("ㅅㄱ")
             db.close();
           };
         }
@@ -973,7 +944,7 @@ function readDB() {
     var request = indexedDB.open("HeyGoogler", 1);
 
     request.onerror = function (event) {
-      console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+      //console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
     };
 
     //1. open() 함수 성공 시 저장소 객체를 불러와서 request에 저장
@@ -1001,7 +972,7 @@ function readDB() {
         }
       }
       transaction.onerror = function (event) {
-        console.log("트랜잭션 오류:", event.target.error);
+        //console.log("트랜잭션 오류:", event.target.error);
       };
 
       transaction.oncomplete = function (event) {
@@ -1027,7 +998,7 @@ function readDB() {
       }
 
       transaction.onerror = function (event) {
-        console.log("트랜잭션 오류:", event.target.error);
+        //console.log("트랜잭션 오류:", event.target.error);
       };
 
       transaction.oncomplete = function (event) {
@@ -1050,7 +1021,7 @@ function addEvent() {
     let dirId = parseInt(nowDirId);
 
     request.onerror = function (event) {
-      console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
+      //console.log("IndexedDB 데이터베이스를 열 수 없습니다.");
     };
 
     request.onsuccess = function (event) {
@@ -1084,7 +1055,6 @@ function addEvent() {
 
             if (!matchingUrlData) {
               deleteDB(keyStore, id);
-              console.log("GreenBox deleted");
             }
           };
         }
@@ -1093,7 +1063,7 @@ function addEvent() {
 
 
       transaction.onerror = function (event) {
-        console.log("트랜잭션 오류:", event.target.error);
+        //console.log("트랜잭션 오류:", event.target.error);
       };
 
       transaction.oncomplete = function (event) {
@@ -1114,7 +1084,7 @@ function addEvent() {
       }
 
       transaction.onerror = function (event) {
-        console.log("트랜잭션 오류:", event.target.error);
+        //console.log("트랜잭션 오류:", event.target.error);
       };
 
       transaction.oncomplete = function (event) {
@@ -1134,7 +1104,7 @@ function addEvent() {
         greenBoxRightClick(filteredKeyword);
       }
       transaction.onerror = function (event) {
-        console.log("트랜잭션 오류:", event.target.error);
+        //console.log("트랜잭션 오류:", event.target.error);
       };
 
       transaction.oncomplete = function (event) {
@@ -1153,7 +1123,7 @@ function readDBAndDisplay() {
   var request = indexedDB.open("HeyGoogler", 1);
 
   request.onerror = function (event) {
-    console.log("DB error", event.target.errorCode);
+    //console.log("DB error", event.target.errorCode);
   };
 
   request.onsuccess = function (event) {
@@ -1169,7 +1139,7 @@ function readDBAndDisplay() {
     };
 
     requestGetAll.onerror = function (event) {
-      console.log("데이터 읽기 실패");
+
     };
   };
 }
@@ -1179,8 +1149,6 @@ async function displayData(data) {
   const container = document.getElementById("dir_container");
   var nowDIrId;
   nowDIrId = await getNowDirId();
-  console.log('현재 실행 중 :');
-  console.log(nowDIrId);
 
   data.forEach(item => {
     const copy = document.getElementById("dir_template").content.cloneNode(true);
@@ -1231,7 +1199,6 @@ function deleteDB(obs, key) {
     // 3. 삭제하기 (키 값인 id로 지정해야 함)
     const objStoreRequest = objStore.delete(key);
     objStoreRequest.onsuccess = (e) => {
-      console.log('deleted ' + key);
       transaction.commit();
       location.reload();
     }
@@ -1284,7 +1251,6 @@ function editDB(obs, field, key, value) {
       let updateRequest = objStore.put(data);
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => {
-        console.log('update success');
         location.reload();
       }
     }

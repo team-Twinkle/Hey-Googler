@@ -8,7 +8,7 @@ let db;
 const request = indexedDB.open("HeyGoogler", 1);
 
 request.onerror = function (event) {
-  console.log("failed");
+  console.log("");
 };
 request.onsuccess = function (event) {
   db = request.result;
@@ -64,7 +64,7 @@ request.onupgradeneeded = function (event) {
   dirStore.createIndex("nowExecutedDir", "nowExecutedDir", { unique: false });
 
   request.onerror = function (event) {
-    console.log("failed");
+    console.log("");
   };
   request.onsuccess = function (event) {
     db = request.result;
@@ -84,10 +84,10 @@ function writeDB(datas, store_name) {
     const transaction = db.transaction([store_name], "readwrite");
 
     transaction.oncomplete = function (event) {
-      console.log("성공");
+      console.log("");
     };
     transaction.onerror = function (event) {
-      console.log("실패");
+      console.log("");
     };
 
     const objectStore = transaction.objectStore(store_name);
@@ -118,8 +118,6 @@ function readDB(store_name) {
 
       requestGetAll.onsuccess = function (event) {
         const data = event.target.result;
-        console.log('readDB 테스트 실행 데이터 값 : ');
-        console.log(data);
         resolve(data); // 비동기 작업이 완료되면 데이터를 반환
       };
 
@@ -202,7 +200,6 @@ isExtensionOnFunc();
       } else {
         // 아니라면 사이드바 띄우기 
         chrome.tabs.sendMessage(tab.id, "toggle");
-        console.log("message sent");
       }
     });
   });
@@ -223,15 +220,11 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg.txt == "Start the extension from list.js") { //사이드바에서 시작버튼을 눌렀을 때
     isExtensionOn = true;
     dirId = parseInt(msg.onDirId);
-    console.log('받은 dir' + dirId);
-
-    console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
     chrome.action.setIcon({ path: { "16": iconPath, "48": iconPath, "128": iconPath } });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
     isExtensionOn = false;
     dirId = null;
-    console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "OFF" });
     chrome.action.setIcon({ path: { "16": offIconPath, "48": offIconPath, "128": offIconPath } });
   }
@@ -251,20 +244,16 @@ chrome.tabs.onActivated.addListener(activeInfo => {
     currentURL = new URL(currentTab);
     if (currentURL.hostname === "www.google.com") {
       searchTab = currentTab;
-      console.log("    SearchTab case1 :        " + searchTab);
     }
   })
 
   chrome.tabs.onUpdated.addListener((currentTabId, changingInfo, tabs) => {
     if (changingInfo.status === 'complete') {
-      //console.log(currentTabId);
       chrome.tabs.get(currentTabId, Tab => {
         currentTab = Tab.url;
         currentURL = new URL(currentTab);
-        //console.log(currentURL);
         if (currentURL.hostname === "www.google.com") {
           searchTab = currentTab;
-          console.log("    SearchTab case2 :       " + searchTab);
         }
       })
 
@@ -293,16 +282,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         if (str2 == "chrome-extension://") {
           return;
         }
-        //console.log(historyItem.title);
 
         const url_ = new URL(searchTab);
-        //console.log(url_);
         let keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
         if (keyword1 != null) {
-          console.log('키데이터' + dirId);
           const keyData = [{ dir_id: dirId, keyword: keyword1 }];
-
-          console.log("Visited Site:", url, title, keyword1);
           //db에 data 입력
           const datas = [
             {
@@ -321,7 +305,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         }
 
       }
-      else console.log("이전 링크가 검색창이 아님!!!!");
+      else ;
     });
   }
 

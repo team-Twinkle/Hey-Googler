@@ -2,7 +2,6 @@ console.log("side-panel script loaded");
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg == "toggle") {
-        console.log("message received");
         toggle();
     }
     if (msg === 'referrer') {
