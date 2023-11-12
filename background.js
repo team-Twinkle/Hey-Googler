@@ -1,4 +1,4 @@
-var isExtensionOn = false; //extension 의 현재 상태 저장
+var isExtensionOn;
 var dirId = 1; //현재 선택된 디렉토리의 id 저장
 
 /****************************************************indexedDB 코드*************************************************************/
@@ -147,7 +147,25 @@ async function initUserHistoryData() {
       }];
       writeDB(dirDatas, "dirStore");
 
-    }
+    } 
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function isExtensionOnFunc() {
+  try {
+    var userHistoryData = await readDB('userHistoryStore');
+
+    if (userHistoryData.length > 0) {
+
+      let nowExecutedDir = userHistoryData[0].nowExecutedDir;
+      if(nowExecutedDir == 'none'){
+        isExtensionOn = false;
+      } else isExtensionOn = true;
+
+    } 
 
   } catch (error) {
     console.error(error);
@@ -155,6 +173,7 @@ async function initUserHistoryData() {
 }
 
 initUserHistoryData();
+isExtensionOnFunc();
 
 /*********************************************************************************************************************/
 
