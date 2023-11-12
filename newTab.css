@@ -20,7 +20,7 @@ body{
     transition:width 0.2s;
 }
 #logo:hover{
-    content:url(./images/logo_color.svg);
+    content:url(./images/logo.png);
     cursor:pointer;
     width:45em;
 
