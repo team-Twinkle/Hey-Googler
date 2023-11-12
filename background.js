@@ -1,6 +1,8 @@
-var isExtensionOn = false; //extension 의 현재 상태 저장
+var isExtensionOn;
 var dirId = 1; //현재 선택된 디렉토리의 id 저장
 
+var iconPath = "heyGoogler_icon.png";
+var offIconPath = "heyGoogler_icon_off.png";
 /****************************************************indexedDB 코드*************************************************************/
 let db;
 const request = indexedDB.open("HeyGoogler", 1);
@@ -132,6 +134,7 @@ function readDB(store_name) {
 async function initUserHistoryData() {
   try {
     var userHistoryData = await readDB('userHistoryStore');
+
     if (userHistoryData.length < 1) {
       const datas = [
         {
@@ -153,7 +156,33 @@ async function initUserHistoryData() {
   }
 }
 
+async function isExtensionOnFunc() {
+  try {
+    var userHistoryData = await readDB('userHistoryStore');
+
+    if (userHistoryData.length > 0) {
+
+      let nowExecutedDir = userHistoryData[0].nowExecutedDir;
+      if (nowExecutedDir == 'none') {
+        isExtensionOn = false;
+        chrome.action.setBadgeText({ text: "OFF" });
+        chrome.action.setIcon({ path: { "16": offIconPath, "48": offIconPath, "128": offIconPath } });
+      } else {
+        isExtensionOn = true;
+        dirId = parseInt(nowExecutedDir);
+        chrome.action.setBadgeText({ text: "ON" });
+        chrome.action.setIcon({ path: { "16": iconPath, "48": iconPath, "128": iconPath } });
+      }
+
+    }
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 initUserHistoryData();
+isExtensionOnFunc();
 
 /*********************************************************************************************************************/
 
@@ -181,10 +210,9 @@ initUserHistoryData();
 
 //액션 아이콘에 extension 의 상태를 표시하기 위한 badge 초기화 시키는 코드 <extension 실행 유무와 상관없이 실행되어야함>
 chrome.runtime.onInstalled.addListener(() => {
-  // chrome.action.setBadgeText({
-  //   text: "OFF",
-  // });
-  const offIconPath = "heyGoogler_icon_off.png";
+  chrome.action.setBadgeText({
+    text: "OFF",
+  });
   chrome.action.setIcon({ path: { "16": offIconPath, "48": offIconPath, "128": offIconPath } });
 
 });
@@ -196,16 +224,15 @@ chrome.runtime.onMessage.addListener((msg) => {
     isExtensionOn = true;
     dirId = parseInt(msg.onDirId);
     console.log('받은 dir' + dirId);
-    //console.log("is the extension ON? : " + isExtensionOn);
-    //chrome.action.setBadgeText({ text: "ON" });
-    const iconPath ="heyGoogler_icon.png";
+
+    console.log("is the extension ON? : " + isExtensionOn);
+    chrome.action.setBadgeText({ text: "ON" });
     chrome.action.setIcon({ path: { "16": iconPath, "48": iconPath, "128": iconPath } });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
     isExtensionOn = false;
     dirId = null;
-    //console.log("is the extension ON? : " + isExtensionOn);
-    //chrome.action.setBadgeText({ text: "OFF" });
-    const offIconPath = "heyGoogler_icon_off.png";
+    console.log("is the extension ON? : " + isExtensionOn);
+    chrome.action.setBadgeText({ text: "OFF" });
     chrome.action.setIcon({ path: { "16": offIconPath, "48": offIconPath, "128": offIconPath } });
   }
 });

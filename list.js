@@ -115,7 +115,7 @@ function setupDirEditEvent(button) {
         editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
       }
       else {
-        alert("빈칸 놉");
+        alert("내용을 입력해주세요");
       }
     }
   })
@@ -158,7 +158,7 @@ function setupDirEditEvent(button) {
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
       } else {
-        alert("빈칸 놉");
+        alert("내용을 입력해주세요");
       }
     }
   });
@@ -213,15 +213,16 @@ async function initListPage() {
   var dirName = urlParams.get("dirname");
   var dirId = urlParams.get("dir_id");
   const dirNameElement = document.querySelector("#dir-name");
+  const dirBox = document.querySelector(".dir");
 
   console.log('initListpage');
   console.log(dirId);
 
+  var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
   if (dirId == null) {
     //초기 진입할 때,
     try {
-      var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
 
       dirId = userHistoryData[0]['recentlyExecutedDir'];
@@ -254,6 +255,11 @@ async function initListPage() {
 
   nowDirId = dirId;
   editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
+
+  var nowExecutedDir = userHistoryData[0]['nowExecutedDir'];
+  if (dirId == nowExecutedDir) {
+    dirBox.style.backgroundColor = '#DFF5E5';
+  }
 
   addEvent();
 
@@ -402,12 +408,14 @@ startButton.addEventListener("click", () => {
   editUserHistoryNowDirDB('userHistoryStore', 1, nowDirId);
   editUserHistoryRecentlyExecutedDirDB('userHistoryStore', 1, nowDirId);
   //거의 10퍼센트 확률로 두번째거 안 먹히는데,, 계속 지속되면 처음 실행되고 다음 되록 수정
+  location.reload();
 });
 
 stopButton.addEventListener("click", () => {
   startButton.src = "images/icon_start.svg";
   chrome.runtime.sendMessage("Stop the extension from list.js");
   editUserHistoryNowDirDB('userHistoryStore', 1, 'none');
+  location.reload();
 });
 
 chrome.action.onClicked.addListener(() => {
@@ -925,7 +933,7 @@ function greenBoxRightClick(data) {
             urls = e.target.result;
             console.log(urlSearch);
             console.log(urls);
-    
+
             for (let i = 0; i < urls.length; i++) {
               deleteDB(urlStore, urls[i].id);
             }
@@ -1183,12 +1191,11 @@ async function displayData(data) {
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
-      // dirLink.querySelector(".dir-point").textContent = '❗';
-      dirList.querySelector(".dir-text").textContent = '❗' + item.dir_name;
+      dirList.style.backgroundColor = '#DFF5E5'
     } else {
-      dirList.querySelector(".dir-text").textContent = item.dir_name;
-
+      dirList.style.backgroundColor = 'white'
     }
+    dirList.querySelector(".dir-text").textContent = item.dir_name;
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);
