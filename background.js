@@ -147,7 +147,7 @@ async function initUserHistoryData() {
       }];
       writeDB(dirDatas, "dirStore");
 
-    } 
+    }
 
   } catch (error) {
     console.error(error);
@@ -161,11 +161,14 @@ async function isExtensionOnFunc() {
     if (userHistoryData.length > 0) {
 
       let nowExecutedDir = userHistoryData[0].nowExecutedDir;
-      if(nowExecutedDir == 'none'){
+      if (nowExecutedDir == 'none') {
         isExtensionOn = false;
-      } else isExtensionOn = true;
+      } else {
+        isExtensionOn = true;
+        dirId = parseInt(nowExecutedDir);
+      }
 
-    } 
+    }
 
   } catch (error) {
     console.error(error);
@@ -219,7 +222,7 @@ chrome.runtime.onMessage.addListener((msg) => {
 
     console.log("is the extension ON? : " + isExtensionOn);
     chrome.action.setBadgeText({ text: "ON" });
-    const iconPath ="heyGoogler_icon.png";
+    const iconPath = "heyGoogler_icon.png";
 
     chrome.action.setIcon({ path: { "16": iconPath, "48": iconPath, "128": iconPath } });
   } else if (msg == "Stop the extension from list.js") { //사이드바에서 중지버튼을 눌렀을 때
