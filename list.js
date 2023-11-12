@@ -1183,12 +1183,11 @@ async function displayData(data) {
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
-      // dirLink.querySelector(".dir-point").textContent = '❗';
-      dirList.querySelector(".dir-text").textContent = '❗' + item.dir_name;
+      dirList.style.backgroundColor = '#f1c965'
     } else {
-      dirList.querySelector(".dir-text").textContent = item.dir_name;
-
+      dirList.style.backgroundColor = 'white'
     }
+    dirList.querySelector(".dir-text").textContent = item.dir_name;
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);
