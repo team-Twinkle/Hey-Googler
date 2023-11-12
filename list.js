@@ -158,7 +158,7 @@ function setupDirEditEvent(button) {
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
       } else {
-        alert("빈칸 놉");
+        alert("내용을 입력해주세요");
       }
     }
   });
