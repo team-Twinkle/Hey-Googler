@@ -258,7 +258,7 @@ async function initListPage() {
 
   var nowExecutedDir = userHistoryData[0]['nowExecutedDir'];
   if (dirId == nowExecutedDir) {
-    dirBox.style.backgroundColor = '#f1c965';
+    dirBox.style.backgroundColor = '#DFF5E5';
   }
 
   addEvent();
@@ -1190,7 +1190,7 @@ async function displayData(data) {
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
-      dirList.style.backgroundColor = '#f1c965'
+      dirList.style.backgroundColor = '#DFF5E5'
     } else {
       dirList.style.backgroundColor = 'white'
     }
