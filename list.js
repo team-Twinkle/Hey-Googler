@@ -213,15 +213,16 @@ async function initListPage() {
   var dirName = urlParams.get("dirname");
   var dirId = urlParams.get("dir_id");
   const dirNameElement = document.querySelector("#dir-name");
+  const dirBox = document.querySelector(".dir");
 
   console.log('initListpage');
   console.log(dirId);
 
+  var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
   if (dirId == null) {
     //초기 진입할 때,
     try {
-      var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
 
       dirId = userHistoryData[0]['recentlyExecutedDir'];
@@ -254,6 +255,11 @@ async function initListPage() {
 
   nowDirId = dirId;
   editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
+
+  var nowExecutedDir = userHistoryData[0]['nowExecutedDir'];
+  if (dirId == nowExecutedDir) {
+    dirBox.style.backgroundColor = '#f1c965';
+  }
 
   addEvent();
 
@@ -402,6 +408,7 @@ startButton.addEventListener("click", () => {
   editUserHistoryNowDirDB('userHistoryStore', 1, nowDirId);
   editUserHistoryRecentlyExecutedDirDB('userHistoryStore', 1, nowDirId);
   //거의 10퍼센트 확률로 두번째거 안 먹히는데,, 계속 지속되면 처음 실행되고 다음 되록 수정
+  location.reload();
 });
 
 stopButton.addEventListener("click", () => {
