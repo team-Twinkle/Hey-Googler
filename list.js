@@ -415,6 +415,7 @@ stopButton.addEventListener("click", () => {
   startButton.src = "images/icon_start.svg";
   chrome.runtime.sendMessage("Stop the extension from list.js");
   editUserHistoryNowDirDB('userHistoryStore', 1, 'none');
+  location.reload();
 });
 
 chrome.action.onClicked.addListener(() => {
