@@ -3,6 +3,16 @@ var dirId = 1; //현재 선택된 디렉토리의 id 저장
 
 var iconPath = "heyGoogler_icon.png";
 var offIconPath = "heyGoogler_icon_off.png";
+
+var beforeTab;
+var currentTab;
+var searchTab;
+
+if(currentTab == null){
+  chrome.tabs.getCurrent ((tab)=>{
+    currentTab = tab;
+  })
+}
 /****************************************************indexedDB 코드*************************************************************/
 let db;
 const request = indexedDB.open("HeyGoogler", 1);
@@ -239,9 +249,6 @@ chrome.runtime.onMessage.addListener((msg) => {
 
 //현재 보고있는 탭(currentTab), 가장 최근까지 보고있던 탭(beforeTab), 검색창(searchTab) 저장 
 //<extension 실행 유무와 상관없이 실행되어야함>
-var beforeTab;
-var currentTab;
-var searchTab;
 
 chrome.tabs.onActivated.addListener(activeInfo => {
   beforeTab = currentTab;
