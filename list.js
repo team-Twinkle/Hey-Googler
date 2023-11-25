@@ -289,9 +289,9 @@ function startBtnEvent(){
   let content = document.getElementById("startModalContent");
   let dirBox = document.getElementById("dir-name");
   let dirName = dirBox.textContent;
-  content.innerHTML = "<b>[" + dirName + "]</b> <br>폴더에서 기록을 시작합니다.";
+  content.innerHTML = "<b>[" + dirName + "]</b> <br>폴더에 검색 기록이 저장됩니다.";
   modal.classList.replace("hidden","clicked");
-  setTimeout(()=>{location.reload();},5000);
+  setTimeout(()=>{modal.classList.replace("clicked","hidden");},5000);
   //console.log("startEvent executed");
 }
 
