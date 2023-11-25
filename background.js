@@ -41,7 +41,6 @@ request.onupgradeneeded = function (event) {
   });
 
   keywordStore.createIndex("dir_id", "dir_id", { unique: false });
-
   keywordStore.createIndex("keyword", ["dir_id", "keyword"], { unique: true });
 
 
@@ -300,7 +299,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         let keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
         if (keyword1 != null) {
           console.log('키데이터' + dirId);
-          const keyData = [{ dir_id: dirId, keyword: keyword1 }];
+          const keyData = [{ dir_id: dirId, keyword: keyword1,isToggled:false }];
 
           console.log("Visited Site:", url, title, keyword1);
           //db에 data 입력
