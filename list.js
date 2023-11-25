@@ -89,7 +89,7 @@ function dirAddButtonClick() {
 
 
 function setupDirEditEvent(button) {
-  const dirElement = button.closest("li");
+  const dirElement = button.closest("li");  
   const dirTextElement = dirElement.querySelector(".dir-text");
   const currentTextValue = dirTextElement.textContent;
   const dir_id = dirElement.id;
@@ -1207,6 +1207,7 @@ async function displayData(data) {
     const editButton = copy.querySelector(".button-edit");
     const deleteButton = copy.querySelector(".button-del");
     const dirLink = copy.querySelector(".dir-link");
+    const dirTooltip = copy.querySelector(".dir-list").querySelector(".tooltipDirTitle");
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
@@ -1215,6 +1216,21 @@ async function displayData(data) {
       dirList.style.backgroundColor = 'white'
     }
     dirList.querySelector(".dir-text").textContent = item.dir_name;
+    dirTooltip.textContent = item.dir_name;
+    //일정 길이 이상일 경우 툴팁도 업데이트------------------------------------------
+    let dirTextLength = parseInt(item.dir_name.length);
+    if (dirTextLength > 14) {
+        let selectedTitle = dirList.querySelector(".dir-text");
+        let titleTooltip = dirList.querySelector(".tooltipDirTitle");
+        selectedTitle.addEventListener("mouseover", (e) => {
+          titleTooltip.style.display = "block";
+        });
+    
+        selectedTitle.addEventListener("mouseout", () => {
+          titleTooltip.style.display = "none";
+        });
+    } 
+    //-------------------------------
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);

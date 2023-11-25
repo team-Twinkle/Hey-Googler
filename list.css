@@ -513,6 +513,26 @@ footer {
   z-index: 50;
 }
 
+.tooltipDirTitle {
+  display: block;
+  position: absolute;
+  background-color: black;
+  border-radius: 7px;
+  color: white;
+  text-align: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  /* 좌우 대칭을 위한 margin추가, 상위 box의 좌우 padding 차이로 인한 문제  */
+  margin-right: 16px;
+  width: 240px;
+  overflow-wrap: break-word;
+  z-index: 50;
+  text-align: center;
+  top: 80%;
+}
+
 #tooltip-folder {
   left: 20px;
   width: 50px;
