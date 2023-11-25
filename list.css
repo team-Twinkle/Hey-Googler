@@ -731,3 +731,39 @@ footer {
 #dirCannotDeleteModal .btn-area {
   padding-top: 2em;
 }
+
+#startModal {
+  position: fixed;
+  width: auto;
+  left: 10px;
+  right: 10px;
+  height: auto;
+  bottom: 85px;
+  background-color: #4285F4;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(13.5px);
+  text-shadow: 1px 1px 2px gray;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  margin-bottom: 0;
+  margin-top: 0;
+  z-index: 10000000000000;
+  opacity: 0.8;
+  color: white;
+}
+
+#startModal.clicked{
+  display: flex;
+}
+#startModal.hidden{
+  display: none;
+}
+
+#startModalContent{
+  text-align: center;
+  line-height: 1.5;
+  padding-left: 25px;
+  padding-right: 25px;
+}
