@@ -643,13 +643,24 @@ function displayURL(data) {
 
 
     const memoBtn = clone.querySelector('.white-menu3');
+    let inputMemo = document.getElementById("memoInput");
 
     memoBtn.setAttribute('key', key);
     const modal = document.getElementById("modal")
-    var memoFlag;
+    let memoFlag;
     memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
       memoFlag = e.target.getAttribute("key");
+      
+      readValueDB('urlStore', 'memo', parseInt(memoFlag))
+      .then(result=>{
+        //console.log("제대로 읽어짐****************" + result);
+        //console.log(typeof(result));
+        inputMemo.setAttribute('value', result);
+      })
+      .catch(error => {
+        console.log("메모 디폴트값 불러오기 에러" + error);
+      });
       //console.log(e);
       //console.log("memo버튼 클릭했을 때 memoFlag : " + memoFlag);
     })
@@ -657,8 +668,6 @@ function displayURL(data) {
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
     })
-
-    let inputMemo = document.getElementById("memoInput");
 
     const memoSaveBtn = modal.querySelector(".saveBtn")
     memoSaveBtn.addEventListener("click", e => {
@@ -689,14 +698,24 @@ function displayURL(data) {
 
 
     const editBtn = clone.querySelector('.white-menu2');
+    let inputTitle = document.getElementById("titleInput");
 
     editBtn.setAttribute('key', key);
     const editmodal = document.getElementById("modal-t")
-    var editFlag;
+    let editFlag;
     editBtn.addEventListener('click', (e) => {
       editmodal.style.display = "flex";
       //몇 번째 요소 선택했는지 인덱스저장
       editFlag = e.target.getAttribute("key");
+      readValueDB('urlStore', 'title', parseInt(editFlag))
+      .then(result=>{
+        //console.log("제대로 읽어짐****************" + result);
+        //console.log(typeof(result));
+        inputTitle.setAttribute('value', result);
+      })
+      .catch(error => {
+        console.log("타이틀 디폴트값 불러오기 에러" + error);
+      });
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -704,7 +723,7 @@ function displayURL(data) {
       editmodal.style.display = "none";
     })
 
-    let inputTitle = document.getElementById("titleInput");
+
 
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
@@ -1307,13 +1326,7 @@ function readValueDB(obs, field, key) {
         let data = event.target.result;
         let findValue;
 
-        if (field == "url") {
-          findValue = data.url;
-        } else if (field == "nowExecutedDir") {
-          findValue = data.nowExecutedDir;
-        } else {
-          reject("필드 추가가 필요함");
-        }
+        findValue = data[field];
 
         resolve(findValue);
       };
