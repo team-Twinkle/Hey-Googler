@@ -36,6 +36,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 window.history.scrollRestoration = "auto";
 
+/**
+  * 스크롤이 움직일때마다 값을 sessionStorage에 넣어줌
+  */
+let scrollHeight;
+addEventListener('scroll', (event) => {
+    scrollHeight = $(document).scrollTop();
+    sessionStorage.setItem("scrollY", scrollHeight);
+});
+
+/**
+  * 스크롤 위치 지정
+  */
+// $(document).ready(function() {
+//     const scrollY = parseInt(sessionStorage.getItem("scrollY"));
+//     if(scrollY && scrollY > 0){
+//         window.scrollTo(0, scrollY);
+//     }
+// });
+
 
 //dir추가 버튼
 function dirAddButtonClick() {
@@ -265,6 +284,16 @@ async function initListPage() {
 
 }
 
+function startBtnEvent(){
+  let modal = document.getElementById("startModal");
+  let content = document.getElementById("startModalContent");
+  let dirBox = document.getElementById("dir-name");
+  let dirName = dirBox.textContent;
+  content.innerHTML = "<b>[" + dirName + "]</b> <br>폴더에 검색 기록이 저장됩니다.";
+  modal.classList.replace("hidden","clicked");
+  setTimeout(()=>{modal.classList.replace("clicked","hidden");},5000);
+  //console.log("startEvent executed");
+}
 
 
 // //dir-name 에 title 부여
@@ -407,8 +436,9 @@ startButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ onDirId: nowDirId, txt: "Start the extension from list.js" });
   editUserHistoryNowDirDB('userHistoryStore', 1, nowDirId);
   editUserHistoryRecentlyExecutedDirDB('userHistoryStore', 1, nowDirId);
+  document.querySelector('.dir').style.backgroundColor = '#DFF5E5';
   //거의 10퍼센트 확률로 두번째거 안 먹히는데,, 계속 지속되면 처음 실행되고 다음 되록 수정
-  location.reload();
+  startBtnEvent();
 });
 
 stopButton.addEventListener("click", () => {

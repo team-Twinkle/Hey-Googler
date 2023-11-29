@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "manifest_version": 3,
-  "name": "Hey Googler",
+  "name": "Hey Googler 개발자용",
   "background": {
     "service_worker": "background.js"
   },
