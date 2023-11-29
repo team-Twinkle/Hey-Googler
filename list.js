@@ -521,6 +521,8 @@ function deleteDirDB(id) {
 
   request.onsuccess = function (event) {
     const db = request.result;
+
+    //dirDel
     const transaction = db.transaction('dirStore', "readwrite");
 
     transaction.oncomplete = function (event) {
@@ -534,11 +536,64 @@ function deleteDirDB(id) {
 
     var requestDel = objectStore.delete(parseInt(id)); //주의~~!!
 
-    requestId.onerror = function (event) { console.log("requestId error"); }
+    requestDel.onerror = function (event) { console.log("requestId error"); }
 
-    requestId.onsuccess = function (event) {
+    requestDel.onsuccess = function (event) {
       console.log("dir 삭제 성공");
     }
+
+    //del 하위 keyword
+    let keywordTransaction = db.transaction('keywordStore', 'readwrite');
+
+    keywordTransaction.oncomplete = function (event) {
+      console.log("키워드 성공");
+    };
+    keywordTransaction.onerror = function (event) {
+      console.log("키워드 실패");
+    };
+
+    const keywordObjectStore = keywordTransaction.objectStore('keywordStore');
+    const keywordSearch = keywordObjectStore.index("dir_id").getAll(parseInt(id));
+    console.log('여기');
+    console.log(keywordSearch);
+
+    keywordSearch.onsuccess = (e) => {
+      keywords = e.target.result;
+
+      for (let i = 0; i < keywords.length; i++) {
+        deleteDB('keywordStore', keywords[i].id);
+      }
+    }
+
+    keywordTransaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    // keywordTransaction.oncomplete = function (event) {
+    //   db.close();
+    // };
+
+    //del 하위 url
+
+    let urlTransaction = db.transaction('urlStore', 'readwrite');
+    const urlObjectStore = urlTransaction.objectStore('urlStore');
+    const urlSearch = urlObjectStore.index("dir_id").getAll(parseInt(id));
+
+    urlSearch.onsuccess = (e) => {
+      urls = e.target.result;
+
+      for (let i = 0; i < urls.length; i++) {
+        deleteDB('urlStore', urls[i].id);
+      }
+    }
+
+    urlTransaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    urlTransaction.oncomplete = function (event) {
+      db.close();
+    };
   }
 }
 
