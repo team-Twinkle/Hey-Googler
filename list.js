@@ -202,75 +202,51 @@ function setupDirDeleteEvent(button) {
 }
 
 
-// 리스트 페이지 초기화 함수
+// 리스트 페이지 로드 될 때
 async function initListPage() {
   const urlParams = new URLSearchParams(window.location.search);
-  var dirName = urlParams.get("dirname");
-  var dirId = urlParams.get("dir_id");
-  const dirNameElement = document.querySelector("#dir-name");
+  const dirNameElement = document.querySelector("#dir-title");
   const dirBox = document.querySelector(".dir");
-
-  console.log('initListpage');
-  console.log(dirId);
 
   var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
-  if (dirId == null) {
-    //초기 진입할 때,
+  var dirId = urlParams.get("dir_id");
+  var dirName;
+  var dirData;
+
+  if (dirId != null) { //dir 폴더로부터 넘어 올 때
+    dirData = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
+  } else { //dir 폴더로부터 열리는 것이 아닐 때
     try {
-
-
       dirId = userHistoryData[0]['recentlyExecutedDir'];
-      console.log(dirId);
-      var initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
-      console.log(initDirName);
+      dirData = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
 
-      if (initDirName == undefined) { //recentlyExecutedDir가 삭제 됨 -> 아무 디렉토리
+      //recentlyExecutedDir가 삭제 됨 -> 아무 디렉토리
+      if (initDirName == undefined) {
         var tempDir = await readDBbyStoreName('dirStore');
         dirId = tempDir[0]['d_id'];
-        console.log('체크');
-        console.log(dirId);
-        initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
-        //오 코드 완전 별로
-        //위에랑 if-else 로 처리하는 방법으로 나중에 수정
+        dirData = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
       }
-      dirName = initDirName['dir_name']
-      dirNameElement.textContent = dirName;
-
-
     } catch (error) {
-
     }
-
   }
+
+  dirName = dirData['dir_name']
 
   if (dirName != null) {
     dirNameElement.textContent = dirName;
   }
 
-  nowDirId = dirId;
-  editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
-
-  var nowExecutedDir = userHistoryData[0]['nowExecutedDir'];
-  if (dirId == nowExecutedDir) {
-    dirBox.style.backgroundColor = '#DFF5E5';
-  }
-
-  addEvent();
-
   //dir title 수정
   var dirTitleBox = document.getElementById('dir-title-box');
-  dirTitleBox.addEventListener("click", () => {
-    console.log('클릭됨');
-    const dirTitle = document.getElementById('dir-title');
-    const currentTextValue = dirTitle.textContent;
+  dirBox.addEventListener("click", () => {
     // input 생성
     const inputElement = document.createElement("input");
     inputElement.type = "text";
-    inputElement.value = currentTextValue;
+    inputElement.value = dirNameElement.textContent;
     inputElement.classList.add("input-dir", "editing");
 
-    dirTitleBox.replaceChild(inputElement, dirTitle);
+    dirTitleBox.replaceChild(inputElement, dirNameElement);
 
     inputElement.focus();
     inputElement.select();
@@ -283,7 +259,6 @@ async function initListPage() {
         const newDirName = inputElement.value.trim();
         if (newDirName !== "") {
           editDB("dirStore", "dir_name", parseInt(dirId), newDirName);
-          document.reload();
         } else {
           alert("내용을 입력해주세요");
         }
@@ -302,7 +277,19 @@ async function initListPage() {
     //     }
     //   }
     // })
+
+
   });
+
+  nowDirId = dirId;
+  editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
+
+  var nowExecutedDir = userHistoryData[0]['nowExecutedDir'];
+  if (dirId == nowExecutedDir) {
+    dirBox.style.backgroundColor = '#DFF5E5';
+  }
+
+  addEvent();
 
 }
 
