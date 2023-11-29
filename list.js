@@ -131,7 +131,7 @@ function setupDirEditEvent(button) {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName,true);
       }
       else {
         alert("내용을 입력해주세요");
@@ -172,7 +172,7 @@ function setupDirEditEvent(button) {
         // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
-        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName,true);
         //그냥 editDirNameDB (editDB) 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
@@ -583,15 +583,18 @@ var keyStore = 'keywordStore';
 function Toggle(data) {
   for (var i = 0; i < data.length; i++) {
     const k = data[i].keyword;
+    const id = data[i].id;
+    const isToggled = data[i].isToggled;
+    console.log(id);
     const kwBox = document.getElementById("green-" + k);
     const pathArea = document.getElementById("white-" + k);
     const toggleButton = kwBox.querySelector(".toggle_keyword");
-    let isToggled = false;
-
+    let isPushed = isToggled;
     toggleButton.addEventListener("click", () => {
       // 토글 상태에 따라 컨텐츠 표시/숨김
-      if (isToggled) {
+      if (isPushed) {
 
+        editDB("keywordStore", "isToggled", parseInt(id), false,false);
         toggleButton.classList.add("toggleShown");
         toggleButton.classList.remove("toggleHidden");
 
@@ -599,12 +602,13 @@ function Toggle(data) {
         pathArea.style.opacity = '1';
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
+        editDB("keywordStore", "isToggled", parseInt(id), true,false);
         toggleButton.classList.add("toggleHidden");
         toggleButton.classList.remove("toggleShown");
 
         pathArea.style.maxHeight = '0';
       }
-      isToggled = !isToggled;
+      isPushed = !isPushed;
     })
   }
 }
@@ -705,7 +709,7 @@ function displayURL(data) {
       //console.log(userInputMemo);
       //console.log("모달에서 저장 눌렀을 때 memoFlag : " + memoFlag);
       //console.log("를 int로 parsing한 memoFlag : " + parseInt(memoFlag));
-      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo,true);
       modal.style.display = "none"
 
     })
@@ -713,7 +717,7 @@ function displayURL(data) {
     inputMemo.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         let userInputMemo = inputMemo.value;
-        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo,true,true);
         modal.style.display = "none"
       }
     })
@@ -759,7 +763,7 @@ function displayURL(data) {
     editSaveBtn.addEventListener("click", e => {
       let userInputTitle = inputTitle.value;
       if (!!userInputTitle.trim()) {
-        editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+        editDB("urlStore", "title", parseInt(editFlag), userInputTitle,true);
         editmodal.style.display = "none"
       }
 
@@ -769,7 +773,7 @@ function displayURL(data) {
       if (event.key === "Enter") {
         let userInputTitle = inputTitle.value;
         if (!!userInputTitle.trim()) {
-          editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+          editDB("urlStore", "title", parseInt(editFlag), userInputTitle,true);
           editmodal.style.display = "none"
         }
       }
@@ -845,8 +849,10 @@ function displayKeyword(data) {
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
     const k = data[i][1];
+    console.log(k);
     const gk = data[i][0];
-
+    const toggleStatus = data[i][2];
+    console.log(toggleStatus);
 
     const template = document.getElementById("keyword_template");
     const clone = template.content.cloneNode(true);
@@ -854,6 +860,7 @@ function displayKeyword(data) {
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
     clone.querySelector(".keyword-box").id = "green-" + k;
     clone.querySelector(".path-area").id = "white-" + k;
+    const toggleButton = clone.querySelector(".keyword-box").querySelector(".toggle_keyword");
 
     clone.querySelector(".keyword-box").querySelector(".keyword").addEventListener("click", () => {
       const url = "https://www.google.com/search?q=" + k;
@@ -862,6 +869,18 @@ function displayKeyword(data) {
 
     let greenBox = clone.getElementById("green-" + k);
     greenBox.setAttribute('Key', gk);
+
+    if(toggleStatus){
+      toggleButton.classList.remove("toggleShown");
+      toggleButton.classList.add("toggleHidden");
+      clone.querySelector(".path-area").style.maxHeight = '0';
+    }
+    if(!toggleStatus){
+      toggleButton.classList.add("toggleShown");
+      toggleButton.classList.remove("toggleHidden");
+      clone.querySelector(".path-area").style.maxHeight = '100vh'
+      clone.querySelector(".path-area").style.opacity = '1';
+    }
 
     container.appendChild(clone);
 
@@ -1042,7 +1061,7 @@ function readDB() {
         let cursor = event.target.result;
         if (cursor) {
           //console.log(cursor.value.keyword);
-          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword]);
+          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword,cursor.value.isToggled]);
           cursor.continue();
         } else {
           //console.log(dirFilterKeyword);
@@ -1328,7 +1347,7 @@ function deleteDB2(key) {
     }
   }
 }
-function editDB(obs, field, key, value) {
+function editDB(obs, field, key, value,reload) {
   //value는 변경하려는 값
   //1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
@@ -1350,7 +1369,10 @@ function editDB(obs, field, key, value) {
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => {
         console.log('update success');
-        location.reload();
+        if(reload){
+          location.reload();
+        }
+        
       }
     }
 
