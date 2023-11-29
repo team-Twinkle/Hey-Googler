@@ -1,15 +1,10 @@
-
-// let onDirLink; 
-// let currentDirLink;
 let nowDirId;
-//FIXME 결국 이렇게 전역 변수로 할거면,, id 구하는 코드 중 필요 없는거 꽤 많을 듯
 
 //init
 //분기해서 사용하는 거 중요함
 document.addEventListener("DOMContentLoaded", function () {
   if (window.location.pathname === "/list.html") {
     initListPage();
-
 
 
   } else if (window.location.pathname === "/dirList.html") {
@@ -226,51 +221,84 @@ function setupDirDeleteEvent(button) {
 }
 
 
-// 리스트 페이지 초기화 함수
+// 리스트 페이지 로드 될 때
 async function initListPage() {
   const urlParams = new URLSearchParams(window.location.search);
-  var dirName = urlParams.get("dirname");
-  var dirId = urlParams.get("dir_id");
-  const dirNameElement = document.querySelector("#dir-name");
+  const dirNameElement = document.querySelector("#dir-title");
   const dirBox = document.querySelector(".dir");
-
-  console.log('initListpage');
-  console.log(dirId);
 
   var userHistoryData = await readDBbyStoreName('userHistoryStore');
 
-  if (dirId == null) {
-    //초기 진입할 때,
+  var dirId = urlParams.get("dir_id");
+  var dirName;
+  var dirData;
+
+  if (dirId != null) { //dir 폴더로부터 넘어 올 때
+    dirData = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
+  } else { //dir 폴더로부터 열리는 것이 아닐 때
     try {
-
-
       dirId = userHistoryData[0]['recentlyExecutedDir'];
-      console.log(dirId);
-      var initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
-      console.log(initDirName);
+      dirData = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
 
-      if (initDirName == undefined) { //recentlyExecutedDir가 삭제 됨 -> 아무 디렉토리
+      //recentlyExecutedDir가 삭제 됨 -> 아무 디렉토리
+      if (initDirName == undefined) {
         var tempDir = await readDBbyStoreName('dirStore');
         dirId = tempDir[0]['d_id'];
-        console.log('체크');
-        console.log(dirId);
-        initDirName = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
-        //오 코드 완전 별로
-        //위에랑 if-else 로 처리하는 방법으로 나중에 수정
+        dirData = await readDBbyStoreNameAndId('dirStore', parseInt(dirId));
       }
-      dirName = initDirName['dir_name']
-      dirNameElement.textContent = dirName;
-
-
     } catch (error) {
-
     }
-
   }
+
+  dirName = dirData['dir_name']
 
   if (dirName != null) {
     dirNameElement.textContent = dirName;
   }
+
+  //dir title 수정
+  var dirTitleBox = document.getElementById('dir-title-box');
+  dirBox.addEventListener("click", () => {
+    // input 생성
+    const inputElement = document.createElement("input");
+    inputElement.type = "text";
+    inputElement.value = dirNameElement.textContent;
+    inputElement.classList.add("input-dir", "editing");
+
+    dirTitleBox.replaceChild(inputElement, dirNameElement);
+
+    inputElement.focus();
+    inputElement.select();
+
+    dirTitleBox.classList.add("editing");
+
+    //엔터 완료
+    inputElement.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const newDirName = inputElement.value.trim();
+        if (newDirName !== "") {
+          editDB("dirStore", "dir_name", parseInt(dirId), newDirName);
+        } else {
+          alert("내용을 입력해주세요");
+        }
+      }
+    });
+
+    // document.addEventListener("click", e => {
+    //   if (!(e.target.classList.contains("editing"))) {
+    //     const newDirName = inputElement.value.trim();
+    //     if (newDirName !== "") {
+    //       editDB("dirStore", "dir_name", parseInt(dirId), newDirName);
+    //       document.reload();
+    //     }
+    //     else {
+    //       alert("내용을 입력해주세요");
+    //     }
+    //   }
+    // })
+
+
+  });
 
   nowDirId = dirId;
   editUserHistoryRecentlyVisitedDB('userHistoryStore', 1, nowDirId);
@@ -294,6 +322,7 @@ function startBtnEvent(){
   setTimeout(()=>{modal.classList.replace("clicked","hidden");},5000);
   //console.log("startEvent executed");
 }
+
 
 
 // //dir-name 에 title 부여
