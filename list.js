@@ -1,15 +1,10 @@
-
-// let onDirLink; 
-// let currentDirLink;
 let nowDirId;
-//FIXME 결국 이렇게 전역 변수로 할거면,, id 구하는 코드 중 필요 없는거 꽤 많을 듯
 
 //init
 //분기해서 사용하는 거 중요함
 document.addEventListener("DOMContentLoaded", function () {
   if (window.location.pathname === "/list.html") {
     initListPage();
-
 
 
   } else if (window.location.pathname === "/dirList.html") {
@@ -263,7 +258,54 @@ async function initListPage() {
 
   addEvent();
 
+  //dir title 수정
+  var dirTitleBox = document.getElementById('dir-title-box');
+  dirTitleBox.addEventListener("click", () => {
+    console.log('클릭됨');
+    const dirTitle = document.getElementById('dir-title');
+    const currentTextValue = dirTitle.textContent;
+    // input 생성
+    const inputElement = document.createElement("input");
+    inputElement.type = "text";
+    inputElement.value = currentTextValue;
+    inputElement.classList.add("input-dir", "editing");
+
+    dirTitleBox.replaceChild(inputElement, dirTitle);
+
+    inputElement.focus();
+    inputElement.select();
+
+    dirTitleBox.classList.add("editing");
+
+    //엔터 완료
+    inputElement.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const newDirName = inputElement.value.trim();
+        if (newDirName !== "") {
+          editDB("dirStore", "dir_name", parseInt(dirId), newDirName);
+          document.reload();
+        } else {
+          alert("내용을 입력해주세요");
+        }
+      }
+    });
+
+    // document.addEventListener("click", e => {
+    //   if (!(e.target.classList.contains("editing"))) {
+    //     const newDirName = inputElement.value.trim();
+    //     if (newDirName !== "") {
+    //       editDB("dirStore", "dir_name", parseInt(dirId), newDirName);
+    //       document.reload();
+    //     }
+    //     else {
+    //       alert("내용을 입력해주세요");
+    //     }
+    //   }
+    // })
+  });
+
 }
+
 
 
 
