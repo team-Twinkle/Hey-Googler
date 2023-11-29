@@ -117,8 +117,8 @@ body {
   position: relative;
   width: 304px;
 
-  margin-top: 20px;
-  margin-bottom: 14px;
+  margin-top: 10px;
+  margin-bottom: 8px;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-left: 16px;
@@ -338,8 +338,8 @@ body {
   width: 304px;
   height: auto;
 
-  margin-bottom: 10px;
-  padding-top: 18px;
+  margin-bottom: 0px;
+  padding-top: 15px;
   padding-left: 16px;
 
   background: #ffffff;
@@ -369,7 +369,7 @@ a {
 a>h4 {
   display: inline-block;
   width: 260px;
-  height: 21.6px;
+  height: 18px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -384,7 +384,7 @@ a>p {
   text-decoration: underline;
 
   width: 288px;
-  height: 21.6px;
+  height: 18px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
