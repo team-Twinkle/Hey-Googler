@@ -1,4 +1,9 @@
 /*스크롤바 커스텀*/
+/* 
+html {
+  zoom: .8;
+} */
+
 html::-webkit-scrollbar {
   width: 17px;
 }
