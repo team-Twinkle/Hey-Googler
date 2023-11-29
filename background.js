@@ -145,7 +145,7 @@ async function initUserHistoryData() {
       ];
       writeDB(datas, "userHistoryStore");
       const dirDatas = [{
-        dir_name: '초기 New Dir',
+        dir_name: '새 폴더',
       }];
       writeDB(dirDatas, "dirStore");
 

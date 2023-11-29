@@ -58,14 +58,14 @@ function dirAddButtonClick() {
   });
 
   // 데이터베이스 추가
-  const data = [{ dir_name: 'NEW DIR' }];
+  const data = [{ dir_name: '새 폴더' }];
   writeDB(data, 'dirStore', function (d_id) {
     // console.log(`dirAddButton 눌러쓸 때의 d_id : ${d_id}`);
     copy.querySelector(".dir-list").id = d_id;
 
     // dir_id를 사용하여 링크 생성
     const dir_id = d_id;
-    const dirName = 'NEW DIR';
+    const dirName = '새 폴더';
     console.log('href생성 전');
     console.log(dir_id, dirName);
 
