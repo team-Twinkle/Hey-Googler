@@ -89,7 +89,7 @@ function dirAddButtonClick() {
 
 
 function setupDirEditEvent(button) {
-  const dirElement = button.closest("li");
+  const dirElement = button.closest("li");  
   const dirTextElement = dirElement.querySelector(".dir-text");
   const currentTextValue = dirTextElement.textContent;
   const dir_id = dirElement.id;
@@ -643,13 +643,24 @@ function displayURL(data) {
 
 
     const memoBtn = clone.querySelector('.white-menu3');
+    let inputMemo = document.getElementById("memoInput");
 
     memoBtn.setAttribute('key', key);
     const modal = document.getElementById("modal")
-    var memoFlag;
+    let memoFlag;
     memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
       memoFlag = e.target.getAttribute("key");
+      
+      readValueDB('urlStore', 'memo', parseInt(memoFlag))
+      .then(result=>{
+        //console.log("제대로 읽어짐****************" + result);
+        //console.log(typeof(result));
+        inputMemo.setAttribute('value', result);
+      })
+      .catch(error => {
+        console.log("메모 디폴트값 불러오기 에러" + error);
+      });
       //console.log(e);
       //console.log("memo버튼 클릭했을 때 memoFlag : " + memoFlag);
     })
@@ -657,8 +668,6 @@ function displayURL(data) {
     closeBtn.addEventListener("click", e => {
       modal.style.display = "none";
     })
-
-    let inputMemo = document.getElementById("memoInput");
 
     const memoSaveBtn = modal.querySelector(".saveBtn")
     memoSaveBtn.addEventListener("click", e => {
@@ -689,14 +698,24 @@ function displayURL(data) {
 
 
     const editBtn = clone.querySelector('.white-menu2');
+    let inputTitle = document.getElementById("titleInput");
 
     editBtn.setAttribute('key', key);
     const editmodal = document.getElementById("modal-t")
-    var editFlag;
+    let editFlag;
     editBtn.addEventListener('click', (e) => {
       editmodal.style.display = "flex";
       //몇 번째 요소 선택했는지 인덱스저장
       editFlag = e.target.getAttribute("key");
+      readValueDB('urlStore', 'title', parseInt(editFlag))
+      .then(result=>{
+        //console.log("제대로 읽어짐****************" + result);
+        //console.log(typeof(result));
+        inputTitle.setAttribute('value', result);
+      })
+      .catch(error => {
+        console.log("타이틀 디폴트값 불러오기 에러" + error);
+      });
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -704,7 +723,7 @@ function displayURL(data) {
       editmodal.style.display = "none";
     })
 
-    let inputTitle = document.getElementById("titleInput");
+
 
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
@@ -1188,6 +1207,7 @@ async function displayData(data) {
     const editButton = copy.querySelector(".button-edit");
     const deleteButton = copy.querySelector(".button-del");
     const dirLink = copy.querySelector(".dir-link");
+    const dirTooltip = copy.querySelector(".dir-list").querySelector(".tooltipDirTitle");
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
@@ -1196,6 +1216,21 @@ async function displayData(data) {
       dirList.style.backgroundColor = 'white'
     }
     dirList.querySelector(".dir-text").textContent = item.dir_name;
+    dirTooltip.textContent = item.dir_name;
+    //일정 길이 이상일 경우 툴팁도 업데이트------------------------------------------
+    let dirTextLength = parseInt(item.dir_name.length);
+    if (dirTextLength > 14) {
+        let selectedTitle = dirList.querySelector(".dir-text");
+        let titleTooltip = dirList.querySelector(".tooltipDirTitle");
+        selectedTitle.addEventListener("mouseover", (e) => {
+          titleTooltip.style.display = "block";
+        });
+    
+        selectedTitle.addEventListener("mouseout", () => {
+          titleTooltip.style.display = "none";
+        });
+    } 
+    //-------------------------------
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);
@@ -1307,13 +1342,7 @@ function readValueDB(obs, field, key) {
         let data = event.target.result;
         let findValue;
 
-        if (field == "url") {
-          findValue = data.url;
-        } else if (field == "nowExecutedDir") {
-          findValue = data.nowExecutedDir;
-        } else {
-          reject("필드 추가가 필요함");
-        }
+        findValue = data[field];
 
         resolve(findValue);
       };
