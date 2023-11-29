@@ -36,6 +36,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 window.history.scrollRestoration = "auto";
 
+/**
+  * 스크롤이 움직일때마다 값을 sessionStorage에 넣어줌
+  */
+let scrollHeight;
+addEventListener('scroll', (event) => {
+    scrollHeight = $(document).scrollTop();
+    sessionStorage.setItem("scrollY", scrollHeight);
+});
+
+/**
+  * 스크롤 위치 지정
+  */
+// $(document).ready(function() {
+//     const scrollY = parseInt(sessionStorage.getItem("scrollY"));
+//     if(scrollY && scrollY > 0){
+//         window.scrollTo(0, scrollY);
+//     }
+// });
+
 
 //dir추가 버튼
 function dirAddButtonClick() {
@@ -89,7 +108,7 @@ function dirAddButtonClick() {
 
 
 function setupDirEditEvent(button) {
-  const dirElement = button.closest("li");
+  const dirElement = button.closest("li");  
   const dirTextElement = dirElement.querySelector(".dir-text");
   const currentTextValue = dirTextElement.textContent;
   const dir_id = dirElement.id;
@@ -112,7 +131,7 @@ function setupDirEditEvent(button) {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName,true);
       }
       else {
         alert("내용을 입력해주세요");
@@ -153,7 +172,7 @@ function setupDirEditEvent(button) {
         // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
-        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName,true);
         //그냥 editDirNameDB (editDB) 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
@@ -265,6 +284,16 @@ async function initListPage() {
 
 }
 
+function startBtnEvent(){
+  let modal = document.getElementById("startModal");
+  let content = document.getElementById("startModalContent");
+  let dirBox = document.getElementById("dir-name");
+  let dirName = dirBox.textContent;
+  content.innerHTML = "<b>[" + dirName + "]</b> <br>폴더에 검색 기록이 저장됩니다.";
+  modal.classList.replace("hidden","clicked");
+  setTimeout(()=>{modal.classList.replace("clicked","hidden");},5000);
+  //console.log("startEvent executed");
+}
 
 
 // //dir-name 에 title 부여
@@ -407,8 +436,9 @@ startButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ onDirId: nowDirId, txt: "Start the extension from list.js" });
   editUserHistoryNowDirDB('userHistoryStore', 1, nowDirId);
   editUserHistoryRecentlyExecutedDirDB('userHistoryStore', 1, nowDirId);
+  document.querySelector('.dir').style.backgroundColor = '#DFF5E5';
   //거의 10퍼센트 확률로 두번째거 안 먹히는데,, 계속 지속되면 처음 실행되고 다음 되록 수정
-  location.reload();
+  startBtnEvent();
 });
 
 stopButton.addEventListener("click", () => {
@@ -521,6 +551,8 @@ function deleteDirDB(id) {
 
   request.onsuccess = function (event) {
     const db = request.result;
+
+    //dirDel
     const transaction = db.transaction('dirStore', "readwrite");
 
     transaction.oncomplete = function (event) {
@@ -534,11 +566,64 @@ function deleteDirDB(id) {
 
     var requestDel = objectStore.delete(parseInt(id)); //주의~~!!
 
-    requestId.onerror = function (event) { console.log("requestId error"); }
+    requestDel.onerror = function (event) { console.log("requestId error"); }
 
-    requestId.onsuccess = function (event) {
+    requestDel.onsuccess = function (event) {
       console.log("dir 삭제 성공");
     }
+
+    //del 하위 keyword
+    let keywordTransaction = db.transaction('keywordStore', 'readwrite');
+
+    keywordTransaction.oncomplete = function (event) {
+      console.log("키워드 성공");
+    };
+    keywordTransaction.onerror = function (event) {
+      console.log("키워드 실패");
+    };
+
+    const keywordObjectStore = keywordTransaction.objectStore('keywordStore');
+    const keywordSearch = keywordObjectStore.index("dir_id").getAll(parseInt(id));
+    console.log('여기');
+    console.log(keywordSearch);
+
+    keywordSearch.onsuccess = (e) => {
+      keywords = e.target.result;
+
+      for (let i = 0; i < keywords.length; i++) {
+        deleteDB('keywordStore', keywords[i].id);
+      }
+    }
+
+    keywordTransaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    // keywordTransaction.oncomplete = function (event) {
+    //   db.close();
+    // };
+
+    //del 하위 url
+
+    let urlTransaction = db.transaction('urlStore', 'readwrite');
+    const urlObjectStore = urlTransaction.objectStore('urlStore');
+    const urlSearch = urlObjectStore.index("dir_id").getAll(parseInt(id));
+
+    urlSearch.onsuccess = (e) => {
+      urls = e.target.result;
+
+      for (let i = 0; i < urls.length; i++) {
+        deleteDB('urlStore', urls[i].id);
+      }
+    }
+
+    urlTransaction.onerror = function (event) {
+      console.log("트랜잭션 오류:", event.target.error);
+    };
+
+    urlTransaction.oncomplete = function (event) {
+      db.close();
+    };
   }
 }
 
@@ -553,15 +638,18 @@ var keyStore = 'keywordStore';
 function Toggle(data) {
   for (var i = 0; i < data.length; i++) {
     const k = data[i].keyword;
+    const id = data[i].id;
+    const isToggled = data[i].isToggled;
+    console.log(id);
     const kwBox = document.getElementById("green-" + k);
     const pathArea = document.getElementById("white-" + k);
     const toggleButton = kwBox.querySelector(".toggle_keyword");
-    let isToggled = false;
-
+    let isPushed = isToggled;
     toggleButton.addEventListener("click", () => {
       // 토글 상태에 따라 컨텐츠 표시/숨김
-      if (isToggled) {
+      if (isPushed) {
 
+        editDB("keywordStore", "isToggled", parseInt(id), false,false);
         toggleButton.classList.add("toggleShown");
         toggleButton.classList.remove("toggleHidden");
 
@@ -569,12 +657,13 @@ function Toggle(data) {
         pathArea.style.opacity = '1';
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
+        editDB("keywordStore", "isToggled", parseInt(id), true,false);
         toggleButton.classList.add("toggleHidden");
         toggleButton.classList.remove("toggleShown");
 
         pathArea.style.maxHeight = '0';
       }
-      isToggled = !isToggled;
+      isPushed = !isPushed;
     })
   }
 }
@@ -643,13 +732,24 @@ function displayURL(data) {
 
 
     const memoBtn = clone.querySelector('.white-menu3');
+    let inputMemo = document.getElementById("memoInput");
 
     memoBtn.setAttribute('key', key);
     const modal = document.getElementById("modal")
-    var memoFlag;
+    let memoFlag;
     memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
       memoFlag = e.target.getAttribute("key");
+      
+      readValueDB('urlStore', 'memo', parseInt(memoFlag))
+      .then(result=>{
+        //console.log("제대로 읽어짐****************" + result);
+        //console.log(typeof(result));
+        inputMemo.setAttribute('value', result);
+      })
+      .catch(error => {
+        console.log("메모 디폴트값 불러오기 에러" + error);
+      });
       //console.log(e);
       //console.log("memo버튼 클릭했을 때 memoFlag : " + memoFlag);
     })
@@ -658,15 +758,13 @@ function displayURL(data) {
       modal.style.display = "none";
     })
 
-    let inputMemo = document.getElementById("memoInput");
-
     const memoSaveBtn = modal.querySelector(".saveBtn")
     memoSaveBtn.addEventListener("click", e => {
       let userInputMemo = inputMemo.value;
       //console.log(userInputMemo);
       //console.log("모달에서 저장 눌렀을 때 memoFlag : " + memoFlag);
       //console.log("를 int로 parsing한 memoFlag : " + parseInt(memoFlag));
-      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo,true);
       modal.style.display = "none"
 
     })
@@ -674,7 +772,7 @@ function displayURL(data) {
     inputMemo.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         let userInputMemo = inputMemo.value;
-        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo);
+        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo,true,true);
         modal.style.display = "none"
       }
     })
@@ -689,14 +787,24 @@ function displayURL(data) {
 
 
     const editBtn = clone.querySelector('.white-menu2');
+    let inputTitle = document.getElementById("titleInput");
 
     editBtn.setAttribute('key', key);
     const editmodal = document.getElementById("modal-t")
-    var editFlag;
+    let editFlag;
     editBtn.addEventListener('click', (e) => {
       editmodal.style.display = "flex";
       //몇 번째 요소 선택했는지 인덱스저장
       editFlag = e.target.getAttribute("key");
+      readValueDB('urlStore', 'title', parseInt(editFlag))
+      .then(result=>{
+        //console.log("제대로 읽어짐****************" + result);
+        //console.log(typeof(result));
+        inputTitle.setAttribute('value', result);
+      })
+      .catch(error => {
+        console.log("타이틀 디폴트값 불러오기 에러" + error);
+      });
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -704,13 +812,13 @@ function displayURL(data) {
       editmodal.style.display = "none";
     })
 
-    let inputTitle = document.getElementById("titleInput");
+
 
     const editSaveBtn = editmodal.querySelector(".saveBtn")
     editSaveBtn.addEventListener("click", e => {
       let userInputTitle = inputTitle.value;
       if (!!userInputTitle.trim()) {
-        editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+        editDB("urlStore", "title", parseInt(editFlag), userInputTitle,true);
         editmodal.style.display = "none"
       }
 
@@ -720,7 +828,7 @@ function displayURL(data) {
       if (event.key === "Enter") {
         let userInputTitle = inputTitle.value;
         if (!!userInputTitle.trim()) {
-          editDB("urlStore", "title", parseInt(editFlag), userInputTitle);
+          editDB("urlStore", "title", parseInt(editFlag), userInputTitle,true);
           editmodal.style.display = "none"
         }
       }
@@ -796,8 +904,10 @@ function displayKeyword(data) {
   // 데이터를 텍스트로 변환하여 화면에 추가
   for (var i = 0; i < data.length; i++) {
     const k = data[i][1];
+    console.log(k);
     const gk = data[i][0];
-
+    const toggleStatus = data[i][2];
+    console.log(toggleStatus);
 
     const template = document.getElementById("keyword_template");
     const clone = template.content.cloneNode(true);
@@ -805,6 +915,7 @@ function displayKeyword(data) {
     clone.querySelector(".keyword-box").querySelector(".keyword").innerHTML = k;
     clone.querySelector(".keyword-box").id = "green-" + k;
     clone.querySelector(".path-area").id = "white-" + k;
+    const toggleButton = clone.querySelector(".keyword-box").querySelector(".toggle_keyword");
 
     clone.querySelector(".keyword-box").querySelector(".keyword").addEventListener("click", () => {
       const url = "https://www.google.com/search?q=" + k;
@@ -813,6 +924,18 @@ function displayKeyword(data) {
 
     let greenBox = clone.getElementById("green-" + k);
     greenBox.setAttribute('Key', gk);
+
+    if(toggleStatus){
+      toggleButton.classList.remove("toggleShown");
+      toggleButton.classList.add("toggleHidden");
+      clone.querySelector(".path-area").style.maxHeight = '0';
+    }
+    if(!toggleStatus){
+      toggleButton.classList.add("toggleShown");
+      toggleButton.classList.remove("toggleHidden");
+      clone.querySelector(".path-area").style.maxHeight = '100vh'
+      clone.querySelector(".path-area").style.opacity = '1';
+    }
 
     container.appendChild(clone);
 
@@ -993,7 +1116,7 @@ function readDB() {
         let cursor = event.target.result;
         if (cursor) {
           //console.log(cursor.value.keyword);
-          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword]);
+          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword,cursor.value.isToggled]);
           cursor.continue();
         } else {
           //console.log(dirFilterKeyword);
@@ -1188,6 +1311,7 @@ async function displayData(data) {
     const editButton = copy.querySelector(".button-edit");
     const deleteButton = copy.querySelector(".button-del");
     const dirLink = copy.querySelector(".dir-link");
+    const dirTooltip = copy.querySelector(".dir-list").querySelector(".tooltipDirTitle");
 
     dirList.id = item.d_id;
     if (dirList.id == nowDIrId) {
@@ -1196,6 +1320,21 @@ async function displayData(data) {
       dirList.style.backgroundColor = 'white'
     }
     dirList.querySelector(".dir-text").textContent = item.dir_name;
+    dirTooltip.textContent = item.dir_name;
+    //일정 길이 이상일 경우 툴팁도 업데이트------------------------------------------
+    let dirTextLength = parseInt(item.dir_name.length);
+    if (dirTextLength > 14) {
+        let selectedTitle = dirList.querySelector(".dir-text");
+        let titleTooltip = dirList.querySelector(".tooltipDirTitle");
+        selectedTitle.addEventListener("mouseover", (e) => {
+          titleTooltip.style.display = "block";
+        });
+    
+        selectedTitle.addEventListener("mouseout", () => {
+          titleTooltip.style.display = "none";
+        });
+    } 
+    //-------------------------------
 
     editButton.addEventListener("click", function () {
       setupDirEditEvent(this);
@@ -1263,7 +1402,7 @@ function deleteDB2(key) {
     }
   }
 }
-function editDB(obs, field, key, value) {
+function editDB(obs, field, key, value,reload) {
   //value는 변경하려는 값
   //1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
@@ -1285,7 +1424,10 @@ function editDB(obs, field, key, value) {
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => {
         console.log('update success');
-        location.reload();
+        if(reload){
+          location.reload();
+        }
+        
       }
     }
 
@@ -1307,13 +1449,7 @@ function readValueDB(obs, field, key) {
         let data = event.target.result;
         let findValue;
 
-        if (field == "url") {
-          findValue = data.url;
-        } else if (field == "nowExecutedDir") {
-          findValue = data.nowExecutedDir;
-        } else {
-          reject("필드 추가가 필요함");
-        }
+        findValue = data[field];
 
         resolve(findValue);
       };
