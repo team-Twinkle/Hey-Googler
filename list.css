@@ -79,10 +79,12 @@ body {
   text-overflow: ellipsis;
 }
 
-.dir-title {
-  /* overflow: hidden;
-  white-space: nowrap;
+#dir-title {
+  width: 255px;
+  overflow: hidden;
+  /* white-space: nowrap;
   text-overflow: ellipsis; */
+
 }
 
 .dir-list {
@@ -780,14 +782,15 @@ footer {
   color: white;
 }
 
-#startModal.clicked{
+#startModal.clicked {
   display: flex;
 }
-#startModal.hidden{
+
+#startModal.hidden {
   display: none;
 }
 
-#startModalContent{
+#startModalContent {
   text-align: center;
   line-height: 1.5;
   padding-left: 25px;

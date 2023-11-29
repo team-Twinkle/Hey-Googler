@@ -36,8 +36,8 @@ window.history.scrollRestoration = "auto";
   */
 let scrollHeight;
 addEventListener('scroll', (event) => {
-    scrollHeight = $(document).scrollTop();
-    sessionStorage.setItem("scrollY", scrollHeight);
+  scrollHeight = $(document).scrollTop();
+  sessionStorage.setItem("scrollY", scrollHeight);
 });
 
 /**
@@ -103,7 +103,7 @@ function dirAddButtonClick() {
 
 
 function setupDirEditEvent(button) {
-  const dirElement = button.closest("li");  
+  const dirElement = button.closest("li");
   const dirTextElement = dirElement.querySelector(".dir-text");
   const currentTextValue = dirTextElement.textContent;
   const dir_id = dirElement.id;
@@ -126,7 +126,7 @@ function setupDirEditEvent(button) {
     if (!(e.target.classList.contains("editing"))) {
       const newDirName = inputElement.value.trim();
       if (newDirName !== "") {
-        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName,true);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName, true);
       }
       else {
         alert("내용을 입력해주세요");
@@ -167,7 +167,7 @@ function setupDirEditEvent(button) {
         // dirElement.parentNode.replaceChild(newLiElement, dirElement);
 
         // 디렉토리 이름 데이터베이스에 업데이트
-        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName,true);
+        editDB("dirStore", "dir_name", parseInt(dir_id), newDirName, true);
         //그냥 editDirNameDB (editDB) 함수에서 success 하면 location.reload() 하도록 코드 작성했어,,
         //어차피 새로고침하니까 위에 코드는 필요 없어지는 거 아닌가 싶어서 주석처리했구! -10월 14일의 채린...-
 
@@ -254,6 +254,7 @@ async function initListPage() {
 
   if (dirName != null) {
     dirNameElement.textContent = dirName;
+    // dirNameElement.style.overflow = 'hidden';
   }
 
   //dir title 수정
@@ -278,6 +279,7 @@ async function initListPage() {
         const newDirName = inputElement.value.trim();
         if (newDirName !== "") {
           editDB("dirStore", "dir_name", parseInt(dirId), newDirName);
+          location.reload();
         } else {
           alert("내용을 입력해주세요");
         }
@@ -312,14 +314,14 @@ async function initListPage() {
 
 }
 
-function startBtnEvent(){
+function startBtnEvent() {
   let modal = document.getElementById("startModal");
   let content = document.getElementById("startModalContent");
-  let dirBox = document.getElementById("dir-name");
+  let dirBox = document.getElementById("dir-title");
   let dirName = dirBox.textContent;
   content.innerHTML = "<b>[" + dirName + "]</b> <br>폴더에 검색 기록이 저장됩니다.";
-  modal.classList.replace("hidden","clicked");
-  setTimeout(()=>{modal.classList.replace("clicked","hidden");},5000);
+  modal.classList.replace("hidden", "clicked");
+  setTimeout(() => { modal.classList.replace("clicked", "hidden"); }, 5000);
   //console.log("startEvent executed");
 }
 
@@ -678,7 +680,7 @@ function Toggle(data) {
       // 토글 상태에 따라 컨텐츠 표시/숨김
       if (isPushed) {
 
-        editDB("keywordStore", "isToggled", parseInt(id), false,false);
+        editDB("keywordStore", "isToggled", parseInt(id), false, false);
         toggleButton.classList.add("toggleShown");
         toggleButton.classList.remove("toggleHidden");
 
@@ -686,7 +688,7 @@ function Toggle(data) {
         pathArea.style.opacity = '1';
       } else {
         // 토글될 컨텐츠 숨김 (애니메이션 포함)
-        editDB("keywordStore", "isToggled", parseInt(id), true,false);
+        editDB("keywordStore", "isToggled", parseInt(id), true, false);
         toggleButton.classList.add("toggleHidden");
         toggleButton.classList.remove("toggleShown");
 
@@ -769,16 +771,16 @@ function displayURL(data) {
     memoBtn.addEventListener('click', (e) => {
       modal.style.display = "flex";
       memoFlag = e.target.getAttribute("key");
-      
+
       readValueDB('urlStore', 'memo', parseInt(memoFlag))
-      .then(result=>{
-        //console.log("제대로 읽어짐****************" + result);
-        //console.log(typeof(result));
-        inputMemo.setAttribute('value', result);
-      })
-      .catch(error => {
-        console.log("메모 디폴트값 불러오기 에러" + error);
-      });
+        .then(result => {
+          //console.log("제대로 읽어짐****************" + result);
+          //console.log(typeof(result));
+          inputMemo.setAttribute('value', result);
+        })
+        .catch(error => {
+          console.log("메모 디폴트값 불러오기 에러" + error);
+        });
       //console.log(e);
       //console.log("memo버튼 클릭했을 때 memoFlag : " + memoFlag);
     })
@@ -793,7 +795,7 @@ function displayURL(data) {
       //console.log(userInputMemo);
       //console.log("모달에서 저장 눌렀을 때 memoFlag : " + memoFlag);
       //console.log("를 int로 parsing한 memoFlag : " + parseInt(memoFlag));
-      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo,true);
+      editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo, true);
       modal.style.display = "none"
 
     })
@@ -801,7 +803,7 @@ function displayURL(data) {
     inputMemo.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         let userInputMemo = inputMemo.value;
-        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo,true,true);
+        editDB("urlStore", "memo", parseInt(memoFlag), userInputMemo, true, true);
         modal.style.display = "none"
       }
     })
@@ -826,14 +828,14 @@ function displayURL(data) {
       //몇 번째 요소 선택했는지 인덱스저장
       editFlag = e.target.getAttribute("key");
       readValueDB('urlStore', 'title', parseInt(editFlag))
-      .then(result=>{
-        //console.log("제대로 읽어짐****************" + result);
-        //console.log(typeof(result));
-        inputTitle.setAttribute('value', result);
-      })
-      .catch(error => {
-        console.log("타이틀 디폴트값 불러오기 에러" + error);
-      });
+        .then(result => {
+          //console.log("제대로 읽어짐****************" + result);
+          //console.log(typeof(result));
+          inputTitle.setAttribute('value', result);
+        })
+        .catch(error => {
+          console.log("타이틀 디폴트값 불러오기 에러" + error);
+        });
     })
     const editcloseBtn = editmodal.querySelector(".closeBtn")
     editcloseBtn.addEventListener("click", e => {
@@ -847,7 +849,7 @@ function displayURL(data) {
     editSaveBtn.addEventListener("click", e => {
       let userInputTitle = inputTitle.value;
       if (!!userInputTitle.trim()) {
-        editDB("urlStore", "title", parseInt(editFlag), userInputTitle,true);
+        editDB("urlStore", "title", parseInt(editFlag), userInputTitle, true);
         editmodal.style.display = "none"
       }
 
@@ -857,7 +859,7 @@ function displayURL(data) {
       if (event.key === "Enter") {
         let userInputTitle = inputTitle.value;
         if (!!userInputTitle.trim()) {
-          editDB("urlStore", "title", parseInt(editFlag), userInputTitle,true);
+          editDB("urlStore", "title", parseInt(editFlag), userInputTitle, true);
           editmodal.style.display = "none"
         }
       }
@@ -954,12 +956,12 @@ function displayKeyword(data) {
     let greenBox = clone.getElementById("green-" + k);
     greenBox.setAttribute('Key', gk);
 
-    if(toggleStatus){
+    if (toggleStatus) {
       toggleButton.classList.remove("toggleShown");
       toggleButton.classList.add("toggleHidden");
       clone.querySelector(".path-area").style.maxHeight = '0';
     }
-    if(!toggleStatus){
+    if (!toggleStatus) {
       toggleButton.classList.add("toggleShown");
       toggleButton.classList.remove("toggleHidden");
       clone.querySelector(".path-area").style.maxHeight = '100vh'
@@ -1145,7 +1147,7 @@ function readDB() {
         let cursor = event.target.result;
         if (cursor) {
           //console.log(cursor.value.keyword);
-          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword,cursor.value.isToggled]);
+          dirFilterKeyword.push([cursor.value.id, cursor.value.keyword, cursor.value.isToggled]);
           cursor.continue();
         } else {
           //console.log(dirFilterKeyword);
@@ -1353,16 +1355,16 @@ async function displayData(data) {
     //일정 길이 이상일 경우 툴팁도 업데이트------------------------------------------
     let dirTextLength = parseInt(item.dir_name.length);
     if (dirTextLength > 14) {
-        let selectedTitle = dirList.querySelector(".dir-text");
-        let titleTooltip = dirList.querySelector(".tooltipDirTitle");
-        selectedTitle.addEventListener("mouseover", (e) => {
-          titleTooltip.style.display = "block";
-        });
-    
-        selectedTitle.addEventListener("mouseout", () => {
-          titleTooltip.style.display = "none";
-        });
-    } 
+      let selectedTitle = dirList.querySelector(".dir-text");
+      let titleTooltip = dirList.querySelector(".tooltipDirTitle");
+      selectedTitle.addEventListener("mouseover", (e) => {
+        titleTooltip.style.display = "block";
+      });
+
+      selectedTitle.addEventListener("mouseout", () => {
+        titleTooltip.style.display = "none";
+      });
+    }
     //-------------------------------
 
     editButton.addEventListener("click", function () {
@@ -1431,7 +1433,7 @@ function deleteDB2(key) {
     }
   }
 }
-function editDB(obs, field, key, value,reload) {
+function editDB(obs, field, key, value, reload) {
   //value는 변경하려는 값
   //1. db 열기
   var request = indexedDB.open("HeyGoogler", 1);
@@ -1453,10 +1455,10 @@ function editDB(obs, field, key, value,reload) {
       updateRequest.onerror = (e) => console.log('update error');
       updateRequest.onsuccess = (e) => {
         console.log('update success');
-        if(reload){
+        if (reload) {
           location.reload();
         }
-        
+
       }
     }
 
