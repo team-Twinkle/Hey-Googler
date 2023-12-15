@@ -8,8 +8,8 @@ var beforeTab;
 var currentTab;
 var searchTab;
 
-if(currentTab == null){
-  chrome.tabs.getCurrent ((tab)=>{
+if (currentTab == null) {
+  chrome.tabs.getCurrent((tab) => {
     currentTab = tab;
   })
 }
@@ -61,6 +61,7 @@ request.onupgradeneeded = function (event) {
   });
 
   dirStore.createIndex("dir_name", "dir_name", { unique: false });
+  dirStore.createIndex("scroll", "scroll", { unique: false });
 
   //user history store
   var dirStore = db.createObjectStore("userHistoryStore", {
@@ -306,7 +307,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
         let keyword1 = url_.searchParams.get("q"); //1차링크의 검색어 
         if (keyword1 != null) {
           console.log('키데이터' + dirId);
-          const keyData = [{ dir_id: dirId, keyword: keyword1,isToggled:false }];
+          const keyData = [{ dir_id: dirId, keyword: keyword1, isToggled: false }];
 
           console.log("Visited Site:", url, title, keyword1);
           //db에 data 입력
