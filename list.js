@@ -1,4 +1,5 @@
 let nowDirId;
+// history.scrollRestoration = "auto";
 
 //init
 //분기해서 사용하는 거 중요함
@@ -13,16 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     defaultDirSet();
-    //경우에 따라 다르게 부여
-    //TODO
-    // if (onDirId != 0) {
-    // document.getElementById("current-dir-link").href = onDirLink;
-
-    // } else {
-    // console.log("init 에서 currentDirLink : " + currentDirLink);
-    // document.getElementById("current-dir-link").href = currentDirLink;
-    // }
-    // console.log(document.getElementById("current-dir-link").href);
 
   }
 });
@@ -34,11 +25,13 @@ window.history.scrollRestoration = "auto";
 /**
   * 스크롤이 움직일때마다 값을 sessionStorage에 넣어줌
   */
-let scrollHeight;
-addEventListener('scroll', (event) => {
-  scrollHeight = $(document).scrollTop();
-  sessionStorage.setItem("scrollY", scrollHeight);
-});
+
+
+// let scrollHeight;
+// addEventListener('scroll', (event) => {
+//   scrollHeight = $(document).scrollTop();
+//   sessionStorage.setItem("scrollY", scrollHeight);
+// });
 
 /**
   * 스크롤 위치 지정
@@ -311,6 +304,19 @@ async function initListPage() {
   }
 
   addEvent();
+
+  //스크롤 위치 지정
+
+  window.scrollTo(0, dirData.scroll);
+
+  let scrollHeight;
+
+  addEventListener('scroll', (event) => {
+    scrollHeight = window.scrollY || document.documentElement.scrollTop;
+    console.log(`scroll 위치 : ${scrollHeight}`);
+    editDB("dirStore", "scroll", parseInt(nowDirId), scrollHeight, false);
+
+  });
 
 }
 
