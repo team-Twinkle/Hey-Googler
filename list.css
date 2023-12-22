@@ -796,3 +796,18 @@ footer {
   padding-left: 25px;
   padding-right: 25px;
 }
+
+#button-top {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 50px;
+  background-color: white;
+  bottom: 85px;
+  left: 300px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.10);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity ease .5s;
+}

@@ -311,11 +311,24 @@ async function initListPage() {
 
   let scrollHeight;
 
+  let topButton = document.querySelector('#button-top');
+
   addEventListener('scroll', (event) => {
     scrollHeight = window.scrollY || document.documentElement.scrollTop;
     console.log(`scroll 위치 : ${scrollHeight}`);
     editDB("dirStore", "scroll", parseInt(nowDirId), scrollHeight, false);
 
+    if (scrollHeight != 0) {
+      topButton.style.opacity = "100";
+    } else {
+      topButton.style.opacity = "0";
+
+    }
+
+  });
+
+  topButton.addEventListener('click', (event) => {
+    window.scrollTo(0, 0);
   });
 
 }
