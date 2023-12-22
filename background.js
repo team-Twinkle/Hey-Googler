@@ -255,7 +255,10 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-    currentURL = new URL(currentTab);
+    if(currentTab){
+      currentURL = new URL(currentTab);
+    }
+    else currentURL = '';
     if ((currentURL.hostname === "www.google.com") || (currentURL.hostname === "scholar.google.com")) {
       searchTab = currentTab;
       console.log("    SearchTab case1 :        " + searchTab);
