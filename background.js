@@ -286,6 +286,10 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확인한다 ! 
   if (changeInfo.status === 'complete') {
     chrome.tabs.sendMessage(tabId, "referrer", response => {
+      if (!response || !response.referrer) {
+        //console.log("referrer 없음");
+        return;
+      }
       var referrer = response.referrer; //referrer 얻은 데이터 !!
       //console.log("===========================>>>>>"+referrer);
 
