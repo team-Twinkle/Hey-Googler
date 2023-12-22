@@ -496,6 +496,12 @@ chrome.action.onClicked.addListener(() => {
   });
 });
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	if (message == "Auto Synchronization message") location.reload();
+});
+
+
+
 //새로운 값 입력
 //db입력 함수 (backtground.js에서 동일한 코드인데 import하는 등 효율적인 방법이 없을까?
 function intitDB() {

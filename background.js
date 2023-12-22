@@ -274,7 +274,6 @@ chrome.tabs.onActivated.addListener(activeInfo => {
           console.log("    SearchTab case2 :       " + searchTab);
         }
       })
-
     }
   });
 });
@@ -324,6 +323,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
           if (isExtensionOn) {
             writeDB(keyData, "keywordStore");
             writeDB(datas, "urlStore");
+
+            // 열려있는 모든 탭에 대한 정보를 얻습니다.
+            chrome.tabs.query({}, function(tabs) {
+              // 각 탭에 대해 메시지를 보냅니다.
+              chrome.runtime.sendMessage("Auto Synchronization message");
+            });
+
+
           }
         }
 
