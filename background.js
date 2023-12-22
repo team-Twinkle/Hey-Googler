@@ -256,7 +256,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
     currentURL = new URL(currentTab);
-    if (currentURL.hostname === "www.google.com") {
+    if ((currentURL.hostname === "www.google.com") || (currentURL.hostname === "scholar.google.com")) {
       searchTab = currentTab;
       console.log("    SearchTab case1 :        " + searchTab);
     }
@@ -269,7 +269,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
         currentTab = Tab.url;
         currentURL = new URL(currentTab);
         //console.log(currentURL);
-        if (currentURL.hostname === "www.google.com") {
+        if ((currentURL.hostname === "www.google.com") || (currentURL.hostname === "scholar.google.com")) {
           searchTab = currentTab;
           console.log("    SearchTab case2 :       " + searchTab);
         }
@@ -286,14 +286,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
       var referrer = response.referrer; //referrer 얻은 데이터 !!
       //console.log("===========================>>>>>"+referrer);
 
-      if (referrer == 'https://www.google.com/') {//1차링크인 경우 추적 
+      if ((referrer == 'https://www.google.com/') || (referrer == 'https://scholar.google.com/')) {//1차링크인 경우 추적 
 
         let url = response.url;
         let title = response.title;
         //검색창인 경우 제외
         let str1 = url.substr(0, 22);
         let str2 = url.substr(0, 19);
-        if (str1 == "https://www.google.com") {
+        if ((str1 == "https://www.google.com") || (str1 == "https://scholar.google.com")) {
           return;
         }
         if (str2 == "chrome-extension://") {
