@@ -255,8 +255,11 @@ chrome.tabs.onActivated.addListener(activeInfo => {
   //console.log("activated changing")
   chrome.tabs.get(activeInfo.tabId, Tab => {
     currentTab = Tab.url;
-    currentURL = new URL(currentTab);
-    if (currentURL.hostname === "www.google.com") {
+    if(currentTab){
+      currentURL = new URL(currentTab);
+    }
+    else currentURL = '';
+    if ((currentURL.hostname === "www.google.com") || (currentURL.hostname === "scholar.google.com")) {
       searchTab = currentTab;
       console.log("    SearchTab case1 :        " + searchTab);
     }
@@ -269,12 +272,11 @@ chrome.tabs.onActivated.addListener(activeInfo => {
         currentTab = Tab.url;
         currentURL = new URL(currentTab);
         //console.log(currentURL);
-        if (currentURL.hostname === "www.google.com") {
+        if ((currentURL.hostname === "www.google.com") || (currentURL.hostname === "scholar.google.com")) {
           searchTab = currentTab;
           console.log("    SearchTab case2 :       " + searchTab);
         }
       })
-
     }
   });
 });
@@ -284,17 +286,21 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확인한다 ! 
   if (changeInfo.status === 'complete') {
     chrome.tabs.sendMessage(tabId, "referrer", response => {
+      if (!response || !response.referrer) {
+        //console.log("referrer 없음");
+        return;
+      }
       var referrer = response.referrer; //referrer 얻은 데이터 !!
       //console.log("===========================>>>>>"+referrer);
 
-      if (referrer == 'https://www.google.com/') {//1차링크인 경우 추적 
+      if ((referrer == 'https://www.google.com/') || (referrer == 'https://scholar.google.com/')) {//1차링크인 경우 추적 
 
         let url = response.url;
         let title = response.title;
         //검색창인 경우 제외
         let str1 = url.substr(0, 22);
         let str2 = url.substr(0, 19);
-        if (str1 == "https://www.google.com") {
+        if ((str1 == "https://www.google.com") || (str1 == "https://scholar.google.com")) {
           return;
         }
         if (str2 == "chrome-extension://") {
@@ -324,6 +330,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {   //referrer 를 확�
           if (isExtensionOn) {
             writeDB(keyData, "keywordStore");
             writeDB(datas, "urlStore");
+
+            // 열려있는 모든 탭에 대한 정보를 얻습니다.
+            chrome.tabs.query({}, function(tabs) {
+              // 각 탭에 대해 메시지를 보냅니다.
+              chrome.runtime.sendMessage("Auto Synchronization message");
+            });
+
+
           }
         }
 
