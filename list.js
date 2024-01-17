@@ -252,7 +252,7 @@ async function initListPage() {
 
   //dir title 수정
   var dirTitleBox = document.getElementById('dir-title-box');
-  dirBox.addEventListener("click", () => {
+  dirTitleBox.addEventListener("click", () => {
     // input 생성
     const inputElement = document.createElement("input");
     inputElement.type = "text";
@@ -510,7 +510,7 @@ chrome.action.onClicked.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	if (message == "Auto Synchronization message") location.reload();
+  if (message == "Auto Synchronization message") location.reload();
 });
 
 
