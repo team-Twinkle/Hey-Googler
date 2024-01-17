@@ -9,7 +9,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const referrer = document.referrer;
         const title = document.title;
         const url = document.baseURI;
-        //console.log(referrer);
         sendResponse({ referrer: referrer, title: title, url: url });
     }
 });
