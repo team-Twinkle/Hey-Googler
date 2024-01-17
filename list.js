@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-window.history.scrollRestoration = "auto";
 
 /**
   * 스크롤이 움직일때마다 값을 sessionStorage에 넣어줌

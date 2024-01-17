@@ -12,17 +12,27 @@
       "128": "heyGoogler_icon.png"
     }
   },
-  "permissions": ["tabs", "activeTab", "history", "webNavigation", "storage"],
+  "permissions": [
+    "tabs"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content-script.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-script.js"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["list.html"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "list.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
